@@ -14,16 +14,19 @@ export const DEFAULTS = {
   // timer: the speedrun clock (hud.js)
   breath: true, // false = endless breath (assist, player.js; never the bot)
   textSize: 'M', // S / M / L: menus, subtitles, hints, cards (hud.js --ts)
+  touchControls: 'auto', touchSize: 'M', leftHanded: false, // touch.js: auto = shown once a touch happens / on a coarse pointer; button size S / M / L; swap sides
 };
 // first-run defaults from the browser: reduced motion from the OS, language from navigator (ru* -> ru, else en)
 const sysReduce = () => { try { return !!globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches; } catch { return false; } };
 const sysLang = () => (/^ru/i.test(globalThis.navigator?.language ?? '') ? 'ru' : 'en');
+// phones / tablets start on medium (pixel ratio cap 1.5, scatter 0.75)
+const sysCoarse = () => { try { return !!globalThis.matchMedia?.('(pointer: coarse)').matches; } catch { return false; } };
 const SPEEDS = [0.7, 0.85, 1];
 const clamp = (v, a, b, d) => (typeof v === 'number' || (typeof v === 'string' && v.trim() !== '') ? (Number.isFinite(+v) ? Math.min(b, Math.max(a, +v)) : d) : d); // null, '', [] are not numbers
 
 export function normalize(s = {}) {
   const v = s.volume ?? {}, d = DEFAULTS;
-  const quality = s.quality in QUALITY ? s.quality : d.quality, speed = clamp(s.gameSpeed, 0.7, 1, d.gameSpeed);
+  const quality = s.quality in QUALITY ? s.quality : sysCoarse() ? 'medium' : d.quality, speed = clamp(s.gameSpeed, 0.7, 1, d.gameSpeed);
   return {
     volume: Object.fromEntries(Object.keys(d.volume).map((k) => [k, clamp(v[k], 0, 1, d.volume[k])])),
     cameraMode: s.cameraMode === 'free' ? 'free' : s.cameraMode === 'assist' ? 'assist' : d.cameraMode,
@@ -32,6 +35,7 @@ export function normalize(s = {}) {
     quality, ...QUALITY[quality],
     reduceMotion: s.reduceMotion == null ? sysReduce() : !!s.reduceMotion, infiniteAirDash: !!s.infiniteAirDash, allGifts: !!s.allGifts, timer: !!s.timer,
     breath: s.breath !== false, textSize: ['S', 'M', 'L'].includes(s.textSize) ? s.textSize : d.textSize, lang: s.lang === 'ru' || s.lang === 'en' ? s.lang : sysLang(),
+    touchControls: ['auto', 'on', 'off'].includes(s.touchControls) ? s.touchControls : d.touchControls, touchSize: ['S', 'M', 'L'].includes(s.touchSize) ? s.touchSize : d.touchSize, leftHanded: !!s.leftHanded,
     gameSpeed: SPEEDS.reduce((a, b) => (Math.abs(b - speed) < Math.abs(a - speed) ? b : a)), // snap to 70/85/100%
   };
 }

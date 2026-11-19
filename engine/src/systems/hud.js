@@ -23,6 +23,7 @@ import { getSave, updateSave, harmony, endingFor, setEnding, tales, TALES } from
 import { ico, wordmark, island, shard, lock, knot, seal, stamp, echoArt, taleArt, songArt, pose, DEFS } from './menuart.js';
 import * as meta from './meta.js'; // R10: challenges, achievements, loom, daily trial (menus)
 import { disarm as disarmDaily } from './daily.js';
+import { touchEnter } from './touch.js'; // phones: fullscreen + landscape on the first journey tap
 
 const END_S = 1.5, SHOW_S = 4, HOLD_R_MS = 500, LOAD_MIN_MS = 1200, PLATE_MS = 2000, PAD_REPEAT = [0.38, 0.13]; // s results delay after the goal touch, s, ms, ms, ms, s first / next
 const TEXT_SIZE = { S: 1.1, M: 1.25, L: 1.5 }; // CSS zoom on the HUD text (M reads ~20 px hints at 1080p)
@@ -32,7 +33,9 @@ export const tr = (s) => (s == null || typeof s === 'string' ? s ?? '' : s[LANG]
 function applyUi(s) { // language + text size, live
   LANG = s.lang === 'ru' ? 'ru' : 'en';
   document.documentElement.lang = LANG;
-  document.documentElement.style.setProperty('--ts', TEXT_SIZE[s.textSize] ?? 1);
+  const compact = innerHeight < 520 && (ui?.device === 'touch' || document.body.classList.contains('touch') || matchMedia('(pointer: coarse)').matches); // a phone held sideways: menus one step smaller
+  document.documentElement.classList.toggle('compact', compact);
+  document.documentElement.style.setProperty('--ts', (TEXT_SIZE[s.textSize] ?? 1) * (compact ? 0.8 : 1));
 }
 
 const fmtTime = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
@@ -174,6 +177,7 @@ async function goTo(levelId, { checkpoint, outMs = 1000, inMs = 800, card = fals
   const { game } = cur, lv = level(levelId);
   clearPanel();
   ui.timer.style.display = 'none';
+  if (!title) touchEnter();
   if (!title && !cut) lockPointer(); // before any await: the lock needs the click's user gesture (input.js retries on the next click)
   game.registry.set('paused', true);
   try {
@@ -470,9 +474,17 @@ function showSettings(back, tab = sTab) { // pages: game, assist, sound, picture
     range(L('Field of view', 'Поле зрения'), 40, 90, 1, () => s.fov, (v) => { s.fov = v; });
     opt(L('Graphics', 'Графика'), [['low', L('Low', 'Низкая')], ['medium', L('Medium', 'Средняя')], ['high', L('High', 'Высокая')]], () => s.quality, (v) => { s.quality = v; });
   } else {
+    const touchOpts = () => {
+      opt(L('Touch controls', 'Сенсорное управление'), [['auto', L('Auto', 'Авто')], ['on', L('On', 'Вкл')], ['off', L('Off', 'Выкл')]], () => s.touchControls, (v) => { s.touchControls = v; });
+      opt(L('Button size', 'Размер кнопок'), [['S', 'S'], ['M', 'M'], ['L', 'L']], () => s.touchSize, (v) => { s.touchSize = v; });
+      opt(L('Left-handed (swap sides)', 'Для левши (поменять стороны)'), onOff, () => s.leftHanded, (v) => { s.leftHanded = v; });
+    };
+    const first = document.body.classList.contains('touch'); // desktop keeps the key list on top
+    if (first) touchOpts();
     ui.keys = mk('div', 'hud-keys');
     form.append(ui.keys);
     drawKeys();
+    if (!first) touchOpts();
   }
   const focusLang = ui.mode === 'settings' && document.activeElement?.cycle && tab === 'game' && document.activeElement.classList.contains('hud-opt'); // redraw after a language change keeps that row focused
   const tabs = tabRow([['game', 'gear', L('Game', 'Игра')], ['assist', 'hand', L('Assist', 'Помощь')], ['sound', 'note', L('Sound', 'Звук')], ['picture', 'eye', L('Picture', 'Картинка')], ['keys', 'keys', L('Controls', 'Управление')]], tab, (id) => showSettings(back, id));
@@ -481,8 +493,21 @@ function showSettings(back, tab = sTab) { // pages: game, assist, sound, picture
 }
 const keycaps = (s) => s.split(' / ').map((part) => part.split(' + ').map((k) => { const m = k.match(/^(.* )?([ABXY])$/); return m ? `${m[1] ?? ''}<kbd class="pad ${m[2]}">${m[2]}</kbd>` : `<kbd>${k}</kbd>`; }).join('+')).join(' ');
 function drawKeys() { // the controls page: a pose per action (it moves while focused) + the glyphs of the last-used device
-  const pad = ui.device === 'pad';
-  const rows = [
+  const pad = ui.device === 'pad', tch = ui.device === 'touch';
+  const rows = tch ? [
+    ['move', L('Move', 'Идти'), L('Left thumb: stick', 'Левый палец: стик')],
+    ['run', L('Run', 'Бег'), L('Push the stick to its edge', 'Тяни стик до края')],
+    ['jump', L('Jump (hold: higher)', 'Прыжок (держи — выше)'), L('Big button', 'Большая кнопка')],
+    ['dash', L('Dash', 'Рывок'), L('Dash button', 'Кнопка рывка')],
+    ['sing', L('Sing to a rune (hold)', 'Спеть руне (держи)'), L('Sing button (hold)', 'Кнопка пения (держи)')],
+    ['strike', L('Strike with the staff', 'Удар посохом'), L('Strike button', 'Кнопка удара')],
+    ['gust', L('Song: Gust (hold: stronger)', 'Песня: Порыв (держи — сильнее)'), L('Song buttons', 'Кнопки песен')],
+    ['name', L('Song: Name (hold: stronger)', 'Песня: Имя (держи — сильнее)'), L('Song buttons', 'Кнопки песен')],
+    ['anchor', L('Song: Anchor (hold: stronger)', 'Песня: Якорь (держи — сильнее)'), L('Song buttons', 'Кнопки песен')],
+    ['look', L('Look', 'Обзор'), L('Drag the right side', 'Тяни справа')],
+    ['pause', L('Pause', 'Пауза'), L('Pause button', 'Кнопка паузы')],
+    ['skip', L('Skip a scene', 'Пропустить сцену'), L('Long press', 'Долгое нажатие')],
+  ] : [
     ['move', L('Move', 'Идти'), pad ? L('Left stick', 'Левый стик') : L('WASD / arrows', 'WASD / стрелки')],
     ['run', L('Run', 'Бег'), pad ? 'RB' : 'Shift'],
     ['jump', L('Jump (hold: higher)', 'Прыжок (держи — выше)'), pad ? 'A' : L('Space', 'Пробел')],
@@ -498,7 +523,7 @@ function drawKeys() { // the controls page: a pose per action (it moves while fo
     ['skip', L('Skip a scene', 'Пропустить сцену'), pad ? L('Hold A', 'Держи A') : L('Hold Esc / Space', 'Держи Esc / Пробел')],
   ];
   const cards = rows.map(([art, a, k]) => { const b = mk('button'); b.innerHTML = `${pose(art)}<span></span><em>${keycaps(k)}</em>`; b.querySelector('span').textContent = a; return b; });
-  ui.keys.replaceChildren(mk('p', 'hud-note', pad ? L('Gamepad', 'Геймпад') : L('Keyboard and mouse', 'Клавиатура и мышь')), ...cards);
+  ui.keys.replaceChildren(mk('p', 'hud-note', tch ? L('Touch', 'Касания') : pad ? L('Gamepad', 'Геймпад') : L('Keyboard and mouse', 'Клавиатура и мышь')), ...cards);
   gridNav(cards.reduce((r, b, i) => { (r[i >> 1] ??= []).push(b); return r; }, []));
 }
 function setDevice(d) { if (ui.device === d) return; ui.device = d; if (ui.mode === 'settings' && ui.keys?.isConnected) drawKeys(); }
@@ -575,7 +600,7 @@ function install() { // once: DOM, key handlers, gamepad poll
   ui = { veil, load, plate, timer, panel: null, mode: 'none', back: null, busy: false, device: 'kb', pad: {}, stats: { falls: 0, time: 0 }, lv: { t: 0, on: false, falls: 0 } };
   let rTimer = 0, lastUnlock = 0;
   addEventListener('keydown', (e) => {
-    if (e.code !== 'Escape' && e.code !== 'Space') setDevice('kb');
+    if (e.isTrusted && e.code !== 'Escape' && e.code !== 'Space') setDevice('kb'); // touch.js sends synthetic keys
     if (ui.mode === 'cut') return; // cutscene.js owns Esc / Space (hold to skip)
     if (ui.panel && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
       e.preventDefault();
@@ -595,13 +620,16 @@ function install() { // once: DOM, key handlers, gamepad poll
   });
   addEventListener('keyup', (e) => { if (e.code === 'KeyR') { clearTimeout(rTimer); rTimer = 0; } });
   addEventListener('blur', () => { clearTimeout(rTimer); rTimer = 0; });
-  addEventListener('mousedown', () => setDevice('kb'));
+  let touchAt = -1e4;
+  addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch') { touchAt = performance.now(); setDevice('touch'); applyUi(cur.game.settings); } }, true);
+  addEventListener('mousedown', () => { if (performance.now() - touchAt > 1000) setDevice('kb'); }); // a tap also fires a compat mousedown
   document.addEventListener('pointerlockchange', () => { if (!document.pointerLockElement) lastUnlock = performance.now(); });
   document.addEventListener('focusin', (e) => { if (!ui.quiet && ui.panel?.contains(e.target)) cue(); });
   document.addEventListener('mousemove', (e) => { // hover = focus (one gold mark for mouse, keys and pad); a resting cursor never steals it
     const t = e.target.closest?.('.hud-panel button:not(:disabled), .hud-panel input');
     if (t && t !== document.activeElement) t.focus({ preventScroll: true });
   });
+  addEventListener('resize', () => applyUi(cur.game.settings));
   requestAnimationFrame(padLoop);
   showTitle();
 }

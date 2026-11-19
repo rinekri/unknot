@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>Unknot</title>
   <style>
     html, body { margin: 0; height: 100%; overflow: hidden; background: #f9f3ec; }
@@ -132,6 +132,18 @@
     .cut-skip svg { width: 30px; height: 30px; transform: rotate(-90deg); }
     .cut-skip circle { fill: none; stroke-width: 3; } .cut-skip .bg { stroke: rgba(249,243,236,.25); }
     .cut-skip .fg { stroke: var(--gold); stroke-dasharray: 100; stroke-dashoffset: calc(100 - var(--hold, 0) * 100); }
+    /* notch / home-bar safe areas (env() is 0 without them: desktop layout unchanged) */
+    html { overscroll-behavior: none; }
+    html.compact .hud-panel { padding-top: 8px; padding-bottom: 8px; line-height: 1.3; } /* phone held sideways (set from hud.js) */
+    html.compact .hud-panel h1 { margin-bottom: 4px; padding-bottom: 4px; font-size: 22px; }
+    html.compact .hud-panel button { padding-top: 4px; padding-bottom: 4px; }
+    html.compact .hud-panel:has(.hud-tabs) h1 { display: none; } /* the tab row names the page; every row of height counts */
+    html.compact body.cut .hud-sub { max-width: calc((100vw - 300px) / var(--ts)); } /* keep clear of the hold-to-skip ring */
+    html.compact .hud-buttons { gap: 5px; margin-top: 8px; }
+    html.compact .hud-tabs { margin-bottom: 6px; }
+    .hud-panel { left: max(16px, 5vw, env(safe-area-inset-left)); }
+    .hud-plate { top: max(18px, env(safe-area-inset-top)); left: max(22px, env(safe-area-inset-left)); }
+    .hud-timer { top: max(14px, env(safe-area-inset-top)); right: max(18px, env(safe-area-inset-right)); }
     @media (prefers-reduced-motion: reduce) { .hud-roll > div { animation-duration: 60s; } .cut-bar { transition: none; } .hud-wm.live text, .isle, .stamp, .hud-res .new, .hud-slots .shard.on, .hud-seals .seal.fresh { animation: none !important; } }
   </style>
 </head>

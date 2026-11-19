@@ -1,0 +1,4824 @@
+{
+ "id": "l2",
+ "title": "Wind Totems",
+ "next": "l3",
+ "seed": 2207,
+ "spawn": {
+  "pos": [
+   0,
+   0,
+   -6
+  ],
+  "heading": 0.31
+ },
+ "goal": {
+  "kind": "circle",
+  "pos": [
+   10.59,
+   14.9,
+   252.2
+  ],
+  "r": 1.3
+ },
+ "killY": -14,
+ "mood": {
+  "sky": {
+   "top": "#ebe6ee",
+   "horizon": "#e4dee8",
+   "haze": "#d8ccd8",
+   "sunGlow": "#e9d8c4",
+   "sunDisc": "#f6efe2",
+   "cloudLit": "#eee6e6",
+   "cloudShade": "#cfc6d4"
+  },
+  "sun": [
+   [
+    -0.5,
+    0.1,
+    1
+   ],
+   [
+    -0.5,
+    0.16,
+    1
+   ]
+  ],
+  "fog": {
+   "color": "#e6dfe8",
+   "near": 30,
+   "far": [
+    230,
+    300
+   ]
+  },
+  "hemi": {
+   "sky": "#e2e3ee",
+   "ground": "#a19caf",
+   "i": 2.25
+  },
+  "light": {
+   "color": "#f2dcc6",
+   "i": 1.2,
+   "y": 4.5
+  },
+  "breeze": 0.12,
+  "breezeFree": 1,
+  "breezeAfter": "npc.kestrel.free"
+ },
+ "beacon": {
+  "pos": [
+   100.99,
+   105.5,
+   268
+  ]
+ },
+ "falls": [
+  {
+   "top": [
+    -16.04,
+    5.8,
+    104.09
+   ],
+   "pos": [
+    -17.43,
+    -2.7,
+    103.71
+   ],
+   "len": 25.8
+  },
+  {
+   "top": [
+    -1.85,
+    4.5,
+    53.44
+   ],
+   "pos": [
+    -3.08,
+    -4,
+    52.54
+   ],
+   "len": 21.7
+  },
+  {
+   "top": [
+    -2.26,
+    4.7,
+    69.14
+   ],
+   "pos": [
+    -3.9,
+    -3.8,
+    68.41
+   ],
+   "len": 22.47
+  }
+ ],
+ "sky": [
+  {
+   "tex": "assets/sky/castle2.png",
+   "pos": [
+    185.29,
+    46,
+    381.67
+   ],
+   "w": 180
+  },
+  {
+   "tex": "assets/sky/castle1.png",
+   "pos": [
+    -329.54,
+    33,
+    10.86
+   ],
+   "w": 157
+  },
+  {
+   "tex": "assets/sky/castle1.png",
+   "pos": [
+    195.29,
+    39,
+    -259.19
+   ],
+   "w": 165
+  }
+ ],
+ "props": [
+  {
+   "id": "totemQ",
+   "glb": "assets/props/wind_totem/wind_totem.glb",
+   "pos": [
+    6.29,
+    4.7,
+    89.02
+   ],
+   "rotY": -1.5708
+  },
+  {
+   "id": "seqA",
+   "glb": "assets/props/rune_stone/rune_stone.glb",
+   "pos": [
+    50.23,
+    19.2,
+    128.33
+   ],
+   "rotY": -1.5708
+  },
+  {
+   "id": "seqB",
+   "glb": "assets/props/rune_stone/rune_stone.glb",
+   "pos": [
+    27.32,
+    17.8,
+    133.44
+   ],
+   "rotY": 3.1416
+  },
+  {
+   "id": "totemW",
+   "glb": "assets/props/wind_totem/wind_totem.glb",
+   "pos": [
+    -26.57,
+    19.2,
+    221.92
+   ],
+   "rotY": 1.5708
+  },
+  {
+   "id": "runeN",
+   "glb": "assets/props/rune_stone/rune_stone.glb",
+   "pos": [
+    5.78,
+    22,
+    170.99
+   ],
+   "rotY": 2.23
+  },
+  {
+   "id": "song_name",
+   "glb": "assets/props/ruin_pillar/ruin_pillar.glb",
+   "pos": [
+    -12.34,
+    5.8,
+    106.83
+   ],
+   "rotY": 2.5307,
+   "scale": 1.9
+  },
+  {
+   "id": "song_anchor",
+   "glb": "assets/props/ruin_pillar/ruin_pillar.glb",
+   "pos": [
+    26.85,
+    19.6,
+    181
+   ],
+   "rotY": -2.5307,
+   "scale": 1.9
+  },
+  {
+   "id": "anchorA",
+   "glb": "assets/props/anchor_stake.glb",
+   "pos": [
+    6.09,
+    4.7,
+    85.42
+   ],
+   "rotY": -1.5708
+  },
+  {
+   "id": "anchorB",
+   "glb": "assets/props/anchor_stake.glb",
+   "pos": [
+    1.09,
+    4.7,
+    86.02
+   ],
+   "rotY": 1.5708
+  },
+  {
+   "id": "lockN",
+   "glb": "assets/props/rune_stone/rune_stone.glb",
+   "pos": [
+    2.4,
+    2.4,
+    -13.96
+   ],
+   "rotY": -0.5091
+  },
+  {
+   "id": "sigh_breath",
+   "glb": "assets/props/name_stone.glb",
+   "mesh": "name_b",
+   "pos": [
+    0,
+    0,
+    -25.36
+   ],
+   "rotY": 0,
+   "scale": 0.85
+  },
+  {
+   "id": "lockD",
+   "glb": "assets/props/rune_stone/rune_stone.glb",
+   "pos": [
+    -1.69,
+    22.8,
+    134.74
+   ],
+   "rotY": 1.1792
+  },
+  {
+   "id": "sc",
+   "glb": "assets/props/rune_stone/rune_stone.glb",
+   "pos": [
+    15.49,
+    20,
+    134.15
+   ],
+   "rotY": -2.1202
+  }
+ ],
+ "mechanisms": [
+  {
+   "id": "up",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     2.09,
+     0,
+     32.4
+    ],
+    "max": [
+     5.29,
+     5.3,
+     34.15
+    ]
+   },
+   "force": [
+    0,
+    40,
+    0
+   ]
+  },
+  {
+   "id": "side",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     5.52,
+     3,
+     54.96
+    ],
+    "max": [
+     17.76,
+     8,
+     59.96
+    ]
+   },
+   "force": [
+    4,
+    0,
+    0
+   ]
+  },
+  {
+   "id": "wallQ",
+   "kind": "breakable",
+   "node": "mech_wall_q",
+   "pos": [
+    3.65,
+    4.75,
+    79.71
+   ],
+   "size": [
+    2.2,
+    2.2,
+    0.5
+   ],
+   "rotY": 0
+  },
+  {
+   "id": "lane0",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     1.19,
+     2.7,
+     94.99
+    ],
+    "max": [
+     7.69,
+     7.7,
+     96.39
+    ]
+   },
+   "force": [
+    7.5,
+    0,
+    0
+   ]
+  },
+  {
+   "id": "lane1",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     1.19,
+     2.7,
+     97.12
+    ],
+    "max": [
+     7.69,
+     7.7,
+     98.52
+    ]
+   },
+   "force": [
+    7.5,
+    0,
+    0
+   ]
+  },
+  {
+   "id": "lane2",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     1.19,
+     2.7,
+     99.24
+    ],
+    "max": [
+     7.69,
+     7.7,
+     100.64
+    ]
+   },
+   "force": [
+    7.5,
+    0,
+    0
+   ]
+  },
+  {
+   "id": "song_name",
+   "kind": "switch",
+   "node": "song_name",
+   "pos": [
+    -12.34,
+    5.8,
+    106.83
+   ],
+   "r": 2.2,
+   "targets": [],
+   "once": true,
+   "gift": "name"
+  },
+  {
+   "id": "song_anchor",
+   "kind": "switch",
+   "node": "song_anchor",
+   "pos": [
+    26.85,
+    19.6,
+    181
+   ],
+   "r": 2.2,
+   "targets": [],
+   "once": true,
+   "gift": "anchor"
+  },
+  {
+   "id": "totemQ",
+   "kind": "switch",
+   "node": "totemQ",
+   "pos": [
+    6.29,
+    4.7,
+    89.02
+   ],
+   "r": 2.2,
+   "targets": [
+    "lane0",
+    "lane1",
+    "lane2"
+   ],
+   "toggle": "onoff",
+   "once": false,
+   "mark": "bird"
+  },
+  {
+   "id": "up_t1",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     2.09,
+     4.2,
+     109.54
+    ],
+    "max": [
+     5.29,
+     9.5,
+     111.29
+    ]
+   },
+   "force": [
+    0,
+    40,
+    0
+   ],
+   "cycle": [
+    3,
+    0.5,
+    1.5
+   ]
+  },
+  {
+   "id": "up_t2",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     3.92,
+     8.2,
+     114.82
+    ],
+    "max": [
+     5.67,
+     13.5,
+     118.02
+    ]
+   },
+   "force": [
+    0,
+    40,
+    0
+   ],
+   "cycle": [
+    3,
+    0.5,
+    1.5
+   ]
+  },
+  {
+   "id": "up_t3",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     8.99,
+     12.2,
+     116.41
+    ],
+    "max": [
+     12.19,
+     17.5,
+     118.16
+    ]
+   },
+   "force": [
+    0,
+    40,
+    0
+   ],
+   "cycle": [
+    3,
+    0.5,
+    1.5
+   ]
+  },
+  {
+   "id": "anchorA",
+   "kind": "switch",
+   "node": "anchorA",
+   "pos": [
+    6.09,
+    4.7,
+    85.42
+   ],
+   "r": 2,
+   "targets": [],
+   "once": true
+  },
+  {
+   "id": "anchorB",
+   "kind": "switch",
+   "node": "anchorB",
+   "pos": [
+    1.09,
+    4.7,
+    86.02
+   ],
+   "r": 2,
+   "targets": [],
+   "once": true
+  },
+  {
+   "id": "kestrelUp",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     5.99,
+     4.2,
+     87.02
+    ],
+    "max": [
+     7.19,
+     9.7,
+     88.22
+    ]
+   },
+   "force": [
+    0,
+    40,
+    0
+   ],
+   "active": false,
+   "after": "npc.kestrel.free"
+  },
+  {
+   "id": "seqA",
+   "kind": "switch",
+   "node": "seqA",
+   "pos": [
+    50.23,
+    19.2,
+    128.33
+   ],
+   "r": 3.2,
+   "targets": [],
+   "once": true,
+   "seq": "lift",
+   "order": 1,
+   "hidden": true,
+   "vein": [
+    [
+     10.59,
+     16.7,
+     129.52
+    ],
+    [
+     13.09,
+     16.7,
+     123.82
+    ],
+    [
+     21.11,
+     17.5,
+     126.45
+    ],
+    [
+     27.32,
+     17.8,
+     132.04
+    ],
+    [
+     33.01,
+     18.5,
+     127.26
+    ],
+    [
+     40.61,
+     18.7,
+     128.33
+    ],
+    [
+     49.03,
+     19.2,
+     128.33
+    ],
+    [
+     50.23,
+     19.2,
+     128.33
+    ]
+   ],
+   "mark": "eye"
+  },
+  {
+   "id": "seqB",
+   "kind": "switch",
+   "node": "seqB",
+   "pos": [
+    27.32,
+    17.8,
+    133.44
+   ],
+   "r": 3.2,
+   "targets": [
+    "lift"
+   ],
+   "once": true,
+   "seq": "lift",
+   "order": 2,
+   "hidden": true,
+   "vein": [
+    [
+     11.19,
+     16.7,
+     129.52
+    ],
+    [
+     13.59,
+     16.7,
+     124.42
+    ],
+    [
+     21.11,
+     17.5,
+     126.45
+    ],
+    [
+     26.92,
+     17.8,
+     132.04
+    ],
+    [
+     27.32,
+     17.8,
+     133.44
+    ]
+   ],
+   "mark": "eye"
+  },
+  {
+   "id": "lift",
+   "kind": "platform",
+   "node": "mech_lift",
+   "path": [
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     3.3,
+     0
+    ]
+   ],
+   "mode": "ride",
+   "period": 5,
+   "idle": true
+  },
+  {
+   "id": "shrine",
+   "kind": "switch",
+   "pos": [
+    4.68,
+    20.9,
+    140.97
+   ],
+   "r": 2.2,
+   "targets": [],
+   "once": true
+  },
+  {
+   "id": "gust",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     3.59,
+     14.5,
+     150.85
+    ],
+    "max": [
+     17.59,
+     23,
+     153.85
+    ]
+   },
+   "force": [
+    7.5,
+    0,
+    0
+   ]
+  },
+  {
+   "id": "gcrumble0",
+   "kind": "crumble",
+   "node": "mech_gcrumble_0",
+   "delay": 0.6,
+   "respawn": 3,
+   "group": "gcr"
+  },
+  {
+   "id": "gcrumble1",
+   "kind": "crumble",
+   "node": "mech_gcrumble_1",
+   "delay": 0.6,
+   "respawn": 3,
+   "group": "gcr"
+  },
+  {
+   "id": "gcrumble2",
+   "kind": "crumble",
+   "node": "mech_gcrumble_2",
+   "delay": 0.6,
+   "respawn": 3,
+   "group": "gcr"
+  },
+  {
+   "id": "runeN",
+   "kind": "switch",
+   "node": "runeN",
+   "pos": [
+    5.78,
+    22,
+    170.99
+   ],
+   "r": 2,
+   "targets": [],
+   "once": true,
+   "far": true
+  },
+  {
+   "id": "upV",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     8.79,
+     12.7,
+     200.66
+    ],
+    "max": [
+     12.39,
+     18.7,
+     205.46
+    ]
+   },
+   "force": [
+    0,
+    40,
+    0
+   ],
+   "cycle": [
+    3,
+    0.5,
+    1.5
+   ]
+  },
+  {
+   "id": "tailX",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     8.39,
+     15.2,
+     215.85
+    ],
+    "max": [
+     12.79,
+     20.2,
+     227.12
+    ]
+   },
+   "force": [
+    0,
+    0,
+    -4
+   ]
+  },
+  {
+   "id": "totemW",
+   "kind": "switch",
+   "node": "totemW",
+   "pos": [
+    -26.57,
+    19.2,
+    221.92
+   ],
+   "r": 2.2,
+   "targets": [
+    "tailX",
+    "upV"
+   ],
+   "toggle": "flip",
+   "once": false,
+   "hidden": true,
+   "vein": [
+    [
+     10.59,
+     16.7,
+     227.42
+    ],
+    [
+     10.59,
+     16.7,
+     217.85
+    ],
+    [
+     7.59,
+     16.7,
+     216.85
+    ],
+    [
+     1.01,
+     17.5,
+     219.6
+    ],
+    [
+     -4.44,
+     17.8,
+     225.24
+    ],
+    [
+     -9.99,
+     18.5,
+     220.58
+    ],
+    [
+     -17.6,
+     18.7,
+     221.92
+    ],
+    [
+     -25.37,
+     19.2,
+     221.92
+    ],
+    [
+     -26.57,
+     19.2,
+     221.92
+    ]
+   ],
+   "mark": "wave"
+  },
+  {
+   "id": "exitUp",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     18.06,
+     8.9,
+     251.37
+    ],
+    "max": [
+     21.06,
+     24.9,
+     254.37
+    ]
+   },
+   "force": [
+    0,
+    40,
+    0
+   ],
+   "active": false,
+   "after": "npc.kestrel.free"
+  },
+  {
+   "id": "lockN",
+   "kind": "switch",
+   "node": "lockN",
+   "pos": [
+    2.4,
+    2.4,
+    -13.96
+   ],
+   "r": 2,
+   "targets": [
+    "lockN_br"
+   ],
+   "once": true,
+   "far": true,
+   "lock": "name",
+   "mark": "spiral"
+  },
+  {
+   "id": "lockN_br",
+   "kind": "bridge",
+   "nodes": [
+    "mech_lockN_br_0",
+    "mech_lockN_br_1",
+    "mech_lockN_br_2",
+    "mech_lockN_br_3"
+   ],
+   "offset": [
+    0,
+    -7,
+    0
+   ],
+   "dur": 1,
+   "stagger": 0.25
+  },
+  {
+   "id": "sigh_breath",
+   "kind": "switch",
+   "node": "sigh_breath",
+   "pos": [
+    0,
+    0,
+    -25.36
+   ],
+   "r": 2,
+   "targets": [],
+   "once": true,
+   "request": "sigh"
+  },
+  {
+   "id": "lockD",
+   "kind": "switch",
+   "node": "lockD",
+   "pos": [
+    -1.69,
+    22.8,
+    134.74
+   ],
+   "r": 2,
+   "targets": [
+    "lockD_br"
+   ],
+   "once": true,
+   "far": true,
+   "dust": true,
+   "lock": "gust2",
+   "mark": "star"
+  },
+  {
+   "id": "lockD_br",
+   "kind": "bridge",
+   "nodes": [
+    "mech_lockD_br_0",
+    "mech_lockD_br_1",
+    "mech_lockD_br_2",
+    "mech_lockD_br_3"
+   ],
+   "offset": [
+    0,
+    -7,
+    0
+   ],
+   "dur": 1,
+   "stagger": 0.25
+  },
+  {
+   "id": "sc",
+   "kind": "switch",
+   "node": "sc",
+   "pos": [
+    15.49,
+    20,
+    134.15
+   ],
+   "r": 2,
+   "targets": [
+    "lift"
+   ],
+   "once": false,
+   "shortcut": true,
+   "after": "enemy.gdS.open",
+   "mark": "moon"
+  }
+ ],
+ "triggers": [
+  {
+   "id": "t_up",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      -2.31,
+      27.14
+     ],
+     [
+      9.69,
+      27.14
+     ],
+     [
+      9.69,
+      31.14
+     ],
+     [
+      -2.31,
+      31.14
+     ]
+    ]
+   },
+   "teaches": "updraft",
+   "ifFlag": null,
+   "once": true
+  },
+  {
+   "id": "t_lanes",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      -1.31,
+      72.6
+     ],
+     [
+      8.69,
+      72.6
+     ],
+     [
+      8.69,
+      76.6
+     ],
+     [
+      -1.31,
+      76.6
+     ]
+    ]
+   },
+   "teaches": "lanes",
+   "ifFlag": null,
+   "once": true
+  },
+  {
+   "id": "t_shrine",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      1.18,
+      137.47
+     ],
+     [
+      8.18,
+      137.47
+     ],
+     [
+      8.18,
+      144.47
+     ],
+     [
+      1.18,
+      144.47
+     ]
+    ]
+   },
+   "ifFlag": "switch.shrine",
+   "once": true,
+   "hint": {
+    "en": "Carved on the shrine: \"The wind remembers every name we gave it.\"",
+    "ru": "Вырезано на святилище: «Ветер помнит каждое имя, что мы ему дали»."
+   }
+  },
+  {
+   "id": "t_gust",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      5.59,
+      142.85
+     ],
+     [
+      15.59,
+      142.85
+     ],
+     [
+      15.59,
+      147.85
+     ],
+     [
+      5.59,
+      147.85
+     ]
+    ]
+   },
+   "teaches": "airdash2",
+   "ifFlag": null,
+   "once": true
+  },
+  {
+   "id": "t_anchor",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      7.59,
+      165.87
+     ],
+     [
+      13.59,
+      165.87
+     ],
+     [
+      13.59,
+      168.87
+     ],
+     [
+      7.59,
+      168.87
+     ]
+    ]
+   },
+   "ifFlag": "gift.anchor",
+   "once": true
+  },
+  {
+   "id": "t_upV",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      6.59,
+      196.96
+     ],
+     [
+      14.59,
+      196.96
+     ],
+     [
+      14.59,
+      200.96
+     ],
+     [
+      6.59,
+      200.96
+     ]
+    ]
+   },
+   "teaches": "updraftDash",
+   "ifFlag": null,
+   "once": true
+  },
+  {
+   "id": "t_lift",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      6.59,
+      119.82
+     ],
+     [
+      14.59,
+      119.82
+     ],
+     [
+      14.59,
+      124.82
+     ],
+     [
+      6.59,
+      124.82
+     ]
+    ]
+   },
+   "ifFlag": null,
+   "once": true
+  },
+  {
+   "id": "t_flip",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      6.59,
+      211.06
+     ],
+     [
+      14.59,
+      211.06
+     ],
+     [
+      14.59,
+      215.85
+     ],
+     [
+      6.59,
+      215.85
+     ]
+    ]
+   },
+   "ifFlag": null,
+   "once": true
+  },
+  {
+   "id": "t_tailX",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      6.59,
+      213.85
+     ],
+     [
+      14.59,
+      213.85
+     ],
+     [
+      14.59,
+      217.85
+     ],
+     [
+      6.59,
+      217.85
+     ]
+    ]
+   },
+   "teaches": "windRoute",
+   "ifFlag": null,
+   "once": true
+  },
+  {
+   "id": "t_tower",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      -1.31,
+      104.76
+     ],
+     [
+      8.69,
+      104.76
+     ],
+     [
+      8.69,
+      109.76
+     ],
+     [
+      -1.31,
+      109.76
+     ]
+    ]
+   },
+   "teaches": "cycle",
+   "ifFlag": null,
+   "once": true
+  },
+  {
+   "id": "t_sigh_tale",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      0.69,
+      105.76
+     ],
+     [
+      6.69,
+      105.76
+     ],
+     [
+      6.69,
+      111.76
+     ],
+     [
+      0.69,
+      111.76
+     ]
+    ]
+   },
+   "talk": "sigh_tale",
+   "ifFlag": "npc.sigh.free",
+   "once": true
+  },
+  {
+   "id": "t_kestrel_tale",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      7.59,
+      113.42
+     ],
+     [
+      13.59,
+      113.42
+     ],
+     [
+      13.59,
+      119.42
+     ],
+     [
+      7.59,
+      119.42
+     ]
+    ]
+   },
+   "talk": "kestrel_tale",
+   "ifFlag": "npc.kestrel.free",
+   "once": true
+  },
+  {
+   "id": "t_sigh_knew",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      7.59,
+      120.82
+     ],
+     [
+      13.59,
+      120.82
+     ],
+     [
+      13.59,
+      126.82
+     ],
+     [
+      7.59,
+      126.82
+     ]
+    ]
+   },
+   "talk": "sigh_knew",
+   "ifFlag": "npc.sigh.free",
+   "once": true
+  },
+  {
+   "id": "t_sigh_lost",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      7.59,
+      136.8
+     ],
+     [
+      13.59,
+      136.8
+     ],
+     [
+      13.59,
+      142.8
+     ],
+     [
+      7.59,
+      142.8
+     ]
+    ]
+   },
+   "talk": "sigh_lost",
+   "ifFlag": "npc.sigh.free",
+   "once": true,
+   "ifNot": "world.sigh.home"
+  }
+ ],
+ "checkpoints": [
+  {
+   "id": "c_U",
+   "pos": [
+    3.69,
+    0.5,
+    31.14
+   ],
+   "r": 2.2,
+   "heading": 0
+  },
+  {
+   "id": "c_L",
+   "pos": [
+    3.69,
+    4.5,
+    40.64
+   ],
+   "r": 2.2,
+   "heading": 0,
+   "wind": true
+  },
+  {
+   "id": "c_N",
+   "pos": [
+    3.69,
+    4.7,
+    71.79
+   ],
+   "r": 2.2,
+   "heading": 0,
+   "wind": true
+  },
+  {
+   "id": "c_Q",
+   "pos": [
+    2.49,
+    4.7,
+    87.62
+   ],
+   "r": 2.2,
+   "heading": 0.2
+  },
+  {
+   "id": "c_NS",
+   "pos": [
+    -10.39,
+    5.8,
+    104.04
+   ],
+   "r": 2.2,
+   "heading": -0.61,
+   "wind": true
+  },
+  {
+   "id": "c_AS",
+   "pos": [
+    24.9,
+    19.6,
+    178.22
+   ],
+   "r": 2.2,
+   "heading": 0.61,
+   "wind": true
+  },
+  {
+   "id": "c_P",
+   "pos": [
+    3.69,
+    4.7,
+    108.76
+   ],
+   "r": 2.2,
+   "heading": 0
+  },
+  {
+   "id": "c_t2",
+   "pos": [
+    10.59,
+    12.7,
+    116.42
+   ],
+   "r": 2.2,
+   "heading": 0
+  },
+  {
+   "id": "c_t3",
+   "pos": [
+    10.59,
+    16.7,
+    123.32
+   ],
+   "r": 2.2,
+   "heading": 0
+  },
+  {
+   "id": "c_lift",
+   "pos": [
+    9.59,
+    16.7,
+    127.67
+   ],
+   "r": 2.2,
+   "heading": 0.34
+  },
+  {
+   "id": "c_S",
+   "pos": [
+    10.59,
+    20,
+    144.85
+   ],
+   "r": 2.2,
+   "heading": 0,
+   "wind": true
+  },
+  {
+   "id": "c_G1",
+   "pos": [
+    10.59,
+    18.5,
+    162.66
+   ],
+   "r": 2.2,
+   "heading": 0,
+   "wind": true
+  },
+  {
+   "id": "c_G2",
+   "pos": [
+    10.59,
+    16.7,
+    195.72
+   ],
+   "r": 2.2,
+   "heading": 0,
+   "wind": true
+  },
+  {
+   "id": "c_W",
+   "pos": [
+    10.59,
+    16.7,
+    216.35
+   ],
+   "r": 2.2,
+   "heading": 0
+  },
+  {
+   "id": "c_hF",
+   "pos": [
+    -25.37,
+    19.2,
+    221.92
+   ],
+   "r": 2.2,
+   "heading": 1.57
+  }
+ ],
+ "route": [
+  [
+   0,
+   0,
+   -6,
+   0
+  ],
+  [
+   -6,
+   0,
+   -4,
+   0
+  ],
+  [
+   -6.5,
+   0,
+   4,
+   0
+  ],
+  [
+   -1,
+   0,
+   7,
+   0
+  ],
+  [
+   6.37,
+   0.3,
+   13.66,
+   0
+  ],
+  [
+   3.69,
+   0.5,
+   21.04,
+   0
+  ],
+  [
+   1.69,
+   0.5,
+   30.14,
+   0
+  ],
+  [
+   3.69,
+   0.5,
+   31.2,
+   0
+  ],
+  [
+   3.69,
+   0.5,
+   33.6,
+   0
+  ],
+  [
+   3.69,
+   4.5,
+   36,
+   0
+  ],
+  [
+   2.49,
+   4.5,
+   40.64,
+   0
+  ],
+  [
+   3.69,
+   4.5,
+   45.59,
+   0
+  ],
+  [
+   3.69,
+   4.5,
+   53.19,
+   0
+  ],
+  [
+   2.69,
+   4.5,
+   58.46,
+   0
+  ],
+  [
+   3.69,
+   4.7,
+   67.49,
+   0
+  ],
+  [
+   3.69,
+   4.7,
+   75.1,
+   0
+  ],
+  [
+   3.69,
+   4.7,
+   77.4,
+   0
+  ],
+  [
+   3.69,
+   4.7,
+   80.91,
+   0
+  ],
+  [
+   3.69,
+   4.7,
+   84.8,
+   0
+  ],
+  [
+   2.49,
+   4.7,
+   86.02,
+   0
+  ],
+  [
+   4.69,
+   4.7,
+   85.42,
+   0
+  ],
+  [
+   4.49,
+   4.7,
+   88.02,
+   0
+  ],
+  [
+   5.09,
+   4.7,
+   89.02,
+   0
+  ],
+  [
+   0.63,
+   4.7,
+   91.18,
+   0
+  ],
+  [
+   -4.26,
+   5.5,
+   95.29,
+   0
+  ],
+  [
+   -9.6,
+   5.8,
+   102.91,
+   0
+  ],
+  [
+   -11.14,
+   5.8,
+   105.11,
+   0
+  ],
+  [
+   -9.6,
+   5.8,
+   102.91,
+   0
+  ],
+  [
+   -4.26,
+   5.5,
+   95.29,
+   0
+  ],
+  [
+   0.63,
+   4.7,
+   91.18,
+   0
+  ],
+  [
+   3.69,
+   4.7,
+   92.37,
+   0
+  ],
+  [
+   3.62,
+   4.72,
+   93.96,
+   0
+  ],
+  [
+   3.63,
+   4.75,
+   95.89,
+   0
+  ],
+  [
+   3.68,
+   4.73,
+   97.82,
+   0
+  ],
+  [
+   3.74,
+   4.75,
+   99.75,
+   0
+  ],
+  [
+   3.7,
+   4.72,
+   101.68,
+   0
+  ],
+  [
+   3.69,
+   4.7,
+   103.57,
+   0
+  ],
+  [
+   3.69,
+   4.7,
+   108.34,
+   0
+  ],
+  [
+   3.69,
+   4.7,
+   110.44,
+   0
+  ],
+  [
+   3.69,
+   8.7,
+   113.14,
+   0
+  ],
+  [
+   3.69,
+   8.7,
+   116.42,
+   0
+  ],
+  [
+   2.72,
+   8.7,
+   116.42,
+   0
+  ],
+  [
+   4.82,
+   8.7,
+   116.42,
+   0
+  ],
+  [
+   7.52,
+   12.7,
+   116.42,
+   0
+  ],
+  [
+   10.59,
+   12.7,
+   116.42,
+   0
+  ],
+  [
+   10.59,
+   12.7,
+   115.21,
+   0
+  ],
+  [
+   10.59,
+   12.7,
+   117.31,
+   0
+  ],
+  [
+   10.59,
+   16.7,
+   120.01,
+   0
+  ],
+  [
+   10.59,
+   16.7,
+   123.82,
+   0
+  ],
+  [
+   13.09,
+   16.7,
+   123.82,
+   0
+  ],
+  [
+   21.11,
+   17.5,
+   126.45,
+   0
+  ],
+  [
+   27.32,
+   17.8,
+   132.04,
+   0
+  ],
+  [
+   33.01,
+   18.5,
+   127.26,
+   0
+  ],
+  [
+   40.61,
+   18.7,
+   128.33,
+   0
+  ],
+  [
+   48.73,
+   19.2,
+   128.33,
+   0
+  ],
+  [
+   40.61,
+   18.7,
+   128.33,
+   0
+  ],
+  [
+   33.01,
+   18.5,
+   127.26,
+   0
+  ],
+  [
+   27.32,
+   17.8,
+   131.94,
+   0
+  ],
+  [
+   21.11,
+   17.5,
+   126.45,
+   0
+  ],
+  [
+   12.59,
+   16.7,
+   124.82,
+   0
+  ],
+  [
+   9.59,
+   16.7,
+   127.67,
+   0
+  ],
+  [
+   10.59,
+   16.7,
+   130.52,
+   0
+  ],
+  [
+   10.59,
+   20,
+   133.17,
+   0
+  ],
+  [
+   9.09,
+   20,
+   139.8,
+   0
+  ],
+  [
+   10.59,
+   20,
+   146.35,
+   0
+  ],
+  [
+   10.59,
+   18.5,
+   158.35,
+   0
+  ],
+  [
+   10.59,
+   18.5,
+   162.66,
+   0
+  ],
+  [
+   14.02,
+   18.5,
+   165.54,
+   0
+  ],
+  [
+   18.88,
+   19.3,
+   169.62,
+   0
+  ],
+  [
+   24.17,
+   19.6,
+   177.18,
+   0
+  ],
+  [
+   25.64,
+   19.6,
+   179.28,
+   0
+  ],
+  [
+   24.17,
+   19.6,
+   177.18,
+   0
+  ],
+  [
+   18.88,
+   19.3,
+   169.62,
+   0
+  ],
+  [
+   14.02,
+   18.5,
+   165.54,
+   0
+  ],
+  [
+   10.59,
+   18.5,
+   167.67,
+   0
+  ],
+  [
+   10.56,
+   18.53,
+   171.97,
+   0
+  ],
+  [
+   10.66,
+   18.56,
+   176.57,
+   0
+  ],
+  [
+   10.6,
+   18.52,
+   181.17,
+   0
+  ],
+  [
+   10.59,
+   16.7,
+   192.17,
+   0
+  ],
+  [
+   10.59,
+   16.7,
+   195.72,
+   0
+  ],
+  [
+   10.59,
+   16.7,
+   199.56,
+   0
+  ],
+  [
+   10.59,
+   16.7,
+   213.56,
+   0
+  ],
+  [
+   8.09,
+   16.7,
+   216.85,
+   0
+  ],
+  [
+   1.01,
+   17.5,
+   219.6,
+   0
+  ],
+  [
+   -4.44,
+   17.8,
+   225.24,
+   0
+  ],
+  [
+   -9.99,
+   18.5,
+   220.58,
+   0
+  ],
+  [
+   -17.6,
+   18.7,
+   221.92,
+   0
+  ],
+  [
+   -25.07,
+   19.2,
+   221.92,
+   0
+  ],
+  [
+   -17.6,
+   18.7,
+   221.92,
+   0
+  ],
+  [
+   -9.99,
+   18.5,
+   220.58,
+   0
+  ],
+  [
+   -4.44,
+   17.8,
+   225.24,
+   0
+  ],
+  [
+   1.01,
+   17.5,
+   219.6,
+   0
+  ],
+  [
+   10.59,
+   16.7,
+   216.85,
+   0
+  ],
+  [
+   10.59,
+   16.7,
+   227.82,
+   0
+  ],
+  [
+   10.59,
+   16.7,
+   231.32,
+   0
+  ],
+  [
+   10.59,
+   16.7,
+   234.79,
+   0
+  ],
+  [
+   10.59,
+   14.9,
+   245.89,
+   0
+  ],
+  [
+   10.59,
+   14.9,
+   252.2,
+   0
+  ]
+ ],
+ "enemies": [
+  {
+   "id": "sqQ",
+   "kind": "squall",
+   "pos": [
+    4.19,
+    4.7,
+    95.69
+   ],
+   "r": 4.5,
+   "motif": "SL",
+   "demo": {
+    "flag": "gift.name",
+    "song": "name",
+    "r": 6
+   }
+  },
+  {
+   "id": "sqP",
+   "kind": "squall",
+   "pos": [
+    5.69,
+    4.7,
+    104.07
+   ],
+   "r": 4.5,
+   "motif": "LS"
+  },
+  {
+   "id": "plP",
+   "kind": "squall",
+   "variant": "pull",
+   "pos": [
+    1.19,
+    4.7,
+    109.76
+   ],
+   "aggro": 4.5,
+   "motif": "SLS"
+  },
+  {
+   "id": "wdS",
+   "kind": "warden",
+   "pos": [
+    10.59,
+    20,
+    140.8
+   ],
+   "path": [
+    [
+     7.59,
+     140.8
+    ],
+    [
+     13.59,
+     140.8
+    ]
+   ],
+   "motif": "SLS"
+  },
+  {
+   "id": "gdS",
+   "kind": "warden",
+   "guard": "sc",
+   "pos": [
+    15.69,
+    20,
+    135.85
+   ],
+   "path": [
+    [
+     15.69,
+     135.85
+    ],
+    [
+     15.69,
+     135.85
+    ]
+   ],
+   "motif": "LSS",
+   "ties": [
+    [
+     15.49,
+     20.9,
+     134.15
+    ]
+   ]
+  }
+ ],
+ "actions": [
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    0,
+    0
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    0,
+    -9.06
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    0,
+    -9.06
+   ],
+   "r": 0.6,
+   "do": "song",
+   "song": "name",
+   "face": [
+    2.4,
+    -13.96
+   ],
+   "until": "switch.lockN"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    0,
+    -9.06
+   ],
+   "r": 0.8,
+   "do": "wait",
+   "until": "raised.lockN_br"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    0,
+    -9.36
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    0,
+    -20.56
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    0,
+    -23.26
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    0,
+    -23.26
+   ],
+   "r": 0.4,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    0,
+    -24.41
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "sigh_breath",
+   "until": "switch.sigh_breath"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    0,
+    -20.56
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    0,
+    -9.36
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    0,
+    0
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "at": [
+    -15,
+    -6
+   ],
+   "r": 1,
+   "do": "go",
+   "drop": true,
+   "profiles": [
+    "worst"
+   ]
+  },
+  {
+   "at": [
+    7.68,
+    0
+   ],
+   "r": 1,
+   "do": "go",
+   "home": 30,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    7.68,
+    0
+   ],
+   "r": 1.2,
+   "do": "airstrike",
+   "face": [
+    22.92,
+    0
+   ],
+   "home": 30,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    10.48,
+    0
+   ],
+   "r": 1.2,
+   "do": "pogo",
+   "aim": true,
+   "to": [
+    22.92,
+    0
+   ],
+   "home": 30,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    20.54,
+    -6.52
+   ],
+   "r": 0.8,
+   "do": "go",
+   "home": 30,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    14.12,
+    -4.48
+   ],
+   "r": 0.8,
+   "do": "go",
+   "home": 30,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    8,
+    -3
+   ],
+   "r": 0.8,
+   "do": "go",
+   "home": 30,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    -6,
+    -4
+   ],
+   "r": 0.8,
+   "do": "song",
+   "song": "gust",
+   "face": [
+    -12,
+    -4
+   ],
+   "profiles": [
+    "worst"
+   ]
+  },
+  {
+   "at": [
+    3.6854163129095863,
+    46.09
+   ],
+   "r": 0.8,
+   "do": "dash",
+   "air": true
+  },
+  {
+   "at": [
+    5.19,
+    53.19
+   ],
+   "y": 4.5,
+   "r": 0.5,
+   "do": "wait",
+   "until": "echo.echo_dash",
+   "home": 3
+  },
+  {
+   "at": [
+    4.69,
+    57.46
+   ],
+   "r": 0.8,
+   "do": "go",
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    18.76,
+    57.46
+   ],
+   "r": 1,
+   "do": "go",
+   "leap": true,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    12.1,
+    63.78
+   ],
+   "r": 1,
+   "do": "go",
+   "leap": false,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    3.69,
+    71.79
+   ],
+   "r": 1,
+   "do": "go",
+   "leap": false,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    3.6854163129095863,
+    78.11
+   ],
+   "r": 0.6,
+   "do": "dash"
+  },
+  {
+   "at": [
+    2.49,
+    86.02
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "anchorB",
+   "until": "switch.anchorB"
+  },
+  {
+   "at": [
+    4.69,
+    85.42
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "anchorA",
+   "until": "switch.anchorA"
+  },
+  {
+   "at": [
+    5.09,
+    89.02
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "totemQ",
+   "until": "switch.totemQ"
+  },
+  {
+   "at": [
+    -5.47,
+    97.02
+   ],
+   "r": 1.2,
+   "do": "dash",
+   "air": true
+  },
+  {
+   "at": [
+    -11.14,
+    105.11
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "song_name",
+   "until": "switch.song_name"
+  },
+  {
+   "at": [
+    -9.2,
+    102.34
+   ],
+   "r": 1.2,
+   "do": "dash",
+   "air": true
+  },
+  {
+   "at": [
+    1.69,
+    90.12
+   ],
+   "y": 4.7,
+   "r": 0.5,
+   "do": "wait",
+   "until": "echo.echo_wall",
+   "home": 4
+  },
+  {
+   "at": [
+    3.69,
+    92.37
+   ],
+   "y": 4.7,
+   "r": 1,
+   "do": "fight",
+   "enemy": "sqQ",
+   "profiles": [
+    "mid",
+    "best"
+   ]
+  },
+  {
+   "at": [
+    3.69,
+    92.37
+   ],
+   "y": 4.7,
+   "r": 1,
+   "do": "fight",
+   "enemy": "sqQ",
+   "shatter": true,
+   "profiles": [
+    "worst"
+   ]
+  },
+  {
+   "at": [
+    3.69,
+    103.57
+   ],
+   "y": 4.7,
+   "r": 1.2,
+   "do": "fight",
+   "enemy": "sqP",
+   "profiles": [
+    "mid",
+    "best"
+   ]
+  },
+  {
+   "at": [
+    3.69,
+    103.57
+   ],
+   "y": 4.7,
+   "r": 1.2,
+   "do": "fight",
+   "enemy": "sqP",
+   "shatter": true,
+   "profiles": [
+    "worst"
+   ]
+  },
+  {
+   "at": [
+    3.69,
+    108.26
+   ],
+   "y": 4.7,
+   "r": 5,
+   "do": "fight",
+   "enemy": "plP"
+  },
+  {
+   "at": [
+    10.59,
+    116.42
+   ],
+   "y": 12.7,
+   "r": 1.5,
+   "do": "go",
+   "home": 4
+  },
+  {
+   "at": [
+    7.2,
+    111.59
+   ],
+   "y": 4.7,
+   "r": 1.5,
+   "do": "go",
+   "drop": true
+  },
+  {
+   "at": [
+    10.59,
+    116.42
+   ],
+   "y": 12.7,
+   "r": 1.5,
+   "do": "go",
+   "home": 4
+  },
+  {
+   "at": [
+    27.32,
+    131.94
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "seqB",
+   "profiles": [
+    "worst"
+   ]
+  },
+  {
+   "at": [
+    48.73,
+    128.33
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "seqA",
+   "until": "switch.seqA"
+  },
+  {
+   "at": [
+    27.32,
+    131.94
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "seqB",
+   "until": "switch.seqB"
+  },
+  {
+   "at": [
+    9.59,
+    127.67
+   ],
+   "y": 16.7,
+   "r": 0.6,
+   "do": "wait",
+   "until": "bottom.lift"
+  },
+  {
+   "at": [
+    10.59,
+    130.52
+   ],
+   "r": 0.6,
+   "do": "wait",
+   "until": "top.lift",
+   "ride": true,
+   "home": 4
+  },
+  {
+   "at": [
+    10.59,
+    138.3
+   ],
+   "y": 20,
+   "r": 2,
+   "do": "fight",
+   "enemy": "wdS"
+  },
+  {
+   "at": [
+    11.54,
+    144.85
+   ],
+   "r": 0.6,
+   "do": "wait",
+   "until": "breath",
+   "home": 9
+  },
+  {
+   "at": [
+    12.89,
+    135.55
+   ],
+   "y": 20,
+   "r": 4.6,
+   "home": 12,
+   "do": "fight",
+   "enemy": "gdS"
+  },
+  {
+   "at": [
+    14.29,
+    134.55
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "sc",
+   "until": "switch.sc",
+   "home": 9
+  },
+  {
+   "at": [
+    5.88,
+    140.97
+   ],
+   "y": 20,
+   "r": 0.5,
+   "do": "wait",
+   "until": "echo.echo_shrine",
+   "home": 6.5
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    10.59,
+    139.8
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    4.95,
+    135.59
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    3.54,
+    136.89
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    3.54,
+    136.89
+   ],
+   "r": 0.6,
+   "do": "song",
+   "song": "gust",
+   "face": [
+    -1.69,
+    134.74
+   ]
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    3.54,
+    136.89
+   ],
+   "r": 0.6,
+   "do": "song",
+   "song": "name",
+   "face": [
+    -1.69,
+    134.74
+   ],
+   "until": "switch.lockD"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    3.54,
+    136.89
+   ],
+   "r": 0.8,
+   "do": "wait",
+   "until": "raised.lockD_br"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    3.58,
+    136.91
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    -6.77,
+    132.64
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    -9.61,
+    131.46
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    -10.83,
+    131
+   ],
+   "r": 0.4,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    -9.11,
+    130.26
+   ],
+   "r": 0.4,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    -8.42,
+    131.99
+   ],
+   "r": 0.4,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    -6.77,
+    132.64
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    3.58,
+    136.91
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    10.59,
+    139.8
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "at": [
+    10.585416312909587,
+    147.25
+   ],
+   "r": 0.8,
+   "do": "dash",
+   "air": 2
+  },
+  {
+   "at": [
+    20.04,
+    171.28
+   ],
+   "r": 1.2,
+   "do": "dash",
+   "air": true
+  },
+  {
+   "at": [
+    25.64,
+    179.28
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "song_anchor",
+   "until": "switch.song_anchor"
+  },
+  {
+   "at": [
+    23.77,
+    176.6
+   ],
+   "r": 1.2,
+   "do": "dash",
+   "air": true
+  },
+  {
+   "at": [
+    10.09,
+    167.67
+   ],
+   "y": 18.5,
+   "r": 0.6,
+   "do": "song",
+   "song": "anchor",
+   "face": [
+    10.66,
+    176.57
+   ],
+   "profiles": [
+    "mid",
+    "best"
+   ]
+  },
+  {
+   "at": [
+    10.09,
+    167.67
+   ],
+   "y": 18.5,
+   "r": 0.6,
+   "do": "song",
+   "song": "name",
+   "face": [
+    5.78,
+    170.99
+   ],
+   "profiles": [
+    "mid",
+    "best"
+   ]
+  },
+  {
+   "at": [
+    10.6,
+    181.17
+   ],
+   "r": 1.4,
+   "do": "dash",
+   "air": 2
+  },
+  {
+   "at": [
+    10.585416312909587,
+    199.56
+   ],
+   "y": 16.7,
+   "r": 0.5,
+   "do": "wait",
+   "wind": "upV",
+   "lead": 0.3
+  },
+  {
+   "at": [
+    10.585416312909587,
+    203.06
+   ],
+   "r": 6,
+   "do": "dash",
+   "air": 2,
+   "minY": 17.2
+  },
+  {
+   "at": [
+    17.59,
+    216.85
+   ],
+   "r": 1,
+   "do": "go",
+   "drop": true,
+   "profiles": [
+    "worst"
+   ]
+  },
+  {
+   "at": [
+    -25.07,
+    221.92
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "totemW",
+   "until": "switch.totemW"
+  },
+  {
+   "at": [
+    10.585416312909587,
+    235.09
+   ],
+   "r": 0.8,
+   "do": "dash",
+   "air": 2
+  }
+ ],
+ "echoSlots": [
+  {
+   "id": "echo_branch",
+   "pos": [
+    18.76,
+    4.5,
+    57.46
+   ],
+   "note": "branch: side tailwind from M, two hops back to N"
+  },
+  {
+   "id": "echo_wall",
+   "pos": [
+    1.69,
+    4.7,
+    90.12
+   ],
+   "note": "behind the cracked wall, by the lane totem"
+  },
+  {
+   "id": "echo_dash",
+   "pos": [
+    5.19,
+    4.5,
+    53.19
+   ],
+   "note": "landing of the L -> M air dash"
+  },
+  {
+   "id": "echo_shrine",
+   "pos": [
+    5.88,
+    20,
+    140.97
+   ],
+   "note": "by the summit shrine"
+  },
+  {
+   "id": "tale4",
+   "pos": [
+    0,
+    0,
+    -23.26
+   ],
+   "relic": "tale.4",
+   "note": "R6 lock reward"
+  },
+  {
+   "id": "echo_dust",
+   "pos": [
+    -10.83,
+    20,
+    131
+   ],
+   "note": "R6 lock reward"
+  },
+  {
+   "id": "tale3",
+   "pos": [
+    -9.11,
+    20,
+    130.26
+   ],
+   "relic": "tale.3",
+   "note": "R6 lock reward"
+  },
+  {
+   "id": "thread_l2",
+   "pos": [
+    -8.42,
+    20,
+    131.99
+   ],
+   "relic": "thread.l2",
+   "note": "R6 lock reward"
+  }
+ ],
+ "startGifts": [
+  "dash",
+  "gust"
+ ],
+ "gifts": [
+  {
+   "id": "airdash",
+   "at": [
+    4.69,
+    4.7,
+    85.42
+   ],
+   "npc": "kestrel"
+  },
+  {
+   "id": "windbreath",
+   "at": [
+    5.09,
+    4.7,
+    89.02
+   ],
+   "npc": "sigh"
+  },
+  {
+   "id": "name",
+   "at": [
+    -11.14,
+    5.8,
+    105.11
+   ],
+   "shrine": "song_name",
+   "via": [
+    "n1",
+    "NS"
+   ],
+   "off": 16.1
+  },
+  {
+   "id": "anchor",
+   "at": [
+    25.64,
+    19.6,
+    179.28
+   ],
+   "shrine": "song_anchor",
+   "via": [
+    "a1",
+    "AS"
+   ],
+   "off": 16.3
+  }
+ ],
+ "npcSlots": [
+  {
+   "id": "kestrel",
+   "pos": [
+    6.59,
+    6.3,
+    86.42
+   ],
+   "note": "kestrel tethered to two anchor stones behind the cracked wall (route: N -> wall -> Q)"
+  }
+ ],
+ "npcs": [
+  {
+   "id": "sigh",
+   "kind": "wisp",
+   "name": {
+    "en": "Sigh",
+    "ru": "Вздох"
+   },
+   "voice": "wisp",
+   "pos": [
+    6.29,
+    6.6,
+    89.02
+   ],
+   "switches": [
+    "totemQ"
+   ],
+   "show": "npc.sigh.free",
+   "found": "sigh_found",
+   "talk": [
+    {
+     "id": "sigh_free",
+     "on": "npc.sigh.1",
+     "set": [
+      "npc.sigh.free",
+      "gift.windbreath"
+     ],
+     "lines": [
+      {
+       "en": "Ah... air! Take my breath: winds and runes will fill you.",
+       "ru": "Ах... воздух! Возьми моё дыхание: ветра и руны наполнят тебя.",
+       "gift": true
+      },
+      {
+       "en": "Fly from wind to wind now. I will not hold you.",
+       "ru": "Лети теперь от ветра к ветру. Я тебя не держу."
+      }
+     ]
+    },
+    {
+     "id": "sigh_tale",
+     "lines": [
+      {
+       "en": "The Keepers bound me in that totem to turn the winds. Follow me: I show what the path does not.",
+       "ru": "Хранители заперли меня в тотеме, чтобы я поворачивал ветра. Следуй за мной: я покажу то, чего не покажет тропа."
+      }
+     ]
+    },
+    {
+     "id": "sigh_knew",
+     "lines": [
+      {
+       "en": "You sang it as if you knew me. Maybe you did, once.",
+       "ru": "Ты спел так, будто знал меня. Может, когда-то и знал."
+      }
+     ]
+    },
+    {
+     "id": "sigh_found",
+     "once": false,
+     "lines": [
+      {
+       "en": "Hee! You found what they hid. Remembering is waking, even for wind.",
+       "ru": "Хи! Ты нашёл то, что они спрятали. Вспомнить значит проснуться, даже ветру."
+      }
+     ]
+    },
+    {
+     "id": "sigh_lost",
+     "lines": [
+      {
+       "en": "One of my breaths is still caught... in a stone past the cliff where you woke. Sing it loose, some day?",
+       "ru": "Один мой вздох всё ещё в плену... в камне за обрывом, где ты проснулся. Освободишь его когда-нибудь?"
+      }
+     ]
+    },
+    {
+     "id": "sigh_home",
+     "on": "switch.sigh_breath",
+     "lines": [
+      {
+       "en": "Hee... it found me. Now my Name carries further: farther runes will hear you.",
+       "ru": "Хи... он нашёл меня. Теперь моё Имя летит дальше: тебя услышат и дальние руны."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "kestrel",
+   "kind": "kestrel",
+   "name": {
+    "en": "Tied Kestrel",
+    "ru": "Привязанная Пустельга"
+   },
+   "voice": "kestrel",
+   "pos": [
+    6.59,
+    6.3,
+    86.42
+   ],
+   "rotY": -1.2,
+   "switches": [
+    "anchorA",
+    "anchorB"
+   ],
+   "free": "npc.kestrel.free",
+   "lure": true,
+   "bark": {
+    "talk": "kestrel_call",
+    "r": 8,
+    "until": "npc.kestrel.free",
+    "every": 15
+   },
+   "rise": [
+    6.59,
+    4.7,
+    87.62
+   ],
+   "talk": [
+    {
+     "id": "kestrel_call",
+     "once": false,
+     "lines": [
+      {
+       "en": "Kree! Two cords, two stones... sing to the stones, wanderer!",
+       "ru": "Кри! Два шнура, два камня... спой камням, странник!"
+      }
+     ]
+    },
+    {
+     "id": "kestrel_1",
+     "on": "npc.kestrel.1",
+     "lines": [
+      {
+       "en": "Kree! One! The other one, quick!",
+       "ru": "Кри! Один! Теперь второй, скорее!"
+      }
+     ]
+    },
+    {
+     "id": "kestrel_cut",
+     "on": "npc.kestrel.2",
+     "set": [
+      "npc.kestrel.free",
+      "gift.airdash"
+     ],
+     "lines": [
+      {
+       "en": "Kree! Free! Take my wings: push off twice in the air.",
+       "ru": "Кри! Свобода! Прими крылья: в воздухе оттолкнись дважды.",
+       "gift": true
+      },
+      {
+       "en": "Kree! Up, up, as high as the wind goes!",
+       "ru": "Кри! Вверх, вверх, до самого ветра!"
+      }
+     ]
+    },
+    {
+     "id": "kestrel_tale",
+     "lines": [
+      {
+       "en": "Kree... Orren's knots. He tied everything he loved so it could not leave.",
+       "ru": "Кри... Узлы Оррена. Он привязывал всё, что любил, чтобы оно не ушло."
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "shots": [
+  {
+   "name": "vista",
+   "pos": [
+    -18.31,
+    20.7,
+    63.79
+   ],
+   "look": [
+    3.69,
+    10.7,
+    108.76
+   ]
+  },
+  {
+   "name": "shrine_name",
+   "pos": [
+    -10.39,
+    8.4,
+    104.04
+   ],
+   "look": [
+    -12.34,
+    8,
+    106.83
+   ]
+  },
+  {
+   "name": "shrine_name_sung",
+   "pos": [
+    -10.39,
+    8.4,
+    104.04
+   ],
+   "look": [
+    -12.34,
+    8,
+    106.83
+   ],
+   "fire": [
+    "song_name"
+   ]
+  },
+  {
+   "name": "shrine_anchor",
+   "pos": [
+    24.9,
+    22.2,
+    178.22
+   ],
+   "look": [
+    26.85,
+    21.8,
+    181
+   ]
+  },
+  {
+   "name": "shrine_anchor_sung",
+   "pos": [
+    24.9,
+    22.2,
+    178.22
+   ],
+   "look": [
+    26.85,
+    21.8,
+    181
+   ],
+   "fire": [
+    "song_anchor"
+   ]
+  },
+  {
+   "name": "updraft",
+   "pos": [
+    12.69,
+    6,
+    26.2
+   ],
+   "look": [
+    3.69,
+    2.7,
+    33.7
+   ]
+  },
+  {
+   "name": "wall",
+   "pos": [
+    6.69,
+    6.7,
+    75.71
+   ],
+   "look": [
+    3.69,
+    5.7,
+    79.71
+   ]
+  },
+  {
+   "name": "lanes",
+   "pos": [
+    -3.31,
+    8.7,
+    90.57
+   ],
+   "look": [
+    4.69,
+    4.7,
+    97.82
+   ]
+  },
+  {
+   "name": "tower",
+   "pos": [
+    -12.31,
+    13.7,
+    116.42
+   ],
+   "look": [
+    10.59,
+    12.7,
+    116.42
+   ]
+  },
+  {
+   "name": "fork",
+   "pos": [
+    11.22,
+    26.5,
+    58.46
+   ],
+   "look": [
+    11.22,
+    4.5,
+    58.96
+   ]
+  },
+  {
+   "name": "gust",
+   "pos": [
+    -1.41,
+    25,
+    150.35
+   ],
+   "look": [
+    10.59,
+    18.5,
+    153.35
+   ]
+  },
+  {
+   "name": "crumble",
+   "pos": [
+    19.59,
+    22.5,
+    171.87
+   ],
+   "look": [
+    10.59,
+    18.5,
+    175.87
+   ]
+  },
+  {
+   "name": "updraft2",
+   "pos": [
+    -0.41,
+    20.7,
+    205.46
+   ],
+   "look": [
+    10.59,
+    16.7,
+    208.76
+   ]
+  },
+  {
+   "name": "windroute",
+   "pos": [
+    20.59,
+    22.7,
+    212.85
+   ],
+   "look": [
+    10.59,
+    16.7,
+    238.99
+   ]
+  },
+  {
+   "name": "vein_lift",
+   "pos": [
+    4.59,
+    25.7,
+    117.82
+   ],
+   "look": [
+    27.32,
+    17.8,
+    132.04
+   ]
+  },
+  {
+   "name": "hidden_seq",
+   "pos": [
+    23.32,
+    20.8,
+    127.04
+   ],
+   "look": [
+    38.18,
+    19.8,
+    130.19
+   ]
+  },
+  {
+   "name": "vein_flip",
+   "pos": [
+    16.59,
+    24.7,
+    210.85
+   ],
+   "look": [
+    -25.37,
+    19.2,
+    221.92
+   ]
+  },
+  {
+   "name": "hidden_flip",
+   "pos": [
+    -20.37,
+    21.7,
+    218.92
+   ],
+   "look": [
+    -26.57,
+    20,
+    221.92
+   ]
+  },
+  {
+   "name": "goal",
+   "pos": [
+    2.59,
+    20.4,
+    244.2
+   ],
+   "look": [
+    10.59,
+    15.7,
+    252.2
+   ]
+  },
+  {
+   "name": "onward",
+   "pos": [
+    6.16,
+    17.1,
+    251.38
+   ],
+   "look": [
+    30.25,
+    17.9,
+    255.86
+   ]
+  },
+  {
+   "name": "arrival",
+   "pos": [
+    1.37,
+    2.2,
+    -1.71
+   ],
+   "look": [
+    -6.1,
+    0,
+    -25.05
+   ]
+  },
+  {
+   "name": "lockN",
+   "pos": [
+    8,
+    5,
+    -4
+   ],
+   "look": [
+    2.4,
+    1,
+    -13.96
+   ]
+  },
+  {
+   "name": "lockN_open",
+   "pos": [
+    8,
+    5,
+    -4
+   ],
+   "look": [
+    2.4,
+    1,
+    -13.96
+   ],
+   "fire": [
+    "lockN"
+   ]
+  },
+  {
+   "name": "lockD",
+   "pos": [
+    14.59,
+    24.5,
+    142.8
+   ],
+   "look": [
+    -1.69,
+    21,
+    134.74
+   ]
+  },
+  {
+   "name": "lockD_open",
+   "pos": [
+    14.59,
+    24.5,
+    142.8
+   ],
+   "look": [
+    -1.69,
+    21,
+    134.74
+   ],
+   "fire": [
+    "lockD"
+   ]
+  },
+  {
+   "name": "shortcut",
+   "pos": [
+    22.49,
+    24,
+    139.15
+   ],
+   "look": [
+    10.59,
+    20,
+    132.15
+   ]
+  },
+  {
+   "name": "shortcut_open",
+   "pos": [
+    22.49,
+    24,
+    139.15
+   ],
+   "look": [
+    10.59,
+    20,
+    132.15
+   ],
+   "fire": [
+    "sc"
+   ]
+  }
+ ],
+ "cutscenes": {
+  "arrive": {
+   "dur": 7,
+   "keys": [
+    {
+     "at": 0,
+     "pos": [
+      -21.77,
+      12.5,
+      -64.13
+     ],
+     "look": [
+      -12.2,
+      7.5,
+      -44.09
+     ]
+    },
+    {
+     "at": 3.4,
+     "pos": [
+      -13.4,
+      9,
+      -36.36
+     ],
+     "look": [
+      -4.27,
+      3.5,
+      -19.33
+     ]
+    },
+    {
+     "at": 5.8,
+     "play": 1
+    },
+    {
+     "at": 7,
+     "play": 1
+    }
+   ],
+   "lines": [
+    {
+     "at": 0.8,
+     "dur": 5,
+     "text": {
+      "en": "Orren's workshop. Here the winds were bound to totems.",
+      "ru": "Мастерская Оррена. Здесь ветры привязали к тотемам."
+     }
+    }
+   ],
+   "events": [
+    {
+     "at": 0,
+     "duck": {
+      "db": -6,
+      "seconds": 7
+     }
+    },
+    {
+     "at": 0.2,
+     "cue": "wind",
+     "gain": 0.8
+    }
+   ],
+   "ribbon": {
+    "at": -6,
+    "grow": 1,
+    "fade": [
+     4.6,
+     7
+    ],
+    "pts": [
+     [
+      -25.62,
+      -4,
+      -80
+     ],
+     [
+      -15.86,
+      9,
+      -55.52
+     ],
+     [
+      -7.32,
+      6.5,
+      -28.86
+     ],
+     [
+      -2.75,
+      3.2,
+      -14.57
+     ],
+     [
+      -0.31,
+      1.3,
+      -6.95
+     ],
+     [
+      2.14,
+      1.6,
+      0.67
+     ]
+    ]
+   },
+   "hero": {
+    "path": [
+     {
+      "at": 0,
+      "pos": [
+       -15.86,
+       9,
+       -55.52
+      ],
+      "heading": 0.31,
+      "clip": "glide"
+     },
+     {
+      "at": 3,
+      "pos": [
+       -7.32,
+       6.5,
+       -28.86
+      ],
+      "heading": 0.31,
+      "clip": "glide"
+     },
+     {
+      "at": 5,
+      "pos": [
+       -2.75,
+       3.2,
+       -14.57
+      ],
+      "heading": 0.31,
+      "clip": "glide"
+     },
+     {
+      "at": 7,
+      "pos": [
+       -0.49,
+       1.4,
+       -7.52
+      ],
+      "heading": 0.31
+     }
+    ]
+   }
+  },
+  "outro": {
+   "dur": 12,
+   "keys": [
+    {
+     "at": 0,
+     "shot": "goal",
+     "ease": 1
+    },
+    {
+     "at": 3.6,
+     "pos": [
+      5.23,
+      17.3,
+      248.16
+     ],
+     "look": [
+      19.75,
+      17.9,
+      252.91
+     ],
+     "ease": 1
+    },
+    {
+     "at": 6.6,
+     "pos": [
+      9.72,
+      19.5,
+      245.94
+     ],
+     "look": [
+      20.74,
+      18.4,
+      253.09
+     ],
+     "ease": 1
+    },
+    {
+     "at": 9.2,
+     "pos": [
+      8.64,
+      22.4,
+      246.25
+     ],
+     "look": [
+      31.55,
+      24.4,
+      255.1
+     ],
+     "ease": 1
+    },
+    {
+     "at": 12,
+     "pos": [
+      7.57,
+      24.9,
+      246.56
+     ],
+     "look": [
+      57.12,
+      33.9,
+      259.85
+     ]
+    }
+   ],
+   "lines": [
+    {
+     "at": 0.6,
+     "dur": 3.8,
+     "text": {
+      "en": "The totems let go. The winds remember the way home.",
+      "ru": "Тотемы отпустили. Ветры помнят дорогу домой."
+     }
+    },
+    {
+     "at": 4.6,
+     "dur": 4.2,
+     "who": {
+      "en": "Kestrel",
+      "ru": "Пустельга"
+     },
+     "voice": "kestrel",
+     "text": {
+      "en": "Kree! All winds lead to the Crown. Ride mine, wanderer!",
+      "ru": "Кррии! Все ветры ведут к Короне. Лети на моём, странник!"
+     }
+    }
+   ],
+   "events": [
+    {
+     "at": 0,
+     "duck": {
+      "db": -8,
+      "seconds": 12
+     }
+    },
+    {
+     "at": 0.3,
+     "fire": "seqB"
+    },
+    {
+     "at": 0.6,
+     "cue": "wind",
+     "gain": 0.8
+    },
+    {
+     "at": 1,
+     "wind": "exitUp"
+    },
+    {
+     "at": 5.5,
+     "cue": "hum",
+     "gain": 0.6
+    },
+    {
+     "at": 6.2,
+     "cue": "wind",
+     "gain": 1
+    }
+   ],
+   "ribbon": {
+    "at": 1.4,
+    "grow": 4.5,
+    "pts": [
+     [
+      16.31,
+      15.8,
+      252.27
+     ],
+     [
+      19.56,
+      17.1,
+      252.87
+     ],
+     [
+      26.64,
+      22.1,
+      254.19
+     ],
+     [
+      43.35,
+      29.3,
+      257.29
+     ],
+     [
+      68.91,
+      36.9,
+      262.04
+     ],
+     [
+      125.94,
+      48.9,
+      272.63
+     ]
+    ]
+   },
+   "hero": {
+    "keep": true,
+    "from": "player",
+    "clip": "land",
+    "at": 0.3,
+    "pose": [
+     {
+      "at": 0,
+      "land": 0
+     },
+     {
+      "at": 5,
+      "land": 0
+     },
+     {
+      "at": 5.6,
+      "land": 0.7
+     },
+     {
+      "at": 6,
+      "land": 0
+     }
+    ],
+    "path": [
+     {
+      "at": 0,
+      "pos": [
+       10.59,
+       14.9,
+       252.2
+      ],
+      "heading": 1.3871052525217447
+     },
+     {
+      "at": 0.9,
+      "pos": [
+       10.59,
+       14.9,
+       252.2
+      ],
+      "heading": 1.3871052525217447,
+      "clip": "walk"
+     },
+     {
+      "at": 4.8,
+      "pos": [
+       17.3,
+       14.9,
+       252.45
+      ],
+      "heading": 1.3871052525217447
+     },
+     {
+      "at": 5.8,
+      "pos": [
+       17.3,
+       14.9,
+       252.45
+      ],
+      "heading": 1.3871052525217447,
+      "clip": "glide"
+     },
+     {
+      "at": 6.8,
+      "pos": [
+       19.56,
+       17.1,
+       252.87
+      ],
+      "heading": 1.3871052525217447,
+      "clip": "glide"
+     },
+     {
+      "at": 8.2,
+      "pos": [
+       26.64,
+       22.1,
+       254.19
+      ],
+      "heading": 1.3871052525217447,
+      "clip": "glide"
+     },
+     {
+      "at": 10.2,
+      "pos": [
+       43.35,
+       29.3,
+       257.29
+      ],
+      "heading": 1.3871052525217447,
+      "clip": "glide"
+     },
+     {
+      "at": 12,
+      "pos": [
+       68.91,
+       36.9,
+       262.04
+      ],
+      "heading": 1.3871052525217447
+     }
+    ]
+   },
+   "actors": [
+    {
+     "glb": "assets/characters/kestrel/kestrel.glb",
+     "scale": 2.2,
+     "path": [
+      {
+       "at": 0.8,
+       "pos": [
+        34.8,
+        24.9,
+        248.58
+       ],
+       "clip": "fly"
+      },
+      {
+       "at": 3,
+       "pos": [
+        20.28,
+        18.4,
+        255.55
+       ],
+       "clip": "circle"
+      },
+      {
+       "at": 5.2,
+       "pos": [
+        19.33,
+        19.4,
+        250.8
+       ],
+       "clip": "fly"
+      },
+      {
+       "at": 6.8,
+       "pos": [
+        25.84,
+        22.4,
+        253.02
+       ],
+       "clip": "fly"
+      },
+      {
+       "at": 8.2,
+       "pos": [
+        36.61,
+        27.3,
+        255.23
+       ],
+       "clip": "fly"
+      },
+      {
+       "at": 10.2,
+       "pos": [
+        57.21,
+        34.4,
+        259.36
+       ],
+       "clip": "fly"
+      },
+      {
+       "at": 12,
+       "pos": [
+        86.7,
+        42.4,
+        264.84
+       ],
+       "clip": "fly"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "feasibility": {
+  "jumpReach": 4.28,
+  "jumpRise": 1.3,
+  "speed": 6.5,
+  "stepUp": 0.35,
+  "maxFrac": 0.9,
+  "aim": [
+   0.6,
+   0.75
+  ],
+  "gaps": [
+   {
+    "from": "bel",
+    "to": "bh1",
+    "dist": 2.8,
+    "rise": 0.2,
+    "reach": 4.11,
+    "frac": 0.68,
+    "inAim": true
+   },
+   {
+    "from": "bh1",
+    "to": "bh2",
+    "dist": 2.8,
+    "rise": 0.2,
+    "reach": 4.11,
+    "frac": 0.68,
+    "inAim": true
+   },
+   {
+    "from": "bh2",
+    "to": "start",
+    "dist": 2.52,
+    "rise": 0.1,
+    "reach": 4.19,
+    "frac": 0.6,
+    "inAim": true
+   },
+   {
+    "from": "start",
+    "to": "h1",
+    "dist": 2.8,
+    "rise": 0.3,
+    "reach": 4.02,
+    "frac": 0.7,
+    "inAim": true
+   },
+   {
+    "from": "h1",
+    "to": "h2",
+    "dist": 2.8,
+    "rise": 0.2,
+    "reach": 4.11,
+    "frac": 0.68,
+    "inAim": true
+   },
+   {
+    "from": "h2",
+    "to": "U",
+    "dist": 2.8,
+    "rise": 0,
+    "reach": 4.28,
+    "frac": 0.65,
+    "inAim": true
+   },
+   {
+    "from": "M",
+    "to": "N",
+    "dist": 2.8,
+    "rise": 0.2,
+    "reach": 4.11,
+    "frac": 0.68,
+    "inAim": true
+   },
+   {
+    "from": "echo",
+    "to": "e1",
+    "dist": 2.8,
+    "rise": 0.1,
+    "reach": 4.19,
+    "frac": 0.67,
+    "inAim": true
+   },
+   {
+    "from": "e1",
+    "to": "N",
+    "dist": 2.58,
+    "rise": 0.1,
+    "reach": 4.19,
+    "frac": 0.62,
+    "inAim": true
+   },
+   {
+    "from": "t3",
+    "to": "v1",
+    "dist": 2.55,
+    "rise": 0.8,
+    "reach": 3.47,
+    "frac": 0.74,
+    "inAim": true
+   },
+   {
+    "from": "v1",
+    "to": "hB",
+    "dist": 2.7,
+    "rise": 0.3,
+    "reach": 4.02,
+    "frac": 0.67,
+    "inAim": true
+   },
+   {
+    "from": "hB",
+    "to": "v2",
+    "dist": 2.55,
+    "rise": 0.7,
+    "reach": 3.59,
+    "frac": 0.71,
+    "inAim": true
+   },
+   {
+    "from": "v2",
+    "to": "v3",
+    "dist": 2.7,
+    "rise": 0.2,
+    "reach": 4.11,
+    "frac": 0.66,
+    "inAim": true
+   },
+   {
+    "from": "v3",
+    "to": "hA",
+    "dist": 2.6,
+    "rise": 0.5,
+    "reach": 3.82,
+    "frac": 0.68,
+    "inAim": true
+   },
+   {
+    "from": "W",
+    "to": "f1",
+    "dist": 2.55,
+    "rise": 0.8,
+    "reach": 3.47,
+    "frac": 0.74,
+    "inAim": true
+   },
+   {
+    "from": "f1",
+    "to": "f2",
+    "dist": 2.7,
+    "rise": 0.3,
+    "reach": 4.02,
+    "frac": 0.67,
+    "inAim": true
+   },
+   {
+    "from": "f2",
+    "to": "f3",
+    "dist": 2.55,
+    "rise": 0.7,
+    "reach": 3.59,
+    "frac": 0.71,
+    "inAim": true
+   },
+   {
+    "from": "f3",
+    "to": "f4",
+    "dist": 2.7,
+    "rise": 0.2,
+    "reach": 4.11,
+    "frac": 0.66,
+    "inAim": true
+   },
+   {
+    "from": "f4",
+    "to": "hF",
+    "dist": 2.6,
+    "rise": 0.5,
+    "reach": 3.82,
+    "frac": 0.68,
+    "inAim": true
+   },
+   {
+    "from": "Q",
+    "to": "n1",
+    "dist": 2.6,
+    "rise": 0.8,
+    "reach": 3.47,
+    "frac": 0.75,
+    "inAim": true
+   },
+   {
+    "from": "G1",
+    "to": "a1",
+    "dist": 2.6,
+    "rise": 0.8,
+    "reach": 3.47,
+    "frac": 0.75,
+    "inAim": true
+   },
+   {
+    "from": "G1",
+    "to": "mech_gcrumble_0",
+    "dist": 1.6,
+    "rise": 0.03,
+    "reach": 4.25,
+    "frac": 0.38,
+    "inAim": false
+   },
+   {
+    "from": "mech_gcrumble_0",
+    "to": "mech_gcrumble_1",
+    "dist": 1.6,
+    "rise": 0.03,
+    "reach": 4.25,
+    "frac": 0.38,
+    "inAim": false
+   },
+   {
+    "from": "mech_gcrumble_1",
+    "to": "mech_gcrumble_2",
+    "dist": 1.6,
+    "rise": -0.04,
+    "reach": 4.31,
+    "frac": 0.37,
+    "inAim": false
+   }
+  ],
+  "steps": [
+   {
+    "from": "N",
+    "to": "slab_0",
+    "rise": 0.02,
+    "overlap": 0.6
+   },
+   {
+    "from": "slab_0",
+    "to": "slab_1",
+    "rise": 0.03,
+    "overlap": 0.05
+   },
+   {
+    "from": "slab_1",
+    "to": "slab_2",
+    "rise": -0.02,
+    "overlap": 0.05
+   },
+   {
+    "from": "slab_2",
+    "to": "slab_3",
+    "rise": 0.01,
+    "overlap": 0.05
+   },
+   {
+    "from": "slab_3",
+    "to": "Q",
+    "rise": -0.04,
+    "overlap": 0.6
+   },
+   {
+    "from": "Q",
+    "to": "path_0",
+    "rise": 0.02,
+    "overlap": 0.6
+   },
+   {
+    "from": "path_0",
+    "to": "path_1",
+    "rise": 0.03,
+    "overlap": 0.05
+   },
+   {
+    "from": "path_1",
+    "to": "path_2",
+    "rise": -0.02,
+    "overlap": 0.05
+   },
+   {
+    "from": "path_2",
+    "to": "path_3",
+    "rise": 0.02,
+    "overlap": 0.05
+   },
+   {
+    "from": "path_3",
+    "to": "path_4",
+    "rise": -0.03,
+    "overlap": 0.05
+   },
+   {
+    "from": "path_4",
+    "to": "P",
+    "rise": -0.02,
+    "overlap": 0.6
+   },
+   {
+    "from": "t3",
+    "to": "mech_lift",
+    "rise": 0,
+    "overlap": 0.4
+   },
+   {
+    "from": "mech_lift@top",
+    "to": "S",
+    "rise": 0,
+    "overlap": 0.1
+   }
+  ],
+  "blocked": [
+   {
+    "from": "U",
+    "to": "L",
+    "rise": 4,
+    "jumpHeight": 1.3,
+    "needs": "wind.up"
+   },
+   {
+    "from": "N",
+    "to": "Q",
+    "wall": [
+     2.2,
+     2.2,
+     0.5
+    ],
+    "needs": "broken.wallQ (strike or dash)"
+   },
+   {
+    "from": "Q",
+    "to": "P",
+    "crosswind": 7.5,
+    "run": 6.5,
+    "lanes": 3,
+    "needs": "not wind.lane* (totemQ) or a dash across each lane"
+   },
+   {
+    "from": "P",
+    "to": "t1",
+    "rise": 4,
+    "needs": "wind.up_t1 (cycle 3/0.5/1.5)"
+   },
+   {
+    "from": "t1",
+    "to": "t2",
+    "rise": 4,
+    "needs": "wind.up_t2 (cycle 3/0.5/1.5)"
+   },
+   {
+    "from": "t2",
+    "to": "t3",
+    "rise": 4,
+    "needs": "wind.up_t3 (cycle 3/0.5/1.5)"
+   },
+   {
+    "from": "t3",
+    "to": "S",
+    "rise": 3.3,
+    "needs": "switch.seqB (lift; rune A then rune B, hidden east of t3)"
+   },
+   {
+    "from": "S",
+    "to": "G1",
+    "crosswind": 7.5,
+    "lane": 3,
+    "needs": "two air dashes (gift.airdash) across wind.gust"
+   },
+   {
+    "from": "G2",
+    "to": "W",
+    "rise": 0,
+    "needs": "wind.upV (cycle 3/0.5/1.5) + two air dashes"
+   },
+   {
+    "from": "start",
+    "to": "lockN_isl",
+    "lock": "name",
+    "rune": 4.35,
+    "stand": 5.46,
+    "gap": 10.39,
+    "needs": "Name -> lockN_br"
+   },
+   {
+    "from": "S",
+    "to": "lockD_isl",
+    "lock": "gust2",
+    "rune": 5.4,
+    "stand": 5.65,
+    "gap": 10.78,
+    "needs": "Gust II + Name -> lockD_br"
+   }
+  ],
+  "dashReach": 6.62,
+  "windGaps": [
+   {
+    "from": "M",
+    "to": "echo",
+    "dist": 5,
+    "rise": 0,
+    "wind": 4,
+    "reachStill": 4.28,
+    "reachWind": 6.91,
+    "frac": 0.72,
+    "margin": 1.22,
+    "needs": "wind.side (always on)"
+   },
+   {
+    "from": "W",
+    "to": "X",
+    "dist": 5.2,
+    "rise": 0,
+    "wind": 4,
+    "reachStill": 4.28,
+    "reachWind": 6.91,
+    "frac": 0.75,
+    "margin": 1.02,
+    "needs": "wind.tailX flipped by totemW (hidden west of W; starts as a headwind; fills breath)"
+   }
+  ],
+  "dashGaps": [
+   {
+    "from": "L",
+    "to": "M",
+    "dist": 5,
+    "rise": 0,
+    "reachJump": 4.28,
+    "reachDash": 6.62,
+    "frac": 0.76,
+    "margin": 0.96
+   },
+   {
+    "from": "S",
+    "to": "G1",
+    "dist": 9,
+    "rise": -1.5,
+    "reachJump": 5.28,
+    "reachDash": 11.25,
+    "frac": 0.8,
+    "margin": 1.13,
+    "charges": 2
+   },
+   {
+    "from": "n1",
+    "to": "NS",
+    "dist": 5.3,
+    "rise": 0.3,
+    "reachJump": 4.02,
+    "reachDash": 6.36,
+    "frac": 0.83,
+    "margin": 0.42
+   },
+   {
+    "from": "a1",
+    "to": "AS",
+    "dist": 5.3,
+    "rise": 0.3,
+    "reachJump": 4.02,
+    "reachDash": 6.36,
+    "frac": 0.83,
+    "margin": 0.42
+   },
+   {
+    "from": "mech_gcrumble_2",
+    "to": "G2",
+    "dist": 8,
+    "rise": -1.82,
+    "reachJump": 5.45,
+    "reachDash": 11.48,
+    "frac": 0.7,
+    "margin": 2.33,
+    "charges": 2
+   },
+   {
+    "from": "G2",
+    "to": "W",
+    "dist": 6.6,
+    "updraft": true,
+    "reachDash": 9.15,
+    "frac": 0.72,
+    "margin": 1.63,
+    "charges": 2
+   },
+   {
+    "from": "X",
+    "to": "Z",
+    "dist": 8.4,
+    "rise": -1.8,
+    "reachJump": 5.44,
+    "reachDash": 11.47,
+    "frac": 0.73,
+    "margin": 1.92,
+    "charges": 2
+   }
+  ]
+ },
+ "trials": [
+  {
+   "id": "bell1",
+   "kind": "bell",
+   "pos": [
+    14.58,
+    -0.8,
+    0
+   ]
+  },
+  {
+   "id": "bell2",
+   "kind": "bell",
+   "pos": [
+    17.83,
+    -0.8,
+    0
+   ]
+  }
+ ]
+}

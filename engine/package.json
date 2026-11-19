@@ -1,0 +1,24 @@
+{
+  "name": "game-threejs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "postinstall": "node -e \"require('fs').cpSync('node_modules/three/examples/jsm/libs/draco/gltf','public/draco',{recursive:true})\"",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173 --strictPort",
+    "playtest": "node $HOME/.claude/skills/video-to-game/scripts/playtest_web.mjs --url http://localhost:4173 --levels l1,l2,l3 --seed 1,2,3 --out ../playtest",
+    "sync-assets": "bash tools/ship_assets.sh",
+    "demo-level": "node tools/make_demo_level.mjs",
+    "gen-l1": "node tools/gen_l1.mjs",
+    "gen-l2": "node tools/gen_l2.mjs",
+    "gen-l3": "node tools/gen_l3.mjs"
+  },
+  "dependencies": {
+    "three": "0.187.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.65.1",
+    "vite": "8.3.8"
+  }
+}

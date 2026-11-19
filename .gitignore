@@ -1,0 +1,27 @@
+.env
+*.env
+node_modules/
+dist/
+.DS_Store
+__pycache__/
+*.blend
+*.blend1
+*.log
+.private/
+.omc/
+# scratch / heavy intermediates
+playtest/
+ref/video/
+ref/3d/
+assets/audio/raw/
+engine/png/
+engine/q3/
+engine/walkthrough/
+release/*.zip
+
+# not published
+assets/characters/hero/src/
+ref/
+manifest/
+BUGS.md
+game-progress.md

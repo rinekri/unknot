@@ -1,0 +1,15 @@
+{
+  "tracks": {
+    "wind": {
+      "lufs": -20.0,
+      "truePeak": -5.3,
+      "duration": 60.01,
+      "file": "wind.ogg",
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 60.01,
+      "xfade": 2.0,
+      "model": "fal-ai/stable-audio-25/text-to-audio"
+    }
+  }
+}

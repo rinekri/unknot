@@ -1,0 +1,535 @@
+{
+ "note": "Sky Wanderer v3 assets. Axes glTF: +Y up, front +Z, 1 unit = 1 m, origin at ground contact unless noted. fps 24. Dim light-me materials are #5b554b; swap to gold by name. No textures except env_* (one 1024 JPEG each).",
+ "assets": [
+  {
+   "name": "stone_warden",
+   "file": "assets/characters/stone_warden/stone_warden.glb",
+   "purpose": "Enemy 'warden' (R3): rubble golem ~1.85 m, foreign teal rune in chest. Rigid stones on bones. Root motion: none (code moves it); patrol_walk stride 1.0 m/loop. unbind ends as a ~0.55 m rubble step, rune face-up (swap collider to a step).",
+   "tris": 1660,
+   "nodes": [
+    "stone_warden_body"
+   ],
+   "materials": [
+    "eyes",
+    "rune_foreign",
+    "socket",
+    "stone"
+   ],
+   "clips": {
+    "idle": {
+     "frames": 49,
+     "loop": true
+    },
+    "patrol_walk": {
+     "frames": 31,
+     "loop": true
+    },
+    "ram_telegraph": {
+     "frames": 20,
+     "loop": false
+    },
+    "ram": {
+     "frames": 13,
+     "loop": true
+    },
+    "flinch": {
+     "frames": 9,
+     "loop": false
+    },
+    "stagger": {
+     "frames": 25,
+     "loop": false
+    },
+    "dazed": {
+     "frames": 49,
+     "loop": true
+    },
+    "unbind": {
+     "frames": 61,
+     "loop": false
+    }
+   },
+   "events": {
+    "patrol_walk": {
+     "step_l": 0.25,
+     "step_r": 0.75
+    },
+    "ram": {
+     "step_l": 0.25,
+     "step_r": 0.75
+    },
+    "unbind": {
+     "land": 0.85
+    }
+   }
+  },
+  {
+   "name": "knot_warden",
+   "file": "assets/characters/knot_warden/knot_warden.glb",
+   "purpose": "Boss (l3, ~3.9 m): knotted totem-guardian. Gold cords are separate skinned meshes cord_1 (waist), cord_2 (chest), cord_3 (neck): hide cord_n after unbind_n 'cord_off' event (unbind_1 -> cord_1, unbind_2 -> cord_2, unbind_final -> cord_3). Phase map: 1 idle/ring_cast, 2 chase/ram_telegraph/ram/recover, 3 ring_cast/slam; stagger -> dazed between phases. Code may keep drawing its own cords; then hide cord_* nodes.",
+   "tris": 5120,
+   "nodes": [
+    "cord_1",
+    "cord_2",
+    "cord_3",
+    "knot_warden_body"
+   ],
+   "materials": [
+    "eyes",
+    "rope",
+    "stone"
+   ],
+   "clips": {
+    "idle": {
+     "frames": 49,
+     "loop": true
+    },
+    "chase": {
+     "frames": 37,
+     "loop": true
+    },
+    "ram_telegraph": {
+     "frames": 23,
+     "loop": false
+    },
+    "ram": {
+     "frames": 13,
+     "loop": true
+    },
+    "recover": {
+     "frames": 37,
+     "loop": false
+    },
+    "slam": {
+     "frames": 37,
+     "loop": false
+    },
+    "ring_cast": {
+     "frames": 59,
+     "loop": true
+    },
+    "stagger": {
+     "frames": 25,
+     "loop": false
+    },
+    "dazed": {
+     "frames": 49,
+     "loop": true
+    },
+    "unbind_1": {
+     "frames": 61,
+     "loop": false
+    },
+    "unbind_2": {
+     "frames": 61,
+     "loop": false
+    },
+    "unbind_final": {
+     "frames": 97,
+     "loop": false
+    }
+   },
+   "events": {
+    "chase": {
+     "step_l": 0.25,
+     "step_r": 0.75
+    },
+    "slam": {
+     "impact": 0.52
+    },
+    "ring_cast": {
+     "ring": 0.5
+    },
+    "unbind_1": {
+     "cord_off": 0.65
+    },
+    "unbind_2": {
+     "cord_off": 0.65
+    },
+    "unbind_final": {
+     "cord_off": 0.36,
+     "land": 0.9
+    }
+   }
+  },
+  {
+   "name": "kestrel",
+   "file": "assets/characters/kestrel/kestrel.glb",
+   "purpose": "Tied Kestrel NPC rebuilt with perch clips (perch loop, perch_land / perch_takeoff with root motion on 'body'). Same rig as assets/npc/kestrel.glb; drop-in superset.",
+   "tris": 33,
+   "nodes": [
+    "kestrel_body"
+   ],
+   "materials": [
+    "paper"
+   ],
+   "clips": {
+    "tethered": {
+     "frames": 25,
+     "loop": true
+    },
+    "fly": {
+     "frames": 49,
+     "loop": true
+    },
+    "strain": {
+     "frames": 30,
+     "loop": true
+    },
+    "flyoff": {
+     "frames": 73,
+     "loop": false
+    },
+    "circle": {
+     "frames": 97,
+     "loop": true
+    },
+    "perch": {
+     "frames": 73,
+     "loop": true
+    },
+    "perch_land": {
+     "frames": 19,
+     "loop": false
+    },
+    "perch_takeoff": {
+     "frames": 19,
+     "loop": false
+    }
+   }
+  },
+  {
+   "name": "squall_core",
+   "file": "assets/characters/squall/squall_core.glb",
+   "purpose": "Squall enemy core: translucent (2,3) knotted-wind tube + emissive eye. Origin = centre (hovers). Spin the whole node in code (yaw ~90 deg/s, faster on telegraph); on unbind scale to 0 and spawn the updraft puff.",
+   "tris": 2000,
+   "nodes": [
+    "squall",
+    "squall_eye"
+   ],
+   "materials": [
+    "squall",
+    "squall_eye"
+   ]
+  },
+  {
+   "name": "anchor_bridge",
+   "file": "assets/props/v2/anchor_bridge.glb",
+   "purpose": "Anchor-song target: 3-slab span ~5.2 m, origin = centre of the walk top. Rings + chains at both ends; segments are one mesh (crumble = code splits by x thirds or swaps).",
+   "tris": 2620,
+   "nodes": [
+    "bridge",
+    "anchor_glyph",
+    "iron"
+   ],
+   "materials": [
+    "anchor_glyph",
+    "iron",
+    "stone"
+   ]
+  },
+  {
+   "name": "anchor_slab",
+   "file": "assets/props/v2/anchor_slab.glb",
+   "purpose": "Anchor-song target: floating crumble slab, origin = centre of the walk top (top at z=0). Iron rings + chain stubs on 3 sides. Light 'anchor_glyph' while frozen.",
+   "tris": 1592,
+   "nodes": [
+    "slab",
+    "anchor_glyph",
+    "iron"
+   ],
+   "materials": [
+    "anchor_glyph",
+    "iron",
+    "stone"
+   ]
+  },
+  {
+   "name": "gust_stone_a",
+   "file": "assets/props/v2/gust_stone_a.glb",
+   "purpose": "Gust-song target: teetering standing stone with a carved spiral (groove). Node 'stone' topples (pivot = its foot near the origin, tip away from the singer), 'base' (cracked plinth) stays. Light 'groove' gold while charged.",
+   "tris": 780,
+   "nodes": [
+    "base",
+    "stone",
+    "groove"
+   ],
+   "materials": [
+    "groove",
+    "stone"
+   ]
+  },
+  {
+   "name": "gust_stone_b",
+   "file": "assets/props/v2/gust_stone_b.glb",
+   "purpose": "Gust-song target: teetering standing stone with a carved spiral (groove). Node 'stone' topples (pivot = its foot near the origin, tip away from the singer), 'base' (cracked plinth) stays. Light 'groove' gold while charged.",
+   "tris": 828,
+   "nodes": [
+    "base",
+    "stone",
+    "groove"
+   ],
+   "materials": [
+    "groove",
+    "stone"
+   ]
+  },
+  {
+   "name": "gust_stone_c",
+   "file": "assets/props/v2/gust_stone_c.glb",
+   "purpose": "Gust-song target: teetering standing stone with a carved spiral (groove). Node 'stone' topples (pivot = its foot near the origin, tip away from the singer), 'base' (cracked plinth) stays. Light 'groove' gold while charged.",
+   "tris": 724,
+   "nodes": [
+    "base",
+    "stone",
+    "groove"
+   ],
+   "materials": [
+    "groove",
+    "stone"
+   ]
+  },
+  {
+   "name": "motif_bird",
+   "file": "assets/props/v2/motif_bird.glb",
+   "purpose": "Switch/target pairing plate: upright tablet with one motif (bird/eye/wave/spiralstar). Switch and its far target share a motif; light 'motif' on both when linked.",
+   "tris": 454,
+   "nodes": [
+    "plate",
+    "motif"
+   ],
+   "materials": [
+    "motif",
+    "stone"
+   ]
+  },
+  {
+   "name": "motif_eye",
+   "file": "assets/props/v2/motif_eye.glb",
+   "purpose": "Switch/target pairing plate: upright tablet with one motif (bird/eye/wave/spiralstar). Switch and its far target share a motif; light 'motif' on both when linked.",
+   "tris": 544,
+   "nodes": [
+    "plate",
+    "motif"
+   ],
+   "materials": [
+    "motif",
+    "stone"
+   ]
+  },
+  {
+   "name": "motif_spiralstar",
+   "file": "assets/props/v2/motif_spiralstar.glb",
+   "purpose": "Switch/target pairing plate: upright tablet with one motif (bird/eye/wave/spiralstar). Switch and its far target share a motif; light 'motif' on both when linked.",
+   "tris": 520,
+   "nodes": [
+    "plate",
+    "motif"
+   ],
+   "materials": [
+    "motif",
+    "stone"
+   ]
+  },
+  {
+   "name": "motif_wave",
+   "file": "assets/props/v2/motif_wave.glb",
+   "purpose": "Switch/target pairing plate: upright tablet with one motif (bird/eye/wave/spiralstar). Switch and its far target share a motif; light 'motif' on both when linked.",
+   "tris": 544,
+   "nodes": [
+    "plate",
+    "motif"
+   ],
+   "materials": [
+    "motif",
+    "stone"
+   ]
+  },
+  {
+   "name": "name_totem_k2",
+   "file": "assets/props/v2/name_totem_k2.glb",
+   "purpose": "Name-song target: carved totem bound by N gold knots. Nodes knot_1..knot_N (lowest first): each sing unties/hides the next knot; light 'name_glyph' when free. kN = knots needed.",
+   "tris": 1616,
+   "nodes": [
+    "totem",
+    "name_glyph",
+    "eyes",
+    "knot_1",
+    "knot_2"
+   ],
+   "materials": [
+    "eyes",
+    "name_glyph",
+    "rope",
+    "stone"
+   ]
+  },
+  {
+   "name": "name_totem_k3",
+   "file": "assets/props/v2/name_totem_k3.glb",
+   "purpose": "Name-song target: carved totem bound by N gold knots. Nodes knot_1..knot_N (lowest first): each sing unties/hides the next knot; light 'name_glyph' when free. kN = knots needed.",
+   "tris": 2164,
+   "nodes": [
+    "totem",
+    "name_glyph",
+    "eyes",
+    "knot_1",
+    "knot_2",
+    "knot_3"
+   ],
+   "materials": [
+    "eyes",
+    "name_glyph",
+    "rope",
+    "stone"
+   ]
+  },
+  {
+   "name": "name_totem_k4",
+   "file": "assets/props/v2/name_totem_k4.glb",
+   "purpose": "Name-song target: carved totem bound by N gold knots. Nodes knot_1..knot_N (lowest first): each sing unties/hides the next knot; light 'name_glyph' when free. kN = knots needed.",
+   "tris": 2712,
+   "nodes": [
+    "totem",
+    "name_glyph",
+    "eyes",
+    "knot_1",
+    "knot_2",
+    "knot_3",
+    "knot_4"
+   ],
+   "materials": [
+    "eyes",
+    "name_glyph",
+    "rope",
+    "stone"
+   ]
+  },
+  {
+   "name": "rubble_b",
+   "file": "assets/props/v2/rubble_b.glb",
+   "purpose": "Environment variant: Blender deform of the Tripo prop of the same base name (same 1024 texture). wind_tree_* match the level.js /wind_tree/ sway rule.",
+   "tris": 7518,
+   "nodes": [
+    "rubble_b__rubble"
+   ],
+   "materials": [
+    "tripo_material_2304b0bd-16a5-483b-a402-f5a21c2898b1"
+   ]
+  },
+  {
+   "name": "rubble_c",
+   "file": "assets/props/v2/rubble_c.glb",
+   "purpose": "Environment variant: Blender deform of the Tripo prop of the same base name (same 1024 texture). wind_tree_* match the level.js /wind_tree/ sway rule.",
+   "tris": 7518,
+   "nodes": [
+    "rubble_c__rubble"
+   ],
+   "materials": [
+    "tripo_material_2304b0bd-16a5-483b-a402-f5a21c2898b1"
+   ]
+  },
+  {
+   "name": "ruin_arch_b",
+   "file": "assets/props/v2/ruin_arch_b.glb",
+   "purpose": "Environment variant: Blender deform of the Tripo prop of the same base name (same 1024 texture). wind_tree_* match the level.js /wind_tree/ sway rule.",
+   "tris": 4373,
+   "nodes": [
+    "ruin_arch_b__arch"
+   ],
+   "materials": [
+    "tripo_material_aa9f669c-0c89-4e11-bd5a-f14bd58da64e"
+   ]
+  },
+  {
+   "name": "ruin_arch_c",
+   "file": "assets/props/v2/ruin_arch_c.glb",
+   "purpose": "Environment variant: Blender deform of the Tripo prop of the same base name (same 1024 texture). wind_tree_* match the level.js /wind_tree/ sway rule.",
+   "tris": 7049,
+   "nodes": [
+    "ruin_arch_c__arch"
+   ],
+   "materials": [
+    "tripo_material_aa9f669c-0c89-4e11-bd5a-f14bd58da64e"
+   ]
+  },
+  {
+   "name": "ruin_pillar_b",
+   "file": "assets/props/v2/ruin_pillar_b.glb",
+   "purpose": "Environment variant: Blender deform of the Tripo prop of the same base name (same 1024 texture). wind_tree_* match the level.js /wind_tree/ sway rule.",
+   "tris": 4898,
+   "nodes": [
+    "ruin_pillar_b__stone"
+   ],
+   "materials": [
+    "tripo_material_4bf40b8d-78b9-4a25-800f-b9206729622a"
+   ]
+  },
+  {
+   "name": "ruin_pillar_c",
+   "file": "assets/props/v2/ruin_pillar_c.glb",
+   "purpose": "Environment variant: Blender deform of the Tripo prop of the same base name (same 1024 texture). wind_tree_* match the level.js /wind_tree/ sway rule.",
+   "tris": 7680,
+   "nodes": [
+    "ruin_pillar_c__stone"
+   ],
+   "materials": [
+    "tripo_material_4bf40b8d-78b9-4a25-800f-b9206729622a"
+   ]
+  },
+  {
+   "name": "wind_cairn",
+   "file": "assets/props/v2/wind_cairn.glb",
+   "purpose": "Breath refill checkpoint: stacked cairn + wooden arm with 4 chimes (bones chime_1..4). chime_idle loop always; chime_ring once on refill; light 'cairn_light'.",
+   "tris": 960,
+   "nodes": [
+    "cairn",
+    "cairn_light",
+    "post",
+    "chime_1",
+    "chime_2",
+    "chime_3",
+    "chime_4"
+   ],
+   "materials": [
+    "cairn_light",
+    "stone",
+    "wood"
+   ],
+   "clips": {
+    "chime_idle": {
+     "frames": 73,
+     "loop": true
+    },
+    "chime_ring": {
+     "frames": 49,
+     "loop": false
+    }
+   }
+  },
+  {
+   "name": "wind_tree_b",
+   "file": "assets/props/v2/wind_tree_b.glb",
+   "purpose": "Environment variant: Blender deform of the Tripo prop of the same base name (same 1024 texture). wind_tree_* match the level.js /wind_tree/ sway rule.",
+   "tris": 7542,
+   "nodes": [
+    "wind_tree_b__tree"
+   ],
+   "materials": [
+    "tripo_material_68783124-b4c6-4edd-85ad-1742eaf97da1"
+   ]
+  },
+  {
+   "name": "wind_tree_c",
+   "file": "assets/props/v2/wind_tree_c.glb",
+   "purpose": "Environment variant: Blender deform of the Tripo prop of the same base name (same 1024 texture). wind_tree_* match the level.js /wind_tree/ sway rule.",
+   "tris": 7542,
+   "nodes": [
+    "wind_tree_c__tree"
+   ],
+   "materials": [
+    "tripo_material_68783124-b4c6-4edd-85ad-1742eaf97da1"
+   ]
+  }
+ ]
+}

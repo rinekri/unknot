@@ -1,0 +1,108 @@
+{
+  "_doc": "Spring bones for engine/src/systems/cloth.js. Bones come from engine/tools/hero_rig.py; tails are read from each chain's *_end child. hz = spring frequency of the first link (x taper per link down the chain), damp = damping ratio, sag = gravity share, inertia = reaction to the acceleration of the link's body-carried rest tip (turns, strikes, stride, stops), drag = trail against head velocity (cloak lifts in falls, streams in runs). Radii in m. windRad = swing (rad) per m/s of relative air, per link (cloak 0.055: ~0.36 rad per link at the 6.5 m/s run, so the hem streams at ~45 deg instead of lying flat, AIR_MAX 0.7 caps the 7.5 m/s l2 crosswind) (level wind + breeze x wind - own velocity); with windRad set, drag is normally 0 (the air term already trails the run).",
+  "params": {
+    "cloak": {
+      "hz": 1.6,
+      "damp": 0.3,
+      "taper": 0.9,
+      "sag": 0.3,
+      "wind": 0.8,
+      "inertia": 2.0,
+      "drag": 0,
+      "radius": 0.02,
+      "hang": 0.25,
+      "windRad": 0.055
+    },
+    "hood": {
+      "hz": 3.2,
+      "damp": 0.4,
+      "taper": 0.9,
+      "sag": 0.2,
+      "wind": 0.4,
+      "inertia": 0.8,
+      "drag": 0,
+      "radius": 0.02,
+      "windRad": 0.024
+    }
+  },
+  "chains": {
+    "cloak": [
+      [
+        "Cloak_B1",
+        "Cloak_B2",
+        "Cloak_B3"
+      ],
+      [
+        "Cloak_L1",
+        "Cloak_L2",
+        "Cloak_L3"
+      ],
+      [
+        "Cloak_R1",
+        "Cloak_R2",
+        "Cloak_R3"
+      ],
+      [
+        "Cloak_FL1",
+        "Cloak_FL2"
+      ],
+      [
+        "Cloak_FR1",
+        "Cloak_FR2"
+      ]
+    ],
+    "hood": [
+      [
+        "Hood1",
+        "Hood2"
+      ]
+    ]
+  },
+  "colliders": [
+    {
+      "bone": "Hip",
+      "to": "NeckTwist01",
+      "radius": 0.12
+    },
+    {
+      "bone": "L_Thigh",
+      "to": "L_Calf",
+      "radius": 0.08
+    },
+    {
+      "bone": "R_Thigh",
+      "to": "R_Calf",
+      "radius": 0.08
+    },
+    {
+      "bone": "L_Calf",
+      "to": "L_Foot",
+      "radius": 0.06
+    },
+    {
+      "bone": "R_Calf",
+      "to": "R_Foot",
+      "radius": 0.06
+    },
+    {
+      "bone": "L_Upperarm",
+      "to": "L_Forearm",
+      "radius": 0.05
+    },
+    {
+      "bone": "R_Upperarm",
+      "to": "R_Forearm",
+      "radius": 0.05
+    },
+    {
+      "bone": "L_Forearm",
+      "to": "L_Hand",
+      "radius": 0.045
+    },
+    {
+      "bone": "R_Forearm",
+      "to": "R_Hand",
+      "radius": 0.045
+    }
+  ]
+}

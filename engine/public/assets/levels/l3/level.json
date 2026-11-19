@@ -1,0 +1,5308 @@
+{
+ "id": "l3",
+ "title": "Crown of Winds",
+ "next": null,
+ "seed": 3301,
+ "spawn": {
+  "pos": [
+   0,
+   0,
+   -5
+  ],
+  "heading": 0.46
+ },
+ "goal": {
+  "kind": "circle",
+  "pos": [
+   3.98,
+   25.5,
+   197.29
+  ],
+  "r": 1.4,
+  "after": "npc.orren.free"
+ },
+ "killY": -20,
+ "mood": {
+  "sky": {
+   "top": "#f5f2ea",
+   "horizon": "#f7f0e2",
+   "haze": "#efdcc0",
+   "sunGlow": "#fbe6b4",
+   "sunDisc": "#fffaf0",
+   "cloudLit": "#fbf1dc",
+   "cloudShade": "#e9ddd8"
+  },
+  "sun": [
+   [
+    -0.4,
+    0.2,
+    1
+   ],
+   [
+    -0.35,
+    0.3,
+    1
+   ]
+  ],
+  "fog": {
+   "color": "#f7efe2",
+   "near": 50,
+   "far": [
+    340,
+    400
+   ]
+  },
+  "hemi": {
+   "sky": "#eef1f2",
+   "ground": "#b4acba",
+   "i": 2.35
+  },
+  "light": {
+   "color": "#fff0d4",
+   "i": 1.85,
+   "y": 9
+  },
+  "breeze": 1
+ },
+ "falls": [
+  {
+   "top": [
+    -2.07,
+    -1.5,
+    168.13
+   ],
+   "pos": [
+    -3.88,
+    -10,
+    168.52
+   ],
+   "len": 24.55
+  },
+  {
+   "top": [
+    9.09,
+    3.5,
+    175
+   ],
+   "pos": [
+    10.03,
+    -2.5,
+    175.25
+   ],
+   "len": 16.28
+  },
+  {
+   "top": [
+    10.32,
+    -9.5,
+    51.06
+   ],
+   "pos": [
+    11.93,
+    -18,
+    50.1
+   ],
+   "len": 20.89
+  },
+  {
+   "top": [
+    11.45,
+    -9.5,
+    126.97
+   ],
+   "pos": [
+    13.28,
+    -18,
+    127.3
+   ],
+   "len": 19.93
+  }
+ ],
+ "sky": [
+  {
+   "tex": "assets/sky/castle1.png",
+   "pos": [
+    66.24,
+    57,
+    447.8
+   ],
+   "w": 202
+  },
+  {
+   "tex": "assets/sky/castle2.png",
+   "pos": [
+    -317.51,
+    31,
+    199.71
+   ],
+   "w": 150
+  },
+  {
+   "tex": "assets/sky/castle2.png",
+   "pos": [
+    313.76,
+    41,
+    -96.58
+   ],
+   "w": 172
+  }
+ ],
+ "props": [
+  {
+   "id": "runeV",
+   "glb": "assets/props/rune_stone/rune_stone.glb",
+   "pos": [
+    -36.97,
+    -7,
+    60.54
+   ],
+   "rotY": 1.5708
+  },
+  {
+   "id": "seqA",
+   "glb": "assets/props/rune_stone/rune_stone.glb",
+   "pos": [
+    -38.87,
+    -3,
+    135.28
+   ],
+   "rotY": 1.5708
+  },
+  {
+   "id": "seqB",
+   "glb": "assets/props/rune_stone/rune_stone.glb",
+   "pos": [
+    -13.9,
+    -4.4,
+    138.82
+   ],
+   "rotY": 3.1416
+  },
+  {
+   "id": "runeK",
+   "glb": "assets/props/rune_stone/rune_stone.glb",
+   "pos": [
+    -33.21,
+    26,
+    178.22
+   ],
+   "rotY": 1.5708
+  },
+  {
+   "id": "runeN",
+   "glb": "assets/props/rune_stone/rune_stone.glb",
+   "pos": [
+    -0.67,
+    -6,
+    85.24
+   ],
+   "rotY": 2.25
+  },
+  {
+   "id": "knot_orren1_post",
+   "glb": "assets/props/knot_post.glb",
+   "mesh": "knot_post",
+   "pos": [
+    1.92,
+    25.47,
+    192.95
+   ],
+   "rotY": 1.5762,
+   "scale": 0.94
+  },
+  {
+   "id": "knot_orren1_rope",
+   "glb": "assets/props/knot_post.glb",
+   "mesh": "knot_rope",
+   "pos": [
+    1.92,
+    25.47,
+    192.95
+   ],
+   "rotY": 1.5762,
+   "scale": 0.94
+  },
+  {
+   "id": "knot_orren2_post",
+   "glb": "assets/props/knot_post.glb",
+   "mesh": "knot_post",
+   "pos": [
+    1.46,
+    25.47,
+    190.58
+   ],
+   "rotY": 1.1547,
+   "scale": 0.85
+  },
+  {
+   "id": "knot_orren2_rope",
+   "glb": "assets/props/knot_post.glb",
+   "mesh": "knot_rope",
+   "pos": [
+    1.46,
+    25.47,
+    190.58
+   ],
+   "rotY": 1.1547,
+   "scale": 0.85
+  },
+  {
+   "id": "knot_orren3_post",
+   "glb": "assets/props/knot_post.glb",
+   "mesh": "knot_post",
+   "pos": [
+    1.29,
+    25.47,
+    195.62
+   ],
+   "rotY": 2.0286,
+   "scale": 0.92
+  },
+  {
+   "id": "knot_orren3_rope",
+   "glb": "assets/props/knot_post.glb",
+   "mesh": "knot_rope",
+   "pos": [
+    1.29,
+    25.47,
+    195.62
+   ],
+   "rotY": 2.0286,
+   "scale": 0.92
+  },
+  {
+   "id": "lockO",
+   "glb": "assets/props/rune_stone/rune_stone.glb",
+   "pos": [
+    18.8,
+    27,
+    198.79
+   ],
+   "rotY": -1.9138
+  },
+  {
+   "id": "kamen_brother",
+   "glb": "assets/props/name_stone.glb",
+   "mesh": "name_b",
+   "pos": [
+    25.45,
+    25.5,
+    198.39
+   ],
+   "rotY": 3.1416,
+   "scale": 0.85
+  },
+  {
+   "id": "sc",
+   "glb": "assets/props/rune_stone/rune_stone.glb",
+   "pos": [
+    1.18,
+    25.5,
+    189.79
+   ],
+   "rotY": 0.4071
+  }
+ ],
+ "mechanisms": [
+  {
+   "id": "runeV",
+   "kind": "switch",
+   "node": "runeV",
+   "pos": [
+    -36.97,
+    -7,
+    60.54
+   ],
+   "r": 2.2,
+   "targets": [
+    "bridge"
+   ],
+   "once": true,
+   "hidden": true,
+   "dust": true,
+   "after": "enemy.gdV.open",
+   "vein": [
+    [
+     3.98,
+     -9.5,
+     61.12
+    ],
+    [
+     1.98,
+     -9.5,
+     55.85
+    ],
+    [
+     -8.28,
+     -8.7,
+     58.36
+    ],
+    [
+     -13.79,
+     -8.4,
+     64.07
+    ],
+    [
+     -19.57,
+     -7.7,
+     59.22
+    ],
+    [
+     -27.04,
+     -7.5,
+     60.54
+    ],
+    [
+     -35.77,
+     -7,
+     60.54
+    ],
+    [
+     -36.97,
+     -7,
+     60.54
+    ]
+   ],
+   "mark": "bird"
+  },
+  {
+   "id": "bridge",
+   "kind": "bridge",
+   "nodes": [
+    "mech_bridge_0",
+    "mech_bridge_1",
+    "mech_bridge_2",
+    "mech_bridge_3",
+    "mech_bridge_4"
+   ],
+   "offset": [
+    0,
+    -7,
+    0
+   ],
+   "dur": 2,
+   "stagger": 0.4,
+   "hold": 14
+  },
+  {
+   "id": "crumble0",
+   "kind": "crumble",
+   "node": "mech_crumble_0",
+   "delay": 0.5,
+   "respawn": 3,
+   "group": "crW"
+  },
+  {
+   "id": "crumble1",
+   "kind": "crumble",
+   "node": "mech_crumble_1",
+   "delay": 0.5,
+   "respawn": 3,
+   "group": "crW"
+  },
+  {
+   "id": "crumble2",
+   "kind": "crumble",
+   "node": "mech_crumble_2",
+   "delay": 0.5,
+   "respawn": 3,
+   "group": "crW"
+  },
+  {
+   "id": "runeN",
+   "kind": "switch",
+   "node": "runeN",
+   "pos": [
+    -0.67,
+    -6,
+    85.24
+   ],
+   "r": 2,
+   "targets": [],
+   "once": true,
+   "far": true
+  },
+  {
+   "id": "dam",
+   "kind": "breakable",
+   "node": "mech_dam",
+   "pos": [
+    3.98,
+    -9.5,
+    112.01
+   ],
+   "size": [
+    3.2,
+    2.6,
+    0.6
+   ],
+   "rotY": 0,
+   "targets": [
+    "tail",
+    "upY"
+   ]
+  },
+  {
+   "id": "tail",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     1.48,
+     -11,
+     112.41
+    ],
+    "max": [
+     6.48,
+     -6,
+     121.31
+    ]
+   },
+   "force": [
+    0,
+    0,
+    4
+   ],
+   "active": false
+  },
+  {
+   "id": "upY",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     2.38,
+     -10,
+     126.77
+    ],
+    "max": [
+     5.58,
+     -4.7,
+     128.52
+    ]
+   },
+   "force": [
+    0,
+    40,
+    0
+   ],
+   "active": false
+  },
+  {
+   "id": "seqA",
+   "kind": "switch",
+   "node": "seqA",
+   "pos": [
+    -38.87,
+    -3,
+    135.28
+   ],
+   "r": 2.2,
+   "targets": [],
+   "once": true,
+   "seq": "fork",
+   "order": 1,
+   "hidden": true,
+   "vein": [
+    [
+     21.78,
+     -5.5,
+     135.27
+    ],
+    [
+     10.38,
+     -5.5,
+     135.27
+    ],
+    [
+     3.98,
+     -5.5,
+     135.87
+    ],
+    [
+     -7.92,
+     -5.2,
+     132.75
+    ],
+    [
+     -13.9,
+     -4.4,
+     137.42
+    ],
+    [
+     -21.19,
+     -4.2,
+     134.47
+    ],
+    [
+     -28.88,
+     -3.5,
+     135.28
+    ],
+    [
+     -37.67,
+     -3,
+     135.28
+    ],
+    [
+     -38.87,
+     -3,
+     135.28
+    ]
+   ],
+   "mark": "eye"
+  },
+  {
+   "id": "seqB",
+   "kind": "switch",
+   "node": "seqB",
+   "pos": [
+    -13.9,
+    -4.4,
+    138.82
+   ],
+   "r": 2.2,
+   "targets": [
+    "lift",
+    "upF"
+   ],
+   "once": true,
+   "seq": "fork",
+   "order": 2,
+   "hidden": true,
+   "vein": [
+    [
+     3.98,
+     -5.5,
+     142.39
+    ],
+    [
+     2.98,
+     -5.5,
+     135.27
+    ],
+    [
+     -7.92,
+     -5.2,
+     132.75
+    ],
+    [
+     -14.4,
+     -4.4,
+     137.42
+    ],
+    [
+     -13.9,
+     -4.4,
+     138.82
+    ]
+   ],
+   "mark": "eye"
+  },
+  {
+   "id": "lift",
+   "kind": "platform",
+   "node": "mech_lift",
+   "path": [
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     4,
+     0
+    ]
+   ],
+   "mode": "ride",
+   "period": 5,
+   "idle": true
+  },
+  {
+   "id": "spiral0",
+   "kind": "crumble",
+   "node": "mech_spiral_0",
+   "delay": 0.5,
+   "respawn": 3
+  },
+  {
+   "id": "spiral1",
+   "kind": "crumble",
+   "node": "mech_spiral_1",
+   "delay": 0.5,
+   "respawn": 3
+  },
+  {
+   "id": "spiral2",
+   "kind": "crumble",
+   "node": "mech_spiral_2",
+   "delay": 0.5,
+   "respawn": 3
+  },
+  {
+   "id": "spiral3",
+   "kind": "crumble",
+   "node": "mech_spiral_3",
+   "delay": 0.5,
+   "respawn": 3
+  },
+  {
+   "id": "spiral4",
+   "kind": "crumble",
+   "node": "mech_spiral_4",
+   "delay": 0.5,
+   "respawn": 3
+  },
+  {
+   "id": "spiral5",
+   "kind": "crumble",
+   "node": "mech_spiral_5",
+   "delay": 0.5,
+   "respawn": 3
+  },
+  {
+   "id": "runeK",
+   "kind": "switch",
+   "node": "runeK",
+   "pos": [
+    -33.21,
+    26,
+    178.22
+   ],
+   "r": 2.2,
+   "targets": [
+    "stairs"
+   ],
+   "once": true,
+   "hidden": true,
+   "vein": [
+    [
+     3.98,
+     23.5,
+     177.17
+    ],
+    [
+     2.48,
+     23.5,
+     173.63
+    ],
+    [
+     -5.77,
+     24.3,
+     176.42
+    ],
+    [
+     -11.07,
+     24.6,
+     181.91
+    ],
+    [
+     -17,
+     25.3,
+     176.93
+    ],
+    [
+     -24.3,
+     25.5,
+     178.22
+    ],
+    [
+     -32.01,
+     26,
+     178.22
+    ],
+    [
+     -33.21,
+     26,
+     178.22
+    ]
+   ],
+   "mark": "wave"
+  },
+  {
+   "id": "stairs",
+   "kind": "bridge",
+   "nodes": [
+    "mech_stairs_0",
+    "mech_stairs_1",
+    "mech_stairs_2",
+    "mech_stairs_3",
+    "mech_stairs_4",
+    "mech_stairs_5"
+   ],
+   "offset": [
+    0,
+    -7,
+    0
+   ],
+   "dur": 1,
+   "stagger": 0.25,
+   "hold": 14
+  },
+  {
+   "id": "crumblef0",
+   "kind": "crumble",
+   "node": "mech_crumblef_0",
+   "delay": 0.5,
+   "respawn": 3
+  },
+  {
+   "id": "crumblef1",
+   "kind": "crumble",
+   "node": "mech_crumblef_1",
+   "delay": 0.5,
+   "respawn": 3
+  },
+  {
+   "id": "crumblef2",
+   "kind": "crumble",
+   "node": "mech_crumblef_2",
+   "delay": 0.5,
+   "respawn": 3
+  },
+  {
+   "id": "upF",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     20.18,
+     -6,
+     161.91
+    ],
+    "max": [
+     23.38,
+     0.3,
+     163.66
+    ]
+   },
+   "force": [
+    0,
+    40,
+    0
+   ],
+   "active": false
+  },
+  {
+   "id": "up_k1",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     2.38,
+     -2,
+     167.38
+    ],
+    "max": [
+     5.58,
+     4.3,
+     169.13
+    ]
+   },
+   "force": [
+    0,
+    40,
+    0
+   ],
+   "cycle": [
+    3.5,
+    0.5,
+    1.5
+   ]
+  },
+  {
+   "id": "up_k2",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     4.04,
+     3,
+     172.03
+    ],
+    "max": [
+     5.79,
+     9.3,
+     175.23
+    ]
+   },
+   "force": [
+    0,
+    40,
+    0
+   ],
+   "cycle": [
+    3.5,
+    0.5,
+    1.5
+   ]
+  },
+  {
+   "id": "up_k3",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     8.59,
+     8,
+     171.99
+    ],
+    "max": [
+     11.79,
+     14.3,
+     173.74
+    ]
+   },
+   "force": [
+    0,
+    40,
+    0
+   ],
+   "cycle": [
+    3.5,
+    0.5,
+    1.5
+   ]
+  },
+  {
+   "id": "up_k4",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     8.3,
+     13,
+     165.82
+    ],
+    "max": [
+     10.05,
+     19.3,
+     169.02
+    ]
+   },
+   "force": [
+    0,
+    40,
+    0
+   ],
+   "cycle": [
+    3.5,
+    0.5,
+    1.5
+   ]
+  },
+  {
+   "id": "up_k5",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     2.38,
+     18,
+     167.55
+    ],
+    "max": [
+     5.58,
+     24.3,
+     169.3
+    ]
+   },
+   "force": [
+    0,
+    40,
+    0
+   ],
+   "cycle": [
+    3.5,
+    0.5,
+    1.5
+   ]
+  },
+  {
+   "id": "orren1",
+   "kind": "switch",
+   "pos": [
+    4.5,
+    25.5,
+    192.51
+   ],
+   "r": 1.15,
+   "once": true,
+   "after": "enemy.kw.free"
+  },
+  {
+   "id": "orren2",
+   "kind": "switch",
+   "pos": [
+    8.87,
+    25.5,
+    192.04
+   ],
+   "r": 1.15,
+   "once": true,
+   "after": "enemy.kw.free"
+  },
+  {
+   "id": "orren3",
+   "kind": "switch",
+   "pos": [
+    6.55,
+    25.5,
+    191.03
+   ],
+   "r": 1.15,
+   "once": true,
+   "after": "enemy.kw.free"
+  },
+  {
+   "id": "knot_orren1_rope",
+   "kind": "platform",
+   "node": "knot_orren1_rope",
+   "path": [
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     -0.47,
+     0
+    ]
+   ],
+   "mode": "once",
+   "period": 0.5,
+   "after": "switch.orren1"
+  },
+  {
+   "id": "knot_orren1_post",
+   "kind": "platform",
+   "node": "knot_orren1_post",
+   "path": [
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     -0.52,
+     0
+    ]
+   ],
+   "mode": "once",
+   "period": 2.2,
+   "after": "switch.orren1"
+  },
+  {
+   "id": "knot_orren2_rope",
+   "kind": "platform",
+   "node": "knot_orren2_rope",
+   "path": [
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     -0.42,
+     0
+    ]
+   ],
+   "mode": "once",
+   "period": 0.5,
+   "after": "switch.orren2"
+  },
+  {
+   "id": "knot_orren2_post",
+   "kind": "platform",
+   "node": "knot_orren2_post",
+   "path": [
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     -0.47,
+     0
+    ]
+   ],
+   "mode": "once",
+   "period": 2.2,
+   "after": "switch.orren2"
+  },
+  {
+   "id": "knot_orren3_rope",
+   "kind": "platform",
+   "node": "knot_orren3_rope",
+   "path": [
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     -0.46,
+     0
+    ]
+   ],
+   "mode": "once",
+   "period": 0.5,
+   "after": "switch.orren3"
+  },
+  {
+   "id": "knot_orren3_post",
+   "kind": "platform",
+   "node": "knot_orren3_post",
+   "path": [
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     -0.51,
+     0
+    ]
+   ],
+   "mode": "once",
+   "period": 2.2,
+   "after": "switch.orren3"
+  },
+  {
+   "id": "shrine",
+   "kind": "switch",
+   "pos": [
+    8.46,
+    26.4,
+    197.11
+   ],
+   "r": 2.2,
+   "targets": [],
+   "once": true
+  },
+  {
+   "id": "arriveUp",
+   "kind": "wind",
+   "area": {
+    "kind": "box",
+    "min": [
+     -6.46,
+     -14,
+     -11.51
+    ],
+    "max": [
+     -3.46,
+     2.5,
+     -8.51
+    ]
+   },
+   "force": [
+    0,
+    40,
+    0
+   ]
+  },
+  {
+   "id": "lockO",
+   "kind": "switch",
+   "node": "lockO",
+   "pos": [
+    18.8,
+    27,
+    198.79
+   ],
+   "r": 2,
+   "targets": [
+    "lockO_br"
+   ],
+   "once": true,
+   "far": true,
+   "lock": "name2",
+   "mark": "spiral"
+  },
+  {
+   "id": "lockO_br",
+   "kind": "bridge",
+   "nodes": [
+    "mech_lockO_br_0",
+    "mech_lockO_br_1",
+    "mech_lockO_br_2",
+    "mech_lockO_br_3"
+   ],
+   "offset": [
+    0,
+    -7,
+    0
+   ],
+   "dur": 1,
+   "stagger": 0.25
+  },
+  {
+   "id": "kamen_brother",
+   "kind": "switch",
+   "node": "kamen_brother",
+   "pos": [
+    25.45,
+    25.5,
+    198.39
+   ],
+   "r": 2,
+   "targets": [],
+   "once": true,
+   "request": "kamen.brother"
+  },
+  {
+   "id": "sc",
+   "kind": "switch",
+   "node": "sc",
+   "pos": [
+    1.18,
+    25.5,
+    189.79
+   ],
+   "r": 2,
+   "targets": [
+    "stairs"
+   ],
+   "once": true,
+   "shortcut": true,
+   "mark": "star"
+  }
+ ],
+ "triggers": [
+  {
+   "id": "t_bridge",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      -2.02,
+      48.85
+     ],
+     [
+      9.98,
+      48.85
+     ],
+     [
+      9.98,
+      52.85
+     ],
+     [
+      -2.02,
+      52.85
+     ]
+    ]
+   },
+   "teaches": "timed_bridge",
+   "ifFlag": null,
+   "once": true
+  },
+  {
+   "id": "t_anchor",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      0.98,
+      80
+     ],
+     [
+      6.98,
+      80
+     ],
+     [
+      6.98,
+      83
+     ],
+     [
+      0.98,
+      83
+     ]
+    ]
+   },
+   "ifFlag": null,
+   "once": true
+  },
+  {
+   "id": "t_dam",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      -1.02,
+      100.8
+     ],
+     [
+      8.98,
+      100.8
+     ],
+     [
+      8.98,
+      107.82
+     ],
+     [
+      -1.02,
+      107.82
+     ]
+    ]
+   },
+   "teaches": "dam",
+   "ifFlag": null,
+   "once": true
+  },
+  {
+   "id": "t_fork",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      -2.02,
+      129.27
+     ],
+     [
+      9.98,
+      129.27
+     ],
+     [
+      9.98,
+      135.27
+     ],
+     [
+      -2.02,
+      135.27
+     ]
+    ]
+   },
+   "teaches": "fork",
+   "ifFlag": null,
+   "once": true
+  },
+  {
+   "id": "t_shrine",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      4.96,
+      193.61
+     ],
+     [
+      11.96,
+      193.61
+     ],
+     [
+      11.96,
+      200.61
+     ],
+     [
+      4.96,
+      200.61
+     ]
+    ]
+   },
+   "ifFlag": "switch.shrine",
+   "once": true,
+   "hint": {
+    "en": "The last shrine reads: \"Let the islands drift. What is remembered is never lost.\"",
+    "ru": "На последнем святилище: «Пусть острова дрейфуют. Что помнят, то не потеряно»."
+   }
+  },
+  {
+   "id": "t_stairs",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      -0.02,
+      170.63
+     ],
+     [
+      7.98,
+      170.63
+     ],
+     [
+      7.98,
+      176.63
+     ],
+     [
+      -0.02,
+      176.63
+     ]
+    ]
+   },
+   "teaches": null,
+   "ifFlag": null,
+   "once": true
+  },
+  {
+   "id": "t_crown",
+   "shape": {
+    "kind": "poly",
+    "pts": [
+     [
+      -2.02,
+      160.85
+     ],
+     [
+      9.98,
+      160.85
+     ],
+     [
+      9.98,
+      167.85
+     ],
+     [
+      -2.02,
+      167.85
+     ]
+    ]
+   },
+   "teaches": null,
+   "ifFlag": null,
+   "once": true
+  }
+ ],
+ "checkpoints": [
+  {
+   "id": "c_d2",
+   "pos": [
+    4.5,
+    -3.2,
+    19.82
+   ],
+   "r": 2.2,
+   "heading": 1.62
+  },
+  {
+   "id": "c_V",
+   "pos": [
+    0.98,
+    -9.5,
+    54.85
+   ],
+   "r": 2.2,
+   "heading": -1.42,
+   "wind": true
+  },
+  {
+   "id": "c_hv",
+   "pos": [
+    -34.27,
+    -7,
+    59.14
+   ],
+   "r": 2.2,
+   "heading": -1.09
+  },
+  {
+   "id": "c_W",
+   "pos": [
+    3.98,
+    -9.5,
+    77.19
+   ],
+   "r": 2.2,
+   "heading": 0.01
+  },
+  {
+   "id": "c_X",
+   "pos": [
+    3.98,
+    -9.5,
+    106.82
+   ],
+   "r": 2.2,
+   "heading": 0
+  },
+  {
+   "id": "c_Z",
+   "pos": [
+    3.98,
+    -5.5,
+    135.27
+   ],
+   "r": 2.2,
+   "heading": 1.57,
+   "wind": true
+  },
+  {
+   "id": "c_hz",
+   "pos": [
+    -37.67,
+    -3,
+    135.28
+   ],
+   "r": 2.2,
+   "heading": 1.57
+  },
+  {
+   "id": "c_fa",
+   "pos": [
+    21.78,
+    -5.5,
+    135.27
+   ],
+   "r": 2.2,
+   "heading": -0.01,
+   "wind": true
+  },
+  {
+   "id": "c_fu",
+   "pos": [
+    21.78,
+    -0.5,
+    166.85
+   ],
+   "r": 2.2,
+   "heading": -1.57
+  },
+  {
+   "id": "c_sa",
+   "pos": [
+    3.98,
+    -1.5,
+    146.92
+   ],
+   "r": 2.2,
+   "heading": 0
+  },
+  {
+   "id": "c_CB",
+   "pos": [
+    3.98,
+    -1.5,
+    165.35
+   ],
+   "r": 2.2,
+   "heading": 0,
+   "wind": true
+  },
+  {
+   "id": "c_k2",
+   "pos": [
+    10.19,
+    8.5,
+    173.63
+   ],
+   "r": 2.2,
+   "heading": 3.14
+  },
+  {
+   "id": "c_k4",
+   "pos": [
+    3.98,
+    18.5,
+    167.42
+   ],
+   "r": 2.2,
+   "heading": 0
+  },
+  {
+   "id": "c_k5",
+   "pos": [
+    4.98,
+    23.5,
+    173.63
+   ],
+   "r": 2.2,
+   "heading": -1.45
+  },
+  {
+   "id": "c_G",
+   "pos": [
+    3.98,
+    25.5,
+    190.79
+   ],
+   "r": 2.2,
+   "heading": 0
+  }
+ ],
+ "route": [
+  [
+   0,
+   0,
+   -5,
+   0
+  ],
+  [
+   -1,
+   0,
+   4,
+   0
+  ],
+  [
+   8.74,
+   -1.2,
+   12.48,
+   0
+  ],
+  [
+   4.5,
+   -3.2,
+   19.82,
+   0
+  ],
+  [
+   10.07,
+   -3.7,
+   19.55,
+   0
+  ],
+  [
+   14.15,
+   -4.15,
+   22.17,
+   0
+  ],
+  [
+   16.15,
+   -4.68,
+   26.58,
+   0
+  ],
+  [
+   15.43,
+   -5.13,
+   31.38,
+   0
+  ],
+  [
+   12.23,
+   -5.63,
+   35.01,
+   0
+  ],
+  [
+   7.56,
+   -6.12,
+   36.33,
+   0
+  ],
+  [
+   2.37,
+   -6.6,
+   34.49,
+   0
+  ],
+  [
+   3.98,
+   -8,
+   42.06,
+   0
+  ],
+  [
+   3.98,
+   -9.5,
+   49.01,
+   0
+  ],
+  [
+   0.98,
+   -9.5,
+   54.85,
+   0
+  ],
+  [
+   -8.28,
+   -8.7,
+   58.36,
+   0
+  ],
+  [
+   -13.79,
+   -8.4,
+   64.07,
+   0
+  ],
+  [
+   -19.57,
+   -7.7,
+   59.22,
+   0
+  ],
+  [
+   -27.04,
+   -7.5,
+   60.54,
+   0
+  ],
+  [
+   -35.47,
+   -7,
+   60.54,
+   0
+  ],
+  [
+   -27.04,
+   -7.5,
+   60.54,
+   0
+  ],
+  [
+   -19.57,
+   -7.7,
+   59.22,
+   0
+  ],
+  [
+   -13.79,
+   -8.4,
+   64.07,
+   0
+  ],
+  [
+   -8.28,
+   -8.7,
+   58.36,
+   0
+  ],
+  [
+   1.98,
+   -9.5,
+   55.85,
+   0
+  ],
+  [
+   3.98,
+   -9.5,
+   60.82,
+   0
+  ],
+  [
+   4,
+   -9.48,
+   62.33,
+   0
+  ],
+  [
+   3.85,
+   -9.44,
+   64.5,
+   0
+  ],
+  [
+   4.02,
+   -9.47,
+   66.67,
+   0
+  ],
+  [
+   4.1,
+   -9.43,
+   68.84,
+   0
+  ],
+  [
+   3.97,
+   -9.46,
+   71.01,
+   0
+  ],
+  [
+   3.98,
+   -9.5,
+   72.92,
+   0
+  ],
+  [
+   3.98,
+   -9.5,
+   81.9,
+   0
+  ],
+  [
+   4.05,
+   -9.47,
+   86.1,
+   0
+  ],
+  [
+   4.01,
+   -9.44,
+   90.7,
+   0
+  ],
+  [
+   4.03,
+   -9.48,
+   95.3,
+   0
+  ],
+  [
+   3.98,
+   -9.5,
+   103.3,
+   0
+  ],
+  [
+   3.98,
+   -9.5,
+   110.61,
+   0
+  ],
+  [
+   3.98,
+   -9.5,
+   113.11,
+   0
+  ],
+  [
+   3.98,
+   -9.5,
+   120.31,
+   0
+  ],
+  [
+   3.98,
+   -9.5,
+   125.57,
+   0
+  ],
+  [
+   3.98,
+   -9.5,
+   127.67,
+   0
+  ],
+  [
+   3.98,
+   -5.5,
+   130.37,
+   0
+  ],
+  [
+   3.98,
+   -5.5,
+   135.27,
+   0
+  ],
+  [
+   0.98,
+   -5.5,
+   135.27,
+   0
+  ],
+  [
+   -7.92,
+   -5.2,
+   132.75,
+   0
+  ],
+  [
+   -13.9,
+   -4.4,
+   137.32,
+   0
+  ],
+  [
+   -21.19,
+   -4.2,
+   134.47,
+   0
+  ],
+  [
+   -28.88,
+   -3.5,
+   135.28,
+   0
+  ],
+  [
+   -37.37,
+   -3,
+   135.28,
+   0
+  ],
+  [
+   -28.88,
+   -3.5,
+   135.28,
+   0
+  ],
+  [
+   -21.19,
+   -4.2,
+   134.47,
+   0
+  ],
+  [
+   -13.9,
+   -4.4,
+   137.32,
+   0
+  ],
+  [
+   -7.92,
+   -5.2,
+   132.75,
+   0
+  ],
+  [
+   5.98,
+   -5.5,
+   135.27,
+   0
+  ],
+  [
+   10.08,
+   -5.5,
+   135.27,
+   0
+  ],
+  [
+   17.34,
+   -5.5,
+   135.27,
+   0
+  ],
+  [
+   21.78,
+   -5.5,
+   135.27,
+   0
+  ],
+  [
+   21.78,
+   -5.5,
+   139.59,
+   0
+  ],
+  [
+   21.71,
+   -5.48,
+   143.71,
+   0
+  ],
+  [
+   21.63,
+   -5.45,
+   148.16,
+   0
+  ],
+  [
+   21.83,
+   -5.46,
+   152.61,
+   0
+  ],
+  [
+   21.78,
+   -5.5,
+   160.23,
+   0
+  ],
+  [
+   21.78,
+   -5.5,
+   160.71,
+   0
+  ],
+  [
+   21.78,
+   -5.5,
+   162.81,
+   0
+  ],
+  [
+   21.78,
+   -0.5,
+   165.51,
+   0
+  ],
+  [
+   21.78,
+   -0.5,
+   166.85,
+   0
+  ],
+  [
+   20.09,
+   -0.5,
+   166.85,
+   0
+  ],
+  [
+   8.68,
+   -1.5,
+   166.85,
+   0
+  ],
+  [
+   3.98,
+   -1.5,
+   166.18,
+   0
+  ],
+  [
+   3.98,
+   -1.5,
+   168.28,
+   0
+  ],
+  [
+   3.98,
+   3.5,
+   170.98,
+   0
+  ],
+  [
+   3.98,
+   3.5,
+   173.63,
+   0
+  ],
+  [
+   2.84,
+   3.5,
+   173.63,
+   0
+  ],
+  [
+   4.94,
+   3.5,
+   173.63,
+   0
+  ],
+  [
+   7.64,
+   8.5,
+   173.63,
+   0
+  ],
+  [
+   10.19,
+   8.5,
+   173.63,
+   0
+  ],
+  [
+   10.19,
+   8.5,
+   174.94,
+   0
+  ],
+  [
+   10.19,
+   8.5,
+   172.84,
+   0
+  ],
+  [
+   10.19,
+   13.5,
+   170.14,
+   0
+  ],
+  [
+   10.19,
+   13.5,
+   167.42,
+   0
+  ],
+  [
+   11.25,
+   13.5,
+   167.42,
+   0
+  ],
+  [
+   9.15,
+   13.5,
+   167.42,
+   0
+  ],
+  [
+   6.45,
+   18.5,
+   167.42,
+   0
+  ],
+  [
+   3.98,
+   18.5,
+   167.42,
+   0
+  ],
+  [
+   3.98,
+   18.5,
+   166.35,
+   0
+  ],
+  [
+   3.98,
+   18.5,
+   168.45,
+   0
+  ],
+  [
+   3.98,
+   23.5,
+   171.15,
+   0
+  ],
+  [
+   3.98,
+   23.5,
+   173.63,
+   0
+  ],
+  [
+   1.48,
+   23.5,
+   173.63,
+   0
+  ],
+  [
+   -5.77,
+   24.3,
+   176.42,
+   0
+  ],
+  [
+   -11.07,
+   24.6,
+   181.91,
+   0
+  ],
+  [
+   -17,
+   25.3,
+   176.93,
+   0
+  ],
+  [
+   -24.3,
+   25.5,
+   178.22,
+   0
+  ],
+  [
+   -31.71,
+   26,
+   178.22,
+   0
+  ],
+  [
+   -24.3,
+   25.5,
+   178.22,
+   0
+  ],
+  [
+   -17,
+   25.3,
+   176.93,
+   0
+  ],
+  [
+   -11.07,
+   24.6,
+   181.91,
+   0
+  ],
+  [
+   -5.77,
+   24.3,
+   176.42,
+   0
+  ],
+  [
+   3.98,
+   23.5,
+   173.63,
+   0
+  ],
+  [
+   3.98,
+   23.5,
+   176.87,
+   0
+  ],
+  [
+   3.98,
+   23.79,
+   178.27,
+   0
+  ],
+  [
+   3.98,
+   24.07,
+   180.21,
+   0
+  ],
+  [
+   3.98,
+   24.36,
+   182.16,
+   0
+  ],
+  [
+   3.98,
+   24.64,
+   184.1,
+   0
+  ],
+  [
+   3.98,
+   24.93,
+   186.05,
+   0
+  ],
+  [
+   3.98,
+   25.21,
+   188,
+   0
+  ],
+  [
+   3.98,
+   25.5,
+   189.79,
+   0
+  ],
+  [
+   8.87,
+   25.5,
+   192.04,
+   0
+  ],
+  [
+   6.55,
+   25.5,
+   191.03,
+   0
+  ],
+  [
+   4.5,
+   25.5,
+   192.51,
+   0
+  ],
+  [
+   3.98,
+   25.5,
+   197.29,
+   0
+  ]
+ ],
+ "enemies": [
+  {
+   "id": "wdY",
+   "kind": "warden",
+   "pos": [
+    3.98,
+    -9.5,
+    126.61
+   ],
+   "path": [
+    [
+     0.98,
+     126.61
+    ],
+    [
+     6.98,
+     126.61
+    ]
+   ],
+   "motif": "SLS"
+  },
+  {
+   "id": "sqCB",
+   "kind": "squall",
+   "variant": "pull",
+   "pos": [
+    5.98,
+    -1.5,
+    165.05
+   ],
+   "aggro": 4.5,
+   "motif": "LSL"
+  },
+  {
+   "id": "thCB",
+   "kind": "squall",
+   "variant": "thief",
+   "pos": [
+    1.48,
+    -1.5,
+    165.35
+   ],
+   "r": 6.5,
+   "motif": "SSL",
+   "behind": "sqCB"
+  },
+  {
+   "id": "gdV",
+   "kind": "warden",
+   "guard": "runeV",
+   "pos": [
+    -36.37,
+    -7,
+    62.24
+   ],
+   "path": [
+    [
+     -36.37,
+     62.24
+    ],
+    [
+     -36.37,
+     62.24
+    ]
+   ],
+   "motif": "LSS",
+   "ties": [
+    [
+     -36.97,
+     -6.1,
+     60.54
+    ]
+   ]
+  },
+  {
+   "id": "kw",
+   "kind": "boss",
+   "pos": [
+    0.48,
+    25.5,
+    198.29
+   ],
+   "r": 5.5,
+   "minions": [
+    "kw1",
+    "kw2",
+    "kw3"
+   ],
+   "motifs": [
+    "SL",
+    "LSL",
+    "SLSL"
+   ],
+   "ties": [
+    [
+     4.5,
+     26.4,
+     192.51
+    ],
+    [
+     8.87,
+     26.4,
+     192.04
+    ],
+    [
+     6.55,
+     26.4,
+     191.03
+    ]
+   ]
+  },
+  {
+   "id": "kw1",
+   "kind": "squall",
+   "boss": "kw",
+   "pos": [
+    -1.02,
+    25.5,
+    196.79
+   ],
+   "r": 8,
+   "aggro": 8,
+   "motif": "SL"
+  },
+  {
+   "id": "kw2",
+   "kind": "squall",
+   "boss": "kw",
+   "pos": [
+    1.98,
+    25.5,
+    200.79
+   ],
+   "r": 8,
+   "aggro": 8,
+   "motif": "SL"
+  },
+  {
+   "id": "kw3",
+   "kind": "squall",
+   "boss": "kw",
+   "pos": [
+    0.48,
+    25.5,
+    200.29
+   ],
+   "r": 8,
+   "aggro": 8,
+   "motif": "SL"
+  }
+ ],
+ "actions": [
+  {
+   "at": [
+    -15,
+    -6
+   ],
+   "r": 1,
+   "do": "go",
+   "drop": true,
+   "profiles": [
+    "worst"
+   ]
+  },
+  {
+   "at": [
+    7.19,
+    0
+   ],
+   "r": 0.8,
+   "do": "go",
+   "home": 30,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    7.19,
+    0
+   ],
+   "r": 1,
+   "do": "song",
+   "song": "anchor",
+   "slab": "slabS",
+   "face": [
+    11.84,
+    0
+   ],
+   "home": 30,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    21.83,
+    0
+   ],
+   "r": 0.8,
+   "do": "go",
+   "home": 30,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    21.83,
+    0
+   ],
+   "r": 1,
+   "do": "airsong",
+   "song": "gust",
+   "face": [
+    28.33,
+    0
+   ],
+   "charge": 0.3,
+   "home": 30,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    16.24,
+    -8.51
+   ],
+   "r": 0.8,
+   "do": "go",
+   "home": 30,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    11.32,
+    -5.93
+   ],
+   "r": 0.8,
+   "do": "go",
+   "home": 30,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    6.63,
+    -3
+   ],
+   "r": 0.8,
+   "do": "go",
+   "home": 30,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    7.19,
+    0
+   ],
+   "r": 0.8,
+   "do": "go",
+   "home": 30,
+   "profiles": [
+    "worst"
+   ]
+  },
+  {
+   "at": [
+    7.19,
+    0
+   ],
+   "r": 1,
+   "do": "song",
+   "song": "anchor",
+   "slab": "slabS",
+   "face": [
+    11.84,
+    0
+   ],
+   "home": 30,
+   "profiles": [
+    "worst"
+   ]
+  },
+  {
+   "at": [
+    9.45,
+    64.32
+   ],
+   "r": 1,
+   "do": "go",
+   "home": 14,
+   "y": -10,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    0.98,
+    54.85
+   ],
+   "r": 1,
+   "do": "go",
+   "home": 14,
+   "y": -10,
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    -1,
+    4
+   ],
+   "r": 0.8,
+   "do": "song",
+   "song": "name",
+   "face": [
+    -1,
+    10
+   ],
+   "profiles": [
+    "worst"
+   ]
+  },
+  {
+   "at": [
+    0.98,
+    54.85
+   ],
+   "y": -9.5,
+   "r": 0.6,
+   "do": "song",
+   "song": "gust",
+   "face": [
+    -3.02,
+    54.85
+   ]
+  },
+  {
+   "at": [
+    -34.77,
+    58.74
+   ],
+   "y": -6.999999999999998,
+   "r": 4.6,
+   "do": "fight",
+   "enemy": "gdV"
+  },
+  {
+   "at": [
+    -35.47,
+    60.54
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "runeV",
+   "until": "switch.runeV"
+  },
+  {
+   "at": [
+    3.48,
+    81.9
+   ],
+   "y": -9.5,
+   "r": 0.6,
+   "do": "song",
+   "song": "anchor",
+   "face": [
+    4.01,
+    90.7
+   ],
+   "profiles": [
+    "mid",
+    "best"
+   ]
+  },
+  {
+   "at": [
+    3.48,
+    81.9
+   ],
+   "y": -9.5,
+   "r": 0.6,
+   "do": "song",
+   "song": "name",
+   "face": [
+    -0.67,
+    85.24
+   ],
+   "profiles": [
+    "best"
+   ]
+  },
+  {
+   "at": [
+    4.03,
+    95.3
+   ],
+   "r": 1.4,
+   "do": "dash",
+   "air": true
+  },
+  {
+   "at": [
+    2.48,
+    103.3
+   ],
+   "y": -9.5,
+   "r": 0.5,
+   "do": "wait",
+   "until": "echo.echo_dash",
+   "home": 3
+  },
+  {
+   "at": [
+    3.98,
+    110.61
+   ],
+   "r": 0.6,
+   "do": "strike",
+   "switch": "dam",
+   "until": "broken.dam"
+  },
+  {
+   "at": [
+    -5.02,
+    125.61
+   ],
+   "r": 1,
+   "do": "go",
+   "drop": true,
+   "profiles": [
+    "worst"
+   ]
+  },
+  {
+   "at": [
+    3.98,
+    123.11
+   ],
+   "y": -9.5,
+   "r": 2,
+   "do": "fight",
+   "enemy": "wdY",
+   "profiles": [
+    "mid",
+    "best"
+   ]
+  },
+  {
+   "at": [
+    3.98,
+    123.11
+   ],
+   "y": -9.5,
+   "r": 2,
+   "do": "fight",
+   "enemy": "wdY",
+   "shatter": true,
+   "profiles": [
+    "worst"
+   ]
+  },
+  {
+   "at": [
+    -13.9,
+    137.32
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "seqB",
+   "profiles": [
+    "worst"
+   ]
+  },
+  {
+   "at": [
+    -37.37,
+    135.28
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "seqA",
+   "until": "switch.seqA"
+  },
+  {
+   "at": [
+    -13.9,
+    137.32
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "seqB",
+   "until": "switch.seqB"
+  },
+  {
+   "at": [
+    10.58,
+    135.27
+   ],
+   "r": 0.8,
+   "do": "dash",
+   "air": true
+  },
+  {
+   "at": [
+    21.83,
+    152.61
+   ],
+   "r": 1.4,
+   "do": "dash",
+   "air": true
+  },
+  {
+   "at": [
+    22.58,
+    167.85
+   ],
+   "y": -0.5,
+   "r": 0.5,
+   "do": "wait",
+   "until": "echo.echo_branch",
+   "home": 3
+  },
+  {
+   "at": [
+    19.59,
+    166.85
+   ],
+   "r": 0.8,
+   "do": "dash",
+   "air": 2
+  },
+  {
+   "at": [
+    3.98,
+    166.85
+   ],
+   "y": -1.5,
+   "r": 5.5,
+   "do": "fight",
+   "enemy": "sqCB",
+   "profiles": [
+    "mid",
+    "best"
+   ]
+  },
+  {
+   "at": [
+    3.98,
+    166.85
+   ],
+   "y": -1.5,
+   "r": 5.5,
+   "do": "fight",
+   "enemy": "sqCB",
+   "shatter": true,
+   "profiles": [
+    "worst"
+   ]
+  },
+  {
+   "at": [
+    3.98,
+    167.42
+   ],
+   "y": 18.5,
+   "r": 1.5,
+   "do": "go",
+   "home": 4,
+   "profiles": [
+    "worst"
+   ]
+  },
+  {
+   "at": [
+    -0.54,
+    164.81
+   ],
+   "r": 0.6,
+   "do": "go",
+   "drop": true,
+   "profiles": [
+    "worst"
+   ]
+  },
+  {
+   "at": [
+    3.98,
+    166.85
+   ],
+   "y": -1.5,
+   "r": 5.5,
+   "do": "fight",
+   "enemy": "thCB"
+  },
+  {
+   "at": [
+    -31.71,
+    178.22
+   ],
+   "y": 26,
+   "r": 0.6,
+   "do": "sing",
+   "switch": "runeK",
+   "until": "switch.runeK"
+  },
+  {
+   "at": [
+    2.48,
+    195.29
+   ],
+   "y": 25.5,
+   "r": 1.5,
+   "do": "fight",
+   "enemy": "kw"
+  },
+  {
+   "at": [
+    1.69,
+    190.99
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "sc",
+   "until": "switch.sc",
+   "home": 9
+  },
+  {
+   "at": [
+    4.5,
+    192.51
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "orren1",
+   "until": "switch.orren1",
+   "home": 9
+  },
+  {
+   "at": [
+    6.55,
+    191.03
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "orren3",
+   "until": "switch.orren3",
+   "home": 9
+  },
+  {
+   "at": [
+    8.87,
+    192.04
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "orren2",
+   "until": "switch.orren2",
+   "home": 9
+  },
+  {
+   "at": [
+    9.66,
+    197.11
+   ],
+   "y": 25.5,
+   "r": 0.5,
+   "do": "wait",
+   "until": "echo.echo_shrine",
+   "home": 7
+  },
+  {
+   "at": [
+    3.98,
+    196.29
+   ],
+   "r": 0.5,
+   "do": "go",
+   "profiles": [
+    "revisit"
+   ]
+  },
+  {
+   "at": [
+    10.96,
+    198.07
+   ],
+   "r": 0.5,
+   "do": "go",
+   "profiles": [
+    "revisit"
+   ]
+  },
+  {
+   "at": [
+    11.2,
+    196.29
+   ],
+   "r": 0.5,
+   "do": "go",
+   "profiles": [
+    "revisit"
+   ]
+  },
+  {
+   "at": [
+    11.2,
+    196.29
+   ],
+   "r": 0.6,
+   "do": "song",
+   "song": "name",
+   "face": [
+    18.8,
+    198.79
+   ],
+   "until": "switch.lockO",
+   "profiles": [
+    "revisit"
+   ]
+  },
+  {
+   "at": [
+    11.2,
+    196.29
+   ],
+   "r": 0.8,
+   "do": "wait",
+   "until": "raised.lockO_br",
+   "profiles": [
+    "revisit"
+   ]
+  },
+  {
+   "at": [
+    11.5,
+    196.29
+   ],
+   "r": 0.5,
+   "do": "go",
+   "profiles": [
+    "revisit"
+   ]
+  },
+  {
+   "at": [
+    22.7,
+    196.29
+   ],
+   "r": 0.5,
+   "do": "go",
+   "profiles": [
+    "revisit"
+   ]
+  },
+  {
+   "at": [
+    25.45,
+    196.29
+   ],
+   "r": 0.5,
+   "do": "go",
+   "profiles": [
+    "revisit"
+   ]
+  },
+  {
+   "at": [
+    26.75,
+    196.25
+   ],
+   "r": 0.4,
+   "do": "go",
+   "profiles": [
+    "revisit"
+   ]
+  },
+  {
+   "at": [
+    25.45,
+    197.59
+   ],
+   "r": 0.4,
+   "do": "go",
+   "profiles": [
+    "revisit"
+   ]
+  },
+  {
+   "at": [
+    24.15,
+    196.25
+   ],
+   "r": 0.4,
+   "do": "go",
+   "profiles": [
+    "revisit"
+   ]
+  },
+  {
+   "at": [
+    25.45,
+    197.44
+   ],
+   "r": 0.6,
+   "do": "sing",
+   "switch": "kamen_brother",
+   "until": "switch.kamen_brother",
+   "profiles": [
+    "revisit"
+   ]
+  },
+  {
+   "at": [
+    22.7,
+    196.29
+   ],
+   "r": 0.5,
+   "do": "go",
+   "profiles": [
+    "revisit"
+   ]
+  },
+  {
+   "at": [
+    11.5,
+    196.29
+   ],
+   "r": 0.5,
+   "do": "go",
+   "profiles": [
+    "revisit"
+   ]
+  },
+  {
+   "at": [
+    3.98,
+    196.29
+   ],
+   "r": 0.5,
+   "do": "go",
+   "profiles": [
+    "revisit"
+   ]
+  }
+ ],
+ "echoSlots": [
+  {
+   "id": "echo_branch",
+   "pos": [
+    22.58,
+    -0.5,
+    167.85
+   ],
+   "note": "fast lane top (crumble + updraft + dash)"
+  },
+  {
+   "id": "echo_bridge",
+   "pos": [
+    9.45,
+    -10.5,
+    64.32
+   ],
+   "note": "nook below the timed bridge foot (drop from V, hop back)"
+  },
+  {
+   "id": "echo_dash",
+   "pos": [
+    2.48,
+    -9.5,
+    103.3
+   ],
+   "note": "landing of the crumble air dash"
+  },
+  {
+   "id": "echo_shrine",
+   "pos": [
+    9.66,
+    25.5,
+    197.11
+   ],
+   "note": "by the crown shrine"
+  },
+  {
+   "id": "echo_far",
+   "pos": [
+    26.75,
+    25.5,
+    196.25
+   ],
+   "note": "R6 lock reward"
+  },
+  {
+   "id": "tale5",
+   "pos": [
+    25.45,
+    25.5,
+    197.59
+   ],
+   "relic": "tale.5",
+   "note": "R6 lock reward"
+  },
+  {
+   "id": "thread_l3",
+   "pos": [
+    24.15,
+    25.5,
+    196.25
+   ],
+   "relic": "thread.l3",
+   "note": "R6 lock reward"
+  }
+ ],
+ "startGifts": [
+  "dash",
+  "windbreath",
+  "airdash",
+  "gust",
+  "name",
+  "anchor"
+ ],
+ "npcSlots": [
+  {
+   "id": "orren",
+   "pos": [
+    6.76,
+    25.5,
+    191.72
+   ],
+   "note": "Orren's arch on the crown terrace (route: g1 -> crown)"
+  }
+ ],
+ "npcs": [
+  {
+   "id": "narrator",
+   "kind": "voice",
+   "voice": "whisper",
+   "talk": [
+    {
+     "id": "n_orren",
+     "lines": [
+      {
+       "en": "Rings of stone turn round the arch. Three runes hold them, and gold threads tie the runes to a stone Warden.",
+       "ru": "Кольца камня вращаются вокруг арки. Их держат три руны, а золотые нити тянутся от рун к каменному Стражу."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "orren",
+   "kind": "orren",
+   "name": {
+    "en": "Orren's Remnant",
+    "ru": "Остаток Оррена"
+   },
+   "voice": "orren",
+   "pos": [
+    6.76,
+    26.9,
+    192.92
+   ],
+   "center": [
+    6.76,
+    26.9,
+    192.92
+   ],
+   "rotY": -3.033,
+   "switches": [
+    "orren1",
+    "orren2",
+    "orren3"
+   ],
+   "lure": true,
+   "bark": {
+    "talk": "n_orren",
+    "r": 8
+   },
+   "talk": [
+    {
+     "id": "orren_kw1",
+     "on": "enemy.kw.p1",
+     "lines": [
+      {
+       "en": "My Warden wakes. Three winds feed him: see the threads.",
+       "ru": "Мой Страж проснулся. Три ветра питают его: видишь нити."
+      },
+      {
+       "en": "Still each wind as it rears to strike.",
+       "ru": "Усмири каждый ветер, когда он встаёт на дыбы."
+      }
+     ]
+    },
+    {
+     "id": "orren_kww",
+     "on": "enemy.kw.window",
+     "lines": [
+      {
+       "en": "His cords hang loose. Say his name before they tighten.",
+       "ru": "Его путы ослабли. Назови его имя, пока они не затянулись."
+      }
+     ]
+    },
+    {
+     "id": "orren_kw2",
+     "on": "enemy.kw.p2",
+     "lines": [
+      {
+       "en": "Now he comes himself. Step aside, then strike: three blows shake him.",
+       "ru": "Теперь он идёт сам. Отступи и бей: три удара пошатнут его."
+      }
+     ]
+    },
+    {
+     "id": "orren_kw3",
+     "on": "enemy.kw.p3",
+     "lines": [
+      {
+       "en": "He beats the ground. Leap each ring, and name him when he tires.",
+       "ru": "Он бьёт землю. Перепрыгни каждое кольцо и назови его, когда он устанет."
+      }
+     ]
+    },
+    {
+     "id": "orren_tied",
+     "on": "enemy.kw.tied",
+     "lines": [
+      {
+       "en": "My runes are tied to the Warden. Unbind him first.",
+       "ru": "Мои руны привязаны к Стражу. Сначала развяжи его."
+      }
+     ]
+    },
+    {
+     "id": "orren_1",
+     "on": "npc.orren.1",
+     "lines": [
+      {
+       "en": "Who loosens my knot? I tied it so the sky would hold together.",
+       "ru": "Кто ослабляет мой узел? Я завязал его, чтобы небо держалось."
+      },
+      {
+       "en": "I was a Keeper. I am what is left of one.",
+       "ru": "Я был Хранителем. Я то, что от него осталось."
+      }
+     ]
+    },
+    {
+     "id": "orren_2",
+     "on": "npc.orren.2",
+     "lines": [
+      {
+       "en": "The stone, the wisp, the bird. I bound them all, out of fear of forgetting.",
+       "ru": "Камень, вихрь, птица. Я связал их всех, боясь забыть."
+      },
+      {
+       "en": "But a knot does not remember. It only holds.",
+       "ru": "Но узел не помнит. Он только держит."
+      }
+     ]
+    },
+    {
+     "id": "orren_3",
+     "on": "npc.orren.3",
+     "end": [
+      "npc.orren.free"
+     ],
+     "lines": [
+      {
+       "en": "Ah. So this is what letting go feels like.",
+       "ru": "А. Вот каково это, отпустить."
+      },
+      {
+       "en": "Remembering is waking, little wind. Go on. The arch is open.",
+       "ru": "Вспомнить значит проснуться, маленький ветер. Иди. Арка открыта."
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "shots": [
+  {
+   "name": "arrival",
+   "pos": [
+    2,
+    2.2,
+    -0.97
+   ],
+   "look": [
+    -8.88,
+    -4,
+    -22.92
+   ]
+  },
+  {
+   "name": "vista",
+   "pos": [
+    33.98,
+    12,
+    100.85
+   ],
+   "look": [
+    3.98,
+    0,
+    110.85
+   ]
+  },
+  {
+   "name": "bridge",
+   "pos": [
+    12.98,
+    -5.5,
+    61.67
+   ],
+   "look": [
+    3.98,
+    -9.5,
+    66.67
+   ],
+   "fire": [
+    "runeV"
+   ]
+  },
+  {
+   "name": "spiral",
+   "pos": [
+    -9.5,
+    5.8,
+    15.82
+   ],
+   "look": [
+    7.44,
+    -6.6,
+    27.15
+   ]
+  },
+  {
+   "name": "stairs",
+   "pos": [
+    13.98,
+    27.5,
+    179.13
+   ],
+   "look": [
+    3.98,
+    24.5,
+    183.13
+   ],
+   "fire": [
+    "runeK"
+   ]
+  },
+  {
+   "name": "crumble",
+   "pos": [
+    11.98,
+    -5.5,
+    85
+   ],
+   "look": [
+    3.98,
+    -9.5,
+    89
+   ]
+  },
+  {
+   "name": "dam",
+   "pos": [
+    7.98,
+    -7,
+    107.01
+   ],
+   "look": [
+    3.98,
+    -8.3,
+    112.01
+   ]
+  },
+  {
+   "name": "fork",
+   "pos": [
+    12.88,
+    24.5,
+    151.06
+   ],
+   "look": [
+    12.88,
+    -5.5,
+    151.56
+   ]
+  },
+  {
+   "name": "crown",
+   "pos": [
+    -18.02,
+    12.5,
+    170.85
+   ],
+   "look": [
+    10.19,
+    13.5,
+    167.42
+   ]
+  },
+  {
+   "name": "vein_V",
+   "pos": [
+    -0.28,
+    1.3,
+    48.36
+   ],
+   "look": [
+    -13.79,
+    -8.4,
+    64.07
+   ]
+  },
+  {
+   "name": "hidden_V",
+   "pos": [
+    -30.77,
+    -4.5,
+    57.54
+   ],
+   "look": [
+    -36.97,
+    -6.2,
+    60.54
+   ]
+  },
+  {
+   "name": "vein_Z",
+   "pos": [
+    0.08,
+    4.8,
+    122.75
+   ],
+   "look": [
+    -13.9,
+    -4.4,
+    137.42
+   ]
+  },
+  {
+   "name": "hidden_Z",
+   "pos": [
+    -32.67,
+    -0.5,
+    132.28
+   ],
+   "look": [
+    -38.87,
+    -2.2,
+    135.28
+   ]
+  },
+  {
+   "name": "vein_K",
+   "pos": [
+    2.23,
+    34.3,
+    166.42
+   ],
+   "look": [
+    -11.07,
+    24.6,
+    181.91
+   ]
+  },
+  {
+   "name": "hidden_K",
+   "pos": [
+    -27.01,
+    28.5,
+    175.22
+   ],
+   "look": [
+    -33.21,
+    26.8,
+    178.22
+   ]
+  },
+  {
+   "name": "goal",
+   "pos": [
+    11.98,
+    30.5,
+    186.29
+   ],
+   "look": [
+    3.98,
+    27,
+    197.29
+   ]
+  },
+  {
+   "name": "lockO",
+   "pos": [
+    5.98,
+    30.5,
+    205.29
+   ],
+   "look": [
+    18.8,
+    26.5,
+    198.79
+   ]
+  },
+  {
+   "name": "lockO_open",
+   "pos": [
+    5.98,
+    30.5,
+    205.29
+   ],
+   "look": [
+    18.8,
+    26.5,
+    198.79
+   ],
+   "fire": [
+    "lockO"
+   ]
+  },
+  {
+   "name": "shortcut",
+   "pos": [
+    13.98,
+    29.5,
+    184.29
+   ],
+   "look": [
+    3.98,
+    24.5,
+    187.29
+   ],
+   "fire": [
+    "runeK",
+    "sc"
+   ]
+  }
+ ],
+ "cutscenes": {
+  "arrive": {
+   "dur": 7,
+   "keys": [
+    {
+     "at": 0,
+     "pos": [
+      -25.72,
+      -3,
+      -63.68
+     ],
+     "look": [
+      -17.76,
+      -0.5,
+      -40.84
+     ]
+    },
+    {
+     "at": 3.4,
+     "pos": [
+      -11.96,
+      5.5,
+      -37.02
+     ],
+     "look": [
+      -6.22,
+      4,
+      -17.54
+     ]
+    },
+    {
+     "at": 5.8,
+     "play": 1
+    },
+    {
+     "at": 7,
+     "play": 1
+    }
+   ],
+   "lines": [
+    {
+     "at": 0.8,
+     "dur": 5,
+     "text": {
+      "en": "The Crown of Winds. Orren's knot is tied here, at the top.",
+      "ru": "Корона Ветров. Узел Оррена завязан здесь, на вершине."
+     }
+    }
+   ],
+   "events": [
+    {
+     "at": 0,
+     "duck": {
+      "db": -6,
+      "seconds": 7
+     }
+    },
+    {
+     "at": 0.2,
+     "cue": "wind",
+     "gain": 0.8
+    }
+   ],
+   "ribbon": {
+    "at": -6,
+    "grow": 1,
+    "fade": [
+     4.6,
+     7
+    ],
+    "pts": [
+     [
+      -42.62,
+      -12,
+      -91.02
+     ],
+     [
+      -23.09,
+      -4.5,
+      -51.59
+     ],
+     [
+      -10.65,
+      4.2,
+      -26.51
+     ],
+     [
+      -4,
+      3.6,
+      -13.06
+     ],
+     [
+      -0.44,
+      1.3,
+      -5.9
+     ],
+     [
+      3.11,
+      1.6,
+      1.27
+     ]
+    ]
+   },
+   "hero": {
+    "path": [
+     {
+      "at": 0,
+      "pos": [
+       -23.09,
+       -4.5,
+       -51.59
+      ],
+      "heading": 0.46,
+      "clip": "glide"
+     },
+     {
+      "at": 3,
+      "pos": [
+       -10.65,
+       4.2,
+       -26.51
+      ],
+      "heading": 0.46,
+      "clip": "glide"
+     },
+     {
+      "at": 5,
+      "pos": [
+       -4,
+       3.6,
+       -13.06
+      ],
+      "heading": 0.46,
+      "clip": "glide"
+     },
+     {
+      "at": 7,
+      "pos": [
+       -0.71,
+       1.4,
+       -6.43
+      ],
+      "heading": 0.46
+     }
+    ]
+   },
+   "actors": [
+    {
+     "glb": "assets/characters/kestrel/kestrel.glb",
+     "scale": 2.2,
+     "path": [
+      {
+       "at": 0,
+       "pos": [
+        -17.04,
+        -0.5,
+        -41.2
+       ],
+       "clip": "fly"
+      },
+      {
+       "at": 2.6,
+       "pos": [
+        -4.43,
+        6.5,
+        -16.2
+       ],
+       "clip": "fly"
+      },
+      {
+       "at": 4.4,
+       "pos": [
+        -0.47,
+        9,
+        0.81
+       ],
+       "clip": "fly"
+      },
+      {
+       "at": 6.6,
+       "pos": [
+        -0.1,
+        17,
+        21.83
+       ],
+       "clip": "fly"
+      }
+     ]
+    }
+   ]
+  },
+  "finale": {
+   "dur": 25,
+   "keys": [
+    {
+     "at": 0,
+     "shot": "goal",
+     "ease": 1
+    },
+    {
+     "at": 4,
+     "pos": [
+      9.5,
+      28.5,
+      190
+     ],
+     "look": [
+      6.4,
+      27.4,
+      194.8
+     ]
+    },
+    {
+     "at": 8,
+     "pos": [
+      16,
+      33,
+      176
+     ],
+     "look": [
+      5,
+      27,
+      198
+     ]
+    },
+    {
+     "at": 14,
+     "pos": [
+      12,
+      27,
+      162
+     ],
+     "look": [
+      -1,
+      36.7,
+      198.5
+     ]
+    },
+    {
+     "at": 19,
+     "pos": [
+      8.5,
+      27.4,
+      182
+     ],
+     "look": [
+      2.6,
+      28.5,
+      206
+     ]
+    },
+    {
+     "at": 25,
+     "pos": [
+      2.6,
+      26.2,
+      193
+     ],
+     "look": [
+      3.1,
+      26.9,
+      206
+     ]
+    }
+   ],
+   "lines": [
+    {
+     "at": 1,
+     "dur": 5,
+     "text": {
+      "en": "The song reaches the knot, and it loosens.",
+      "ru": "Песня касается узла, и узел слабеет."
+     }
+    },
+    {
+     "at": 6.5,
+     "dur": 5.5,
+     "text": {
+      "en": "Every wind Orren held goes home at once.",
+      "ru": "Все ветры, что держал Оррен, разом летят домой."
+     }
+    },
+    {
+     "at": 12.6,
+     "dur": 5.6,
+     "text": {
+      "en": "The sun climbs over the Crown for the first time in an age.",
+      "ru": "Впервые за века солнце встаёт над Короной."
+     }
+    },
+    {
+     "at": 18.8,
+     "dur": 5.8,
+     "text": {
+      "en": "And the islands, unbound, drift toward each other again.",
+      "ru": "А острова, освобождённые, снова плывут друг к другу."
+     }
+    }
+   ],
+   "events": [
+    {
+     "at": 0,
+     "duck": {
+      "db": -10,
+      "seconds": 25
+     }
+    },
+    {
+     "at": 0.6,
+     "cue": "rune"
+    },
+    {
+     "at": 1,
+     "fire": "orren1"
+    },
+    {
+     "at": 1,
+     "fire": "orren2"
+    },
+    {
+     "at": 1,
+     "fire": "orren3"
+    },
+    {
+     "at": 2,
+     "fx": "finale"
+    },
+    {
+     "at": 2,
+     "cue": "unbind"
+    },
+    {
+     "at": 2.4,
+     "cue": "wind",
+     "gain": 1
+    },
+    {
+     "at": 6,
+     "sun": [
+      0,
+      1,
+      10
+     ]
+    },
+    {
+     "at": 9,
+     "cue": "birds",
+     "gain": 0.7
+    },
+    {
+     "at": 13,
+     "cue": "hum",
+     "gain": 0.7
+    }
+   ],
+   "ribbon": [
+    {
+     "at": 2.2,
+     "grow": 5,
+     "pts": [
+      [
+       6.76,
+       28,
+       192.92
+      ],
+      [
+       3.5,
+       31.5,
+       189.13
+      ],
+      [
+       -6.35,
+       36.5,
+       183.75
+      ],
+      [
+       -32.54,
+       40.5,
+       178.1
+      ],
+      [
+       -92.63,
+       34.5,
+       181.87
+      ]
+     ]
+    },
+    {
+     "at": 2.7,
+     "grow": 5,
+     "pts": [
+      [
+       6.76,
+       28,
+       192.92
+      ],
+      [
+       5.61,
+       31.5,
+       197.79
+      ],
+      [
+       7.05,
+       36.5,
+       208.92
+      ],
+      [
+       17.89,
+       40.5,
+       233.42
+      ],
+      [
+       56.31,
+       34.5,
+       279.78
+      ]
+     ]
+    },
+    {
+     "at": 3.2,
+     "grow": 5,
+     "pts": [
+      [
+       6.76,
+       28,
+       192.92
+      ],
+      [
+       11.74,
+       31.5,
+       192.52
+      ],
+      [
+       21.89,
+       36.5,
+       187.73
+      ],
+      [
+       41.87,
+       40.5,
+       169.88
+      ],
+      [
+       74.19,
+       34.5,
+       119.08
+      ]
+     ]
+    }
+   ],
+   "hero": {
+    "keep": true,
+    "from": "player",
+    "clip": "land",
+    "at": 0.3,
+    "pose": [
+     {
+      "at": 0,
+      "land": 0
+     },
+     {
+      "at": 2.1,
+      "land": 0
+     },
+     {
+      "at": 2.6,
+      "land": 0.6
+     },
+     {
+      "at": 4.4,
+      "land": 0
+     }
+    ],
+    "path": [
+     {
+      "at": 0,
+      "pos": [
+       3.48,
+       25.5,
+       195.79
+      ],
+      "heading": -0.34
+     },
+     {
+      "at": 0.1,
+      "pos": [
+       3.48,
+       25.5,
+       195.79
+      ],
+      "heading": -0.34,
+      "clip": "walk"
+     },
+     {
+      "at": 1,
+      "pos": [
+       3.48,
+       25.5,
+       196.14
+      ],
+      "heading": -0.34,
+      "clip": "sing"
+     },
+     {
+      "at": 2.2,
+      "pos": [
+       3.48,
+       25.5,
+       196.14
+      ],
+      "heading": -0.34
+     }
+    ]
+   }
+  },
+  "finale_bad": {
+   "dur": 21,
+   "keys": [
+    {
+     "at": 0,
+     "shot": "goal",
+     "ease": 1
+    },
+    {
+     "at": 4,
+     "pos": [
+      9.5,
+      28.5,
+      190
+     ],
+     "look": [
+      6.4,
+      27.4,
+      194.8
+     ]
+    },
+    {
+     "at": 8,
+     "pos": [
+      16,
+      33,
+      176
+     ],
+     "look": [
+      5,
+      27,
+      198
+     ]
+    },
+    {
+     "at": 14,
+     "pos": [
+      12,
+      27,
+      162
+     ],
+     "look": [
+      -1,
+      36.7,
+      198.5
+     ]
+    },
+    {
+     "at": 16.5,
+     "pos": [
+      8.5,
+      27.4,
+      182
+     ],
+     "look": [
+      2.6,
+      28.5,
+      206
+     ]
+    },
+    {
+     "at": 21,
+     "pos": [
+      2.6,
+      26.2,
+      193
+     ],
+     "look": [
+      3.1,
+      26.9,
+      206
+     ]
+    }
+   ],
+   "lines": [
+    {
+     "at": 1,
+     "dur": 5,
+     "text": {
+      "en": "The song reaches the knot. It loosens, slowly, unwillingly.",
+      "ru": "Песня касается узла. Он слабеет медленно, нехотя."
+     }
+    },
+    {
+     "at": 6.5,
+     "dur": 5.5,
+     "text": {
+      "en": "The winds go home, but many have forgotten the way.",
+      "ru": "Ветры летят домой, но многие забыли дорогу."
+     }
+    },
+    {
+     "at": 12.6,
+     "dur": 6.5,
+     "text": {
+      "en": "Orren fades without a word. No one here remembers his name.",
+      "ru": "Оррен тает без слова. Здесь никто не помнит его имени."
+     }
+    }
+   ],
+   "events": [
+    {
+     "at": 0,
+     "duck": {
+      "db": -10,
+      "seconds": 21
+     }
+    },
+    {
+     "at": 0.6,
+     "cue": "rune"
+    },
+    {
+     "at": 1,
+     "fire": "orren1"
+    },
+    {
+     "at": 1,
+     "fire": "orren2"
+    },
+    {
+     "at": 1,
+     "fire": "orren3"
+    },
+    {
+     "at": 1.5,
+     "fx": "grey"
+    },
+    {
+     "at": 2,
+     "cue": "unbind"
+    },
+    {
+     "at": 2.4,
+     "cue": "wind",
+     "gain": 1
+    },
+    {
+     "at": 6,
+     "sun": [
+      0,
+      0.2,
+      12
+     ]
+    },
+    {
+     "at": 13,
+     "cue": "hum",
+     "gain": 0.7
+    }
+   ],
+   "ribbon": [
+    {
+     "at": 2.2,
+     "grow": 5,
+     "pts": [
+      [
+       6.76,
+       28,
+       192.92
+      ],
+      [
+       3.5,
+       31.5,
+       189.13
+      ],
+      [
+       -6.35,
+       36.5,
+       183.75
+      ],
+      [
+       -32.54,
+       40.5,
+       178.1
+      ],
+      [
+       -92.63,
+       34.5,
+       181.87
+      ]
+     ],
+     "fade": [
+      8,
+      13
+     ]
+    }
+   ],
+   "hero": {
+    "keep": true,
+    "from": "player",
+    "clip": "land",
+    "at": 0.3,
+    "pose": [
+     {
+      "at": 0,
+      "land": 0
+     },
+     {
+      "at": 2.1,
+      "land": 0
+     },
+     {
+      "at": 2.6,
+      "land": 0.6
+     },
+     {
+      "at": 4.4,
+      "land": 0
+     }
+    ],
+    "path": [
+     {
+      "at": 0,
+      "pos": [
+       3.48,
+       25.5,
+       195.79
+      ],
+      "heading": -0.34
+     },
+     {
+      "at": 0.1,
+      "pos": [
+       3.48,
+       25.5,
+       195.79
+      ],
+      "heading": -0.34,
+      "clip": "walk"
+     },
+     {
+      "at": 1,
+      "pos": [
+       3.48,
+       25.5,
+       196.14
+      ],
+      "heading": -0.34,
+      "clip": "sing"
+     },
+     {
+      "at": 2.2,
+      "pos": [
+       3.48,
+       25.5,
+       196.14
+      ],
+      "heading": -0.34
+     }
+    ]
+   }
+  },
+  "finale_true": {
+   "dur": 31,
+   "keys": [
+    {
+     "at": 0,
+     "shot": "goal",
+     "ease": 1
+    },
+    {
+     "at": 4,
+     "pos": [
+      9.5,
+      28.5,
+      190
+     ],
+     "look": [
+      6.4,
+      27.4,
+      194.8
+     ]
+    },
+    {
+     "at": 8,
+     "pos": [
+      16,
+      33,
+      176
+     ],
+     "look": [
+      5,
+      27,
+      198
+     ]
+    },
+    {
+     "at": 14,
+     "pos": [
+      12,
+      27,
+      162
+     ],
+     "look": [
+      -1,
+      36.7,
+      198.5
+     ]
+    },
+    {
+     "at": 19,
+     "pos": [
+      8.5,
+      27.4,
+      182
+     ],
+     "look": [
+      2.6,
+      28.5,
+      206
+     ]
+    },
+    {
+     "at": 25,
+     "pos": [
+      2.6,
+      26.2,
+      193
+     ],
+     "look": [
+      3.1,
+      26.9,
+      206
+     ]
+    },
+    {
+     "at": 31,
+     "pos": [
+      2.6,
+      27.4,
+      188
+     ],
+     "look": [
+      3.1,
+      30,
+      206
+     ]
+    }
+   ],
+   "lines": [
+    {
+     "at": 1,
+     "dur": 5,
+     "text": {
+      "en": "The song reaches the knot, and it loosens.",
+      "ru": "Песня касается узла, и узел слабеет."
+     }
+    },
+    {
+     "at": 6.5,
+     "dur": 5.5,
+     "text": {
+      "en": "Every wind Orren held goes home at once.",
+      "ru": "Все ветры, что держал Оррен, разом летят домой."
+     }
+    },
+    {
+     "at": 12.6,
+     "dur": 5.6,
+     "text": {
+      "en": "The sun climbs over the Crown for the first time in an age.",
+      "ru": "Впервые за века солнце встаёт над Короной."
+     }
+    },
+    {
+     "at": 18.8,
+     "dur": 5.8,
+     "text": {
+      "en": "And the islands, unbound, drift toward each other again.",
+      "ru": "А острова, освобождённые, снова плывут друг к другу."
+     }
+    },
+    {
+     "at": 25,
+     "dur": 5.6,
+     "text": {
+      "en": "Orren, youngest of the Keepers. Named, he lets go of the last cord: himself.",
+      "ru": "Оррен, младший из Хранителей. Названный по имени, он отпускает последнюю верёвку: себя."
+     }
+    }
+   ],
+   "events": [
+    {
+     "at": 0,
+     "duck": {
+      "db": -10,
+      "seconds": 31
+     }
+    },
+    {
+     "at": 0.6,
+     "cue": "rune"
+    },
+    {
+     "at": 1,
+     "fire": "orren1"
+    },
+    {
+     "at": 1,
+     "fire": "orren2"
+    },
+    {
+     "at": 1,
+     "fire": "orren3"
+    },
+    {
+     "at": 2,
+     "fx": "finale"
+    },
+    {
+     "at": 2,
+     "cue": "unbind"
+    },
+    {
+     "at": 2.4,
+     "cue": "wind",
+     "gain": 1
+    },
+    {
+     "at": 6,
+     "sun": [
+      0,
+      1,
+      10
+     ]
+    },
+    {
+     "at": 9,
+     "cue": "birds",
+     "gain": 0.7
+    },
+    {
+     "at": 13,
+     "cue": "hum",
+     "gain": 0.7
+    },
+    {
+     "at": 24.6,
+     "cue": "rune"
+    },
+    {
+     "at": 25.2,
+     "cue": "birds",
+     "gain": 1
+    }
+   ],
+   "ribbon": [
+    {
+     "at": 2.2,
+     "grow": 5,
+     "pts": [
+      [
+       6.76,
+       28,
+       192.92
+      ],
+      [
+       3.5,
+       31.5,
+       189.13
+      ],
+      [
+       -6.35,
+       36.5,
+       183.75
+      ],
+      [
+       -32.54,
+       40.5,
+       178.1
+      ],
+      [
+       -92.63,
+       34.5,
+       181.87
+      ]
+     ]
+    },
+    {
+     "at": 2.7,
+     "grow": 5,
+     "pts": [
+      [
+       6.76,
+       28,
+       192.92
+      ],
+      [
+       5.61,
+       31.5,
+       197.79
+      ],
+      [
+       7.05,
+       36.5,
+       208.92
+      ],
+      [
+       17.89,
+       40.5,
+       233.42
+      ],
+      [
+       56.31,
+       34.5,
+       279.78
+      ]
+     ]
+    },
+    {
+     "at": 3.2,
+     "grow": 5,
+     "pts": [
+      [
+       6.76,
+       28,
+       192.92
+      ],
+      [
+       11.74,
+       31.5,
+       192.52
+      ],
+      [
+       21.89,
+       36.5,
+       187.73
+      ],
+      [
+       41.87,
+       40.5,
+       169.88
+      ],
+      [
+       74.19,
+       34.5,
+       119.08
+      ]
+     ]
+    }
+   ],
+   "hero": {
+    "keep": true,
+    "from": "player",
+    "clip": "land",
+    "at": 0.3,
+    "pose": [
+     {
+      "at": 0,
+      "land": 0
+     },
+     {
+      "at": 2.1,
+      "land": 0
+     },
+     {
+      "at": 2.6,
+      "land": 0.6
+     },
+     {
+      "at": 4.4,
+      "land": 0
+     }
+    ],
+    "path": [
+     {
+      "at": 0,
+      "pos": [
+       3.48,
+       25.5,
+       195.79
+      ],
+      "heading": -0.34
+     },
+     {
+      "at": 0.1,
+      "pos": [
+       3.48,
+       25.5,
+       195.79
+      ],
+      "heading": -0.34,
+      "clip": "walk"
+     },
+     {
+      "at": 1,
+      "pos": [
+       3.48,
+       25.5,
+       196.14
+      ],
+      "heading": -0.34,
+      "clip": "sing"
+     },
+     {
+      "at": 2.2,
+      "pos": [
+       3.48,
+       25.5,
+       196.14
+      ],
+      "heading": -0.34
+     }
+    ]
+   }
+  }
+ },
+ "feasibility": {
+  "jumpReach": 4.28,
+  "jumpRise": 1.3,
+  "speed": 6.5,
+  "stepUp": 0.35,
+  "maxFrac": 0.9,
+  "aim": [
+   0.6,
+   0.75
+  ],
+  "gaps": [
+   {
+    "from": "sl",
+    "to": "sh1",
+    "dist": 2.8,
+    "rise": 0.2,
+    "reach": 4.11,
+    "frac": 0.68,
+    "inAim": true
+   },
+   {
+    "from": "sh1",
+    "to": "sh2",
+    "dist": 2.8,
+    "rise": 0.2,
+    "reach": 4.11,
+    "frac": 0.68,
+    "inAim": true
+   },
+   {
+    "from": "sh2",
+    "to": "start",
+    "dist": 3.25,
+    "rise": -0.4,
+    "reach": 4.59,
+    "frac": 0.71,
+    "inAim": true
+   },
+   {
+    "from": "start",
+    "to": "d1",
+    "dist": 2.6,
+    "rise": -1.2,
+    "reach": 5.11,
+    "frac": 0.51,
+    "inAim": false
+   },
+   {
+    "from": "d1",
+    "to": "d2",
+    "dist": 2.9,
+    "rise": -2,
+    "reach": 5.55,
+    "frac": 0.52,
+    "inAim": false
+   },
+   {
+    "from": "d4",
+    "to": "d5",
+    "dist": 2.7,
+    "rise": -1.4,
+    "reach": 5.22,
+    "frac": 0.52,
+    "inAim": false
+   },
+   {
+    "from": "d5",
+    "to": "V",
+    "dist": 2.8,
+    "rise": -1.5,
+    "reach": 5.28,
+    "frac": 0.53,
+    "inAim": false
+   },
+   {
+    "from": "V",
+    "to": "nook",
+    "dist": 2,
+    "rise": -1,
+    "reach": 4.99,
+    "frac": 0.4,
+    "inAim": false
+   },
+   {
+    "from": "nook",
+    "to": "V",
+    "dist": 2,
+    "rise": 1,
+    "reach": 3.17,
+    "frac": 0.63,
+    "inAim": true
+   },
+   {
+    "from": "sa",
+    "to": "sb",
+    "dist": 2.8,
+    "rise": 0,
+    "reach": 4.28,
+    "frac": 0.65,
+    "inAim": true
+   },
+   {
+    "from": "sb",
+    "to": "CB",
+    "dist": 2.8,
+    "rise": 0,
+    "reach": 4.28,
+    "frac": 0.65,
+    "inAim": true
+   },
+   {
+    "from": "V",
+    "to": "hv1",
+    "dist": 2.55,
+    "rise": 0.8,
+    "reach": 3.47,
+    "frac": 0.74,
+    "inAim": true
+   },
+   {
+    "from": "hv1",
+    "to": "hv2",
+    "dist": 2.7,
+    "rise": 0.3,
+    "reach": 4.02,
+    "frac": 0.67,
+    "inAim": true
+   },
+   {
+    "from": "hv2",
+    "to": "hv3",
+    "dist": 2.55,
+    "rise": 0.7,
+    "reach": 3.59,
+    "frac": 0.71,
+    "inAim": true
+   },
+   {
+    "from": "hv3",
+    "to": "hv4",
+    "dist": 2.7,
+    "rise": 0.2,
+    "reach": 4.11,
+    "frac": 0.66,
+    "inAim": true
+   },
+   {
+    "from": "hv4",
+    "to": "hvH",
+    "dist": 2.6,
+    "rise": 0.5,
+    "reach": 3.82,
+    "frac": 0.68,
+    "inAim": true
+   },
+   {
+    "from": "y1",
+    "to": "hz1",
+    "dist": 2.7,
+    "rise": 0.3,
+    "reach": 4.02,
+    "frac": 0.67,
+    "inAim": true
+   },
+   {
+    "from": "hz1",
+    "to": "hz2",
+    "dist": 2.55,
+    "rise": 0.8,
+    "reach": 3.47,
+    "frac": 0.74,
+    "inAim": true
+   },
+   {
+    "from": "hz2",
+    "to": "hz3",
+    "dist": 2.7,
+    "rise": 0.2,
+    "reach": 4.11,
+    "frac": 0.66,
+    "inAim": true
+   },
+   {
+    "from": "hz3",
+    "to": "hz4",
+    "dist": 2.55,
+    "rise": 0.7,
+    "reach": 3.59,
+    "frac": 0.71,
+    "inAim": true
+   },
+   {
+    "from": "hz4",
+    "to": "hzH",
+    "dist": 2.6,
+    "rise": 0.5,
+    "reach": 3.82,
+    "frac": 0.68,
+    "inAim": true
+   },
+   {
+    "from": "k5",
+    "to": "hk1",
+    "dist": 2.55,
+    "rise": 0.8,
+    "reach": 3.47,
+    "frac": 0.74,
+    "inAim": true
+   },
+   {
+    "from": "hk1",
+    "to": "hk2",
+    "dist": 2.7,
+    "rise": 0.3,
+    "reach": 4.02,
+    "frac": 0.67,
+    "inAim": true
+   },
+   {
+    "from": "hk2",
+    "to": "hk3",
+    "dist": 2.55,
+    "rise": 0.7,
+    "reach": 3.59,
+    "frac": 0.71,
+    "inAim": true
+   },
+   {
+    "from": "hk3",
+    "to": "hk4",
+    "dist": 2.7,
+    "rise": 0.2,
+    "reach": 4.11,
+    "frac": 0.66,
+    "inAim": true
+   },
+   {
+    "from": "hk4",
+    "to": "hkH",
+    "dist": 2.6,
+    "rise": 0.5,
+    "reach": 3.82,
+    "frac": 0.68,
+    "inAim": true
+   },
+   {
+    "from": "d2",
+    "to": "mech_spiral_0",
+    "dist": 1.63,
+    "rise": -0.5,
+    "reach": 4.66,
+    "frac": 0.35,
+    "inAim": false
+   },
+   {
+    "from": "mech_spiral_0",
+    "to": "mech_spiral_1",
+    "dist": 1.67,
+    "rise": -0.46,
+    "reach": 4.63,
+    "frac": 0.36,
+    "inAim": false
+   },
+   {
+    "from": "mech_spiral_1",
+    "to": "mech_spiral_2",
+    "dist": 1.67,
+    "rise": -0.53,
+    "reach": 4.68,
+    "frac": 0.36,
+    "inAim": false
+   },
+   {
+    "from": "mech_spiral_2",
+    "to": "mech_spiral_3",
+    "dist": 1.67,
+    "rise": -0.46,
+    "reach": 4.63,
+    "frac": 0.36,
+    "inAim": false
+   },
+   {
+    "from": "mech_spiral_3",
+    "to": "mech_spiral_4",
+    "dist": 1.67,
+    "rise": -0.5,
+    "reach": 4.66,
+    "frac": 0.36,
+    "inAim": false
+   },
+   {
+    "from": "mech_spiral_4",
+    "to": "mech_spiral_5",
+    "dist": 1.67,
+    "rise": -0.5,
+    "reach": 4.66,
+    "frac": 0.36,
+    "inAim": false
+   },
+   {
+    "from": "mech_spiral_5",
+    "to": "d4",
+    "dist": 1.63,
+    "rise": -0.48,
+    "reach": 4.64,
+    "frac": 0.35,
+    "inAim": false
+   },
+   {
+    "from": "W",
+    "to": "mech_crumble_0",
+    "dist": 1.6,
+    "rise": 0.03,
+    "reach": 4.25,
+    "frac": 0.38,
+    "inAim": false
+   },
+   {
+    "from": "mech_crumble_0",
+    "to": "mech_crumble_1",
+    "dist": 1.6,
+    "rise": 0.03,
+    "reach": 4.25,
+    "frac": 0.38,
+    "inAim": false
+   },
+   {
+    "from": "mech_crumble_1",
+    "to": "mech_crumble_2",
+    "dist": 1.6,
+    "rise": -0.04,
+    "reach": 4.31,
+    "frac": 0.37,
+    "inAim": false
+   },
+   {
+    "from": "fa",
+    "to": "mech_crumblef_0",
+    "dist": 1.6,
+    "rise": 0.02,
+    "reach": 4.26,
+    "frac": 0.38,
+    "inAim": false
+   },
+   {
+    "from": "mech_crumblef_0",
+    "to": "mech_crumblef_1",
+    "dist": 1.6,
+    "rise": 0.03,
+    "reach": 4.25,
+    "frac": 0.38,
+    "inAim": false
+   },
+   {
+    "from": "mech_crumblef_1",
+    "to": "mech_crumblef_2",
+    "dist": 1.6,
+    "rise": -0.01,
+    "reach": 4.29,
+    "frac": 0.37,
+    "inAim": false
+   }
+  ],
+  "steps": [
+   {
+    "from": "k5",
+    "to": "mech_stairs_0",
+    "rise": 0.286,
+    "overlap": 0.7
+   },
+   {
+    "from": "mech_stairs_0",
+    "to": "mech_stairs_1",
+    "rise": 0.286,
+    "overlap": 0.05
+   },
+   {
+    "from": "mech_stairs_1",
+    "to": "mech_stairs_2",
+    "rise": 0.286,
+    "overlap": 0.05
+   },
+   {
+    "from": "mech_stairs_2",
+    "to": "mech_stairs_3",
+    "rise": 0.286,
+    "overlap": 0.05
+   },
+   {
+    "from": "mech_stairs_3",
+    "to": "mech_stairs_4",
+    "rise": 0.286,
+    "overlap": 0.05
+   },
+   {
+    "from": "mech_stairs_4",
+    "to": "mech_stairs_5",
+    "rise": 0.286,
+    "overlap": 0.05
+   },
+   {
+    "from": "mech_stairs_5",
+    "to": "crown",
+    "rise": 0.286,
+    "overlap": 0.7
+   },
+   {
+    "from": "V",
+    "to": "mech_bridge_0",
+    "rise": 0.02,
+    "overlap": 0.7
+   },
+   {
+    "from": "mech_bridge_0",
+    "to": "mech_bridge_1",
+    "rise": 0.04,
+    "overlap": 0.05
+   },
+   {
+    "from": "mech_bridge_1",
+    "to": "mech_bridge_2",
+    "rise": -0.03,
+    "overlap": 0.05
+   },
+   {
+    "from": "mech_bridge_2",
+    "to": "mech_bridge_3",
+    "rise": 0.04,
+    "overlap": 0.05
+   },
+   {
+    "from": "mech_bridge_3",
+    "to": "mech_bridge_4",
+    "rise": -0.03,
+    "overlap": 0.05
+   },
+   {
+    "from": "mech_bridge_4",
+    "to": "W",
+    "rise": -0.04,
+    "overlap": 0.7
+   },
+   {
+    "from": "y1",
+    "to": "mech_lift",
+    "rise": 0,
+    "overlap": 0.4
+   },
+   {
+    "from": "mech_lift@top",
+    "to": "sa",
+    "rise": 0,
+    "overlap": 0.1
+   }
+  ],
+  "blocked": [
+   {
+    "from": "V",
+    "to": "W",
+    "dist": 9.5,
+    "reach": 4.28,
+    "needs": "raised.bridge (runeV, hold 14 s)"
+   },
+   {
+    "from": "X",
+    "to": "Y",
+    "wall": [
+     3.2,
+     2.6,
+     0.6
+    ],
+    "needs": "broken.dam (strike or dash); frees wind.tail + wind.upY"
+   },
+   {
+    "from": "Y",
+    "to": "y1",
+    "rise": 4,
+    "needs": "wind.upY (after the dam)"
+   },
+   {
+    "from": "y1",
+    "to": "sa",
+    "rise": 4,
+    "needs": "switch.seqB (lift; runes A then B hidden west of Z) - safe lane"
+   },
+   {
+    "from": "fb",
+    "to": "fu1",
+    "rise": 5,
+    "needs": "wind.upF (switch.seqB) - fast lane"
+   },
+   {
+    "from": "k5",
+    "to": "crown",
+    "dist": 10.32,
+    "rise": 2,
+    "needs": "raised.stairs (runeK, hold 14 s)"
+   },
+   {
+    "from": "CB",
+    "to": "k1",
+    "rise": 5,
+    "needs": "wind.up_k1 (cycle 3.5/0.5/1.5)"
+   },
+   {
+    "from": "k1",
+    "to": "k2",
+    "rise": 5,
+    "needs": "wind.up_k2 (cycle 3.5/0.5/1.5)"
+   },
+   {
+    "from": "k2",
+    "to": "k3",
+    "rise": 5,
+    "needs": "wind.up_k3 (cycle 3.5/0.5/1.5)"
+   },
+   {
+    "from": "k3",
+    "to": "k4",
+    "rise": 5,
+    "needs": "wind.up_k4 (cycle 3.5/0.5/1.5)"
+   },
+   {
+    "from": "k4",
+    "to": "k5",
+    "rise": 5,
+    "needs": "wind.up_k5 (cycle 3.5/0.5/1.5)"
+   },
+   {
+    "from": "crown",
+    "to": "lockO_isl",
+    "lock": "name2",
+    "rune": 7.08,
+    "stand": 8,
+    "gap": 10.44,
+    "needs": "Name II -> lockO_br"
+   }
+  ],
+  "dashReach": 6.62,
+  "windGaps": [
+   {
+    "from": "X",
+    "to": "Y",
+    "dist": 4.6,
+    "rise": 0,
+    "wind": 4,
+    "reachStill": 4.28,
+    "reachWind": 6.91,
+    "frac": 0.67,
+    "margin": 1.62,
+    "needs": "broken.dam (wind.tail)"
+   }
+  ],
+  "dashGaps": [
+   {
+    "from": "y1",
+    "to": "fa",
+    "dist": 5.06,
+    "rise": 0,
+    "reachJump": 4.28,
+    "reachDash": 6.62,
+    "frac": 0.76,
+    "margin": 0.9
+   },
+   {
+    "from": "mech_crumble_2",
+    "to": "X",
+    "dist": 5,
+    "rise": -0.02,
+    "reachJump": 4.3,
+    "reachDash": 6.64,
+    "frac": 0.75,
+    "margin": 0.97
+   },
+   {
+    "from": "mech_crumblef_2",
+    "to": "fb",
+    "dist": 5,
+    "rise": -0.04,
+    "reachJump": 4.31,
+    "reachDash": 6.65,
+    "frac": 0.75,
+    "margin": 0.99
+   },
+   {
+    "from": "fu1",
+    "to": "CB",
+    "dist": 8.81,
+    "rise": -1,
+    "reachJump": 4.99,
+    "reachDash": 10.84,
+    "frac": 0.81,
+    "margin": 0.95,
+    "charges": 2
+   }
+  ]
+ },
+ "trials": [
+  {
+   "id": "slabS",
+   "kind": "slab",
+   "pos": [
+    11.84,
+    3,
+    0
+   ],
+   "size": [
+    7.7,
+    0.5,
+    2.2
+   ],
+   "stop": 0,
+   "near": [
+    6.99,
+    0
+   ],
+   "r": 2,
+   "v": 1.2,
+   "drop": 4.5,
+   "hold": 4
+  }
+ ]
+}

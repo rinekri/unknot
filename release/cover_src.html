@@ -1,0 +1,31 @@
+<!doctype html><html><head><style>
+@font-face{font-family:Lum;src:url(Luminari.ttf)}@font-face{font-family:Tra;src:url(Trattatello.ttf)}
+html,body{margin:0;background:#000}</style></head><body><canvas id=c width=1260 height=1000></canvas><script>
+const F=new URLSearchParams(location.search).get('f')||'Lum';
+document.fonts.load('200px '+F).then(()=>{const img=new Image();img.onload=()=>{
+const c=document.getElementById('c'),g=c.getContext('2d');g.drawImage(img,0,0,1260,1000);
+// warm top wash for legibility
+let gr=g.createLinearGradient(0,0,0,460);gr.addColorStop(0,'rgba(250,240,215,.85)');gr.addColorStop(1,'rgba(250,240,215,0)');g.fillStyle=gr;g.fillRect(0,0,1260,460);
+const txt='Unknot',X=630,Y=250;g.textAlign='center';g.textBaseline='alphabetic';g.font=`210px ${F}`;
+// gold thread behind letters: loops, loosening to the right
+g.lineCap='round';g.lineWidth=7;g.strokeStyle='rgba(120,80,20,.35)';
+const thread=(dx,dy)=>{g.beginPath();g.moveTo(150+dx,300+dy);
+g.bezierCurveTo(260+dx,120+dy,380+dx,330+dy,470+dx,190+dy);
+g.bezierCurveTo(560+dx,60+dy,600+dx,330+dy,700+dx,210+dy);
+g.bezierCurveTo(800+dx,90+dy,820+dx,300+dy,930+dx,240+dy);
+g.bezierCurveTo(1030+dx,190+dy,1080+dx,330+dy,1180+dx,280+dy);g.stroke();};
+thread(3,-50);g.strokeStyle='#d9a63a';g.lineWidth=6;thread(0,-55);g.strokeStyle='rgba(255,236,170,.9)';g.lineWidth=2;thread(-1,-57);
+// a small knot on the left
+g.beginPath();g.arc(150,245,14,0,Math.PI*2);g.strokeStyle='#d9a63a';g.lineWidth=6;g.stroke();
+// ink outline + cream fill
+g.lineJoin='round';g.strokeStyle='#3a2c20';g.lineWidth=18;g.strokeText(txt,X,Y);
+g.fillStyle='#f6ead0';g.fillText(txt,X,Y);
+g.save();g.globalCompositeOperation='source-atop';g.restore();
+g.lineWidth=3;g.strokeStyle='rgba(58,44,32,.5)';g.strokeText(txt,X,Y);
+// thread passes OVER some letters (weave)
+g.save();g.beginPath();g.rect(555,0,90,1000);g.rect(815,0,70,1000);g.clip();
+g.strokeStyle='#d9a63a';g.lineWidth=6;thread(0,-55);g.strokeStyle='rgba(255,236,170,.9)';g.lineWidth=2;thread(-1,-57);g.restore();
+// subtitle
+g.font=`38px ${F}`;g.fillStyle='#3a2c20';g.fillText('Wake the stones. Loosen the winds.',X,330);
+document.title='done';};img.src='bg.png';});
+</script></body></html>

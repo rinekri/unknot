@@ -1,0 +1,66 @@
+{
+  "tracks": {
+    "theme_l1": {
+      "lufs": -20.0,
+      "truePeak": -7.7,
+      "duration": 137.84,
+      "file": "theme_l1.ogg",
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 137.84,
+      "xfade": 0,
+      "model": "fal-ai/stable-audio-25/text-to-audio",
+      "gap": [
+        20,
+        40
+      ],
+      "note": "natural fade-in/out tail; loop = play whole take, then 20-40 s silence (fx rng), then restart"
+    },
+    "theme_l2": {
+      "lufs": -20.0,
+      "truePeak": -4.7,
+      "duration": 140.73,
+      "file": "theme_l2.ogg",
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 140.73,
+      "xfade": 0,
+      "model": "fal-ai/stable-audio-25/text-to-audio",
+      "gap": [
+        20,
+        40
+      ],
+      "note": "natural fade-in/out tail; loop = play whole take, then 20-40 s silence (fx rng), then restart"
+    },
+    "theme_l3": {
+      "lufs": -20.0,
+      "truePeak": -7.7,
+      "duration": 145.71,
+      "file": "theme_l3.ogg",
+      "loop": true,
+      "loopStart": 0,
+      "loopEnd": 145.71,
+      "xfade": 0,
+      "model": "fal-ai/stable-audio-25/text-to-audio",
+      "gap": [
+        20,
+        40
+      ],
+      "note": "natural fade-in/out tail; loop = play whole take, then 20-40 s silence (fx rng), then restart"
+    },
+    "stinger_intro": {
+      "file": "stinger_intro.ogg",
+      "lufs": -18.0,
+      "truePeak": -6.1,
+      "duration": 4.84,
+      "model": "fal-ai/stable-audio-25/text-to-audio"
+    },
+    "stinger_goal": {
+      "file": "stinger_goal.ogg",
+      "lufs": -18.0,
+      "truePeak": -9.3,
+      "duration": 3.22,
+      "model": "fal-ai/stable-audio-25/text-to-audio"
+    }
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "tracks": {
+    "goal": {
+      "lufs": -18.0,
+      "truePeak": -4.7,
+      "duration": 4.3,
+      "file": "goal.ogg",
+      "model": "fal-ai/stable-audio-25/text-to-audio"
+    },
+    "rune": {
+      "lufs": -19.2,
+      "truePeak": -1.0,
+      "duration": 2.0,
+      "file": "rune.ogg",
+      "model": "fal-ai/stable-audio-25/text-to-audio"
+    },
+    "stones": {
+      "lufs": -18.0,
+      "truePeak": -6.6,
+      "duration": 2.96,
+      "file": "stones.ogg",
+      "model": "fal-ai/stable-audio-25/text-to-audio"
+    },
+    "wind": {
+      "lufs": -24.6,
+      "truePeak": -3.6,
+      "duration": 1.88,
+      "note": "transient clip; play with +5 dB trim",
+      "trimDb": 5.0,
+      "file": "wind.ogg",
+      "model": "fal-ai/stable-audio-25/text-to-audio"
+    },
+    "fall_whoosh": {
+      "file": "fall_whoosh.ogg",
+      "lufs": -18.0,
+      "truePeak": -8.6,
+      "duration": 2.86
+    },
+    "respawn": {
+      "file": "respawn.ogg",
+      "lufs": -18.0,
+      "truePeak": -6.1,
+      "duration": 2.5
+    },
+    "staff_whoosh": {
+      "file": "staff_whoosh.ogg",
+      "norm": "peak -3 dBFS (too short for LUFS)",
+      "model": "fal-ai/stable-audio-25/text-to-audio"
+    },
+    "staff_hit": {
+      "file": "staff_hit.ogg",
+      "norm": "peak -3 dBFS (too short for LUFS)",
+      "model": "fal-ai/stable-audio-25/text-to-audio"
+    },
+    "ui_click": {
+      "file": "ui_click.ogg",
+      "norm": "peak -3 dBFS (too short for LUFS)",
+      "model": "fal-ai/stable-audio-25/text-to-audio"
+    },
+    "step_grass_0": {
+      "file": "step_grass_0.ogg",
+      "norm": "peak -3 dBFS (too short for LUFS)",
+      "model": "fal-ai/stable-audio-25/text-to-audio"
+    },
+    "step_grass_1": {
+      "file": "step_grass_1.ogg",
+      "norm": "peak -3 dBFS (too short for LUFS)",
+      "model": "fal-ai/stable-audio-25/text-to-audio"
+    },
+    "step_stone_0": {
+      "file": "step_stone_0.ogg",
+      "norm": "peak -3 dBFS (too short for LUFS)",
+      "model": "fal-ai/stable-audio-25/text-to-audio"
+    },
+    "step_stone_1": {
+      "file": "step_stone_1.ogg",
+      "norm": "peak -3 dBFS (too short for LUFS)",
+      "model": "fal-ai/stable-audio-25/text-to-audio"
+    },
+    "step_stone_2": {
+      "file": "step_stone_2.ogg",
+      "norm": "peak -3 dBFS (too short for LUFS)",
+      "model": "fal-ai/stable-audio-25/text-to-audio"
+    },
+    "step_stone_3": {
+      "file": "step_stone_3.ogg",
+      "norm": "peak -3 dBFS (too short for LUFS)",
+      "model": "fal-ai/stable-audio-25/text-to-audio"
+    }
+  }
+}

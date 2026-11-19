@@ -1,0 +1,17 @@
+Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+
+Copyright (c) 2026 rinekri
+
+Applies to the game's creative content: everything under assets/ and
+engine/public/assets/ (3D models, levels, textures, audio, music), release/
+and ref/ (art, covers, reference stills), and the game's text and story.
+Source code (engine/src, engine/tools, scripts) is under the MIT License, see LICENSE.
+
+You are free to share and adapt this material for non-commercial purposes,
+provided you give appropriate credit to "rinekri", link to the license and
+indicate if changes were made.
+
+Full legal text: https://creativecommons.org/licenses/by-nc/4.0/legalcode
+
+Third-party components keep their own licenses, see CREDITS.md
+(for example the CC0 Rock030 texture from ambientCG and three.js, MIT).

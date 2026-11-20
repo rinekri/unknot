@@ -18,7 +18,8 @@
    14.9,
    252.2
   ],
-  "r": 1.3
+  "r": 1.3,
+  "after": "switch.exitGate"
  },
  "killY": -14,
  "mood": {
@@ -75,14 +76,14 @@
  "falls": [
   {
    "top": [
-    -16.04,
-    5.8,
-    104.09
+    3.7,
+    14.9,
+    249.3
    ],
    "pos": [
-    -17.43,
-    -2.7,
-    103.71
+    1.89,
+    6.4,
+    248.81
    ],
    "len": 25.8
   },
@@ -205,15 +206,14 @@
    "scale": 1.9
   },
   {
-   "id": "song_anchor",
-   "glb": "assets/props/ruin_pillar/ruin_pillar.glb",
+   "id": "runeU",
+   "glb": "assets/props/rune_stone/rune_stone.glb",
    "pos": [
-    26.85,
-    19.6,
-    181
+    -0.51,
+    0.5,
+    29.54
    ],
-   "rotY": -2.5307,
-   "scale": 1.9
+   "rotY": 1.5708
   },
   {
    "id": "anchorA",
@@ -276,6 +276,16 @@
     134.15
    ],
    "rotY": -2.1202
+  },
+  {
+   "id": "exitGate",
+   "glb": "assets/props/rune_stone/rune_stone.glb",
+   "pos": [
+    13.59,
+    17.3,
+    240.79
+   ],
+   "rotY": -0.6947
   }
  ],
  "mechanisms": [
@@ -299,7 +309,23 @@
     0,
     40,
     0
-   ]
+   ],
+   "active": false,
+   "after": "switch.runeU"
+  },
+  {
+   "id": "runeU",
+   "kind": "switch",
+   "node": "runeU",
+   "pos": [
+    -0.51,
+    0.5,
+    29.54
+   ],
+   "r": 2.2,
+   "targets": [],
+   "once": true,
+   "dust": true
   },
   {
    "id": "side",
@@ -418,20 +444,6 @@
    "targets": [],
    "once": true,
    "gift": "name"
-  },
-  {
-   "id": "song_anchor",
-   "kind": "switch",
-   "node": "song_anchor",
-   "pos": [
-    26.85,
-    19.6,
-    181
-   ],
-   "r": 2.2,
-   "targets": [],
-   "once": true,
-   "gift": "anchor"
   },
   {
    "id": "totemQ",
@@ -1021,6 +1033,61 @@
    "shortcut": true,
    "after": "enemy.gdS.open",
    "mark": "moon"
+  },
+  {
+   "id": "exitGate",
+   "kind": "switch",
+   "node": "exitGate",
+   "pos": [
+    13.59,
+    17.3,
+    240.79
+   ],
+   "r": 2,
+   "targets": [],
+   "once": true,
+   "far": true,
+   "dust": true
+  },
+  {
+   "id": "lockH_0",
+   "kind": "crumble",
+   "node": "mech_lockH_0",
+   "delay": 0.05,
+   "respawn": 3,
+   "group": "lockH"
+  },
+  {
+   "id": "lockH_1",
+   "kind": "crumble",
+   "node": "mech_lockH_1",
+   "delay": 0.05,
+   "respawn": 3,
+   "group": "lockH"
+  },
+  {
+   "id": "lockH_2",
+   "kind": "crumble",
+   "node": "mech_lockH_2",
+   "delay": 0.05,
+   "respawn": 3,
+   "group": "lockH"
+  },
+  {
+   "id": "lockH_3",
+   "kind": "crumble",
+   "node": "mech_lockH_3",
+   "delay": 0.05,
+   "respawn": 3,
+   "group": "lockH"
+  },
+  {
+   "id": "lockH_4",
+   "kind": "crumble",
+   "node": "mech_lockH_4",
+   "delay": 0.05,
+   "respawn": 3,
+   "group": "lockH"
   }
  ],
  "triggers": [
@@ -1105,7 +1172,8 @@
    "once": true,
    "hint": {
     "en": "Carved on the shrine: \"The wind remembers every name we gave it.\"",
-    "ru": "Вырезано на святилище: «Ветер помнит каждое имя, что мы ему дали»."
+    "ru": "Вырезано на святилище: «Ветер помнит каждое имя, что мы ему дали».",
+    "pt": "Gravado no santuário: \"O vento recorda todos os nomes que lhe demos.\""
    }
   },
   {
@@ -1133,32 +1201,6 @@
    },
    "teaches": "airdash2",
    "ifFlag": null,
-   "once": true
-  },
-  {
-   "id": "t_anchor",
-   "shape": {
-    "kind": "poly",
-    "pts": [
-     [
-      7.59,
-      165.87
-     ],
-     [
-      13.59,
-      165.87
-     ],
-     [
-      13.59,
-      168.87
-     ],
-     [
-      7.59,
-      168.87
-     ]
-    ]
-   },
-   "ifFlag": "gift.anchor",
    "once": true
   },
   {
@@ -1413,7 +1455,8 @@
     31.14
    ],
    "r": 2.2,
-   "heading": 0
+   "heading": 0,
+   "wind": true
   },
   {
    "id": "c_L",
@@ -1456,17 +1499,6 @@
    ],
    "r": 2.2,
    "heading": -0.61,
-   "wind": true
-  },
-  {
-   "id": "c_AS",
-   "pos": [
-    24.9,
-    19.6,
-    178.22
-   ],
-   "r": 2.2,
-   "heading": 0.61,
    "wind": true
   },
   {
@@ -1553,6 +1585,17 @@
    "heading": 0
   },
   {
+   "id": "c_Z",
+   "pos": [
+    10.59,
+    14.9,
+    245.89
+   ],
+   "r": 2.2,
+   "heading": 0,
+   "wind": true
+  },
+  {
    "id": "c_hF",
    "pos": [
     -25.37,
@@ -1604,6 +1647,18 @@
    1.69,
    0.5,
    30.14,
+   0
+  ],
+  [
+   3.09,
+   0.5,
+   29.54,
+   0
+  ],
+  [
+   1.09,
+   0.5,
+   29.54,
    0
   ],
   [
@@ -1967,48 +2022,6 @@
    0
   ],
   [
-   14.02,
-   18.5,
-   165.54,
-   0
-  ],
-  [
-   18.88,
-   19.3,
-   169.62,
-   0
-  ],
-  [
-   24.17,
-   19.6,
-   177.18,
-   0
-  ],
-  [
-   25.64,
-   19.6,
-   179.28,
-   0
-  ],
-  [
-   24.17,
-   19.6,
-   177.18,
-   0
-  ],
-  [
-   18.88,
-   19.3,
-   169.62,
-   0
-  ],
-  [
-   14.02,
-   18.5,
-   165.54,
-   0
-  ],
-  [
    10.59,
    18.5,
    167.67,
@@ -2143,7 +2156,19 @@
   [
    10.59,
    14.9,
+   244.79,
+   0
+  ],
+  [
+   10.59,
+   14.9,
    245.89,
+   0
+  ],
+  [
+   12.38,
+   14.9,
+   244.96,
    0
   ],
   [
@@ -2495,6 +2520,31 @@
   },
   {
    "at": [
+    3.09,
+    29.54
+   ],
+   "y": 0.5,
+   "r": 0.6,
+   "do": "song",
+   "song": "gust",
+   "face": [
+    -0.51,
+    29.54
+   ]
+  },
+  {
+   "at": [
+    1.09,
+    29.54
+   ],
+   "y": 0.5,
+   "r": 0.6,
+   "do": "sing",
+   "switch": "runeU",
+   "until": "switch.runeU"
+  },
+  {
+   "at": [
     3.6854163129095863,
     46.09
    ],
@@ -2559,6 +2609,117 @@
    "profiles": [
     "best"
    ]
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    3.69,
+    71.79
+   ],
+   "r": 0.6,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    -1.96,
+    71.79
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    -1.96,
+    71.79
+   ],
+   "r": 0.6,
+   "do": "song",
+   "song": "anchor",
+   "face": [
+    -2.26,
+    71.79
+   ],
+   "hold": 1.6
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    -21.73,
+    71.79
+   ],
+   "r": 0.6,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    -21.73,
+    71.79
+   ],
+   "r": 0.4,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    -19.76,
+    71.79
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    -19.76,
+    71.79
+   ],
+   "r": 0.6,
+   "do": "song",
+   "song": "anchor",
+   "face": [
+    -1.96,
+    71.79
+   ],
+   "hold": 1.6
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    -1.96,
+    71.79
+   ],
+   "r": 0.6,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    3.69,
+    71.79
+   ],
+   "r": 0.6,
+   "do": "go"
   },
   {
    "at": [
@@ -3027,52 +3188,6 @@
   },
   {
    "at": [
-    20.04,
-    171.28
-   ],
-   "r": 1.2,
-   "do": "dash",
-   "air": true
-  },
-  {
-   "at": [
-    25.64,
-    179.28
-   ],
-   "r": 0.6,
-   "do": "sing",
-   "switch": "song_anchor",
-   "until": "switch.song_anchor"
-  },
-  {
-   "at": [
-    23.77,
-    176.6
-   ],
-   "r": 1.2,
-   "do": "dash",
-   "air": true
-  },
-  {
-   "at": [
-    10.09,
-    167.67
-   ],
-   "y": 18.5,
-   "r": 0.6,
-   "do": "song",
-   "song": "anchor",
-   "face": [
-    10.66,
-    176.57
-   ],
-   "profiles": [
-    "mid",
-    "best"
-   ]
-  },
-  {
-   "at": [
     10.09,
     167.67
    ],
@@ -3149,6 +3264,42 @@
    "r": 0.8,
    "do": "dash",
    "air": 2
+  },
+  {
+   "at": [
+    12.38,
+    244.96
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "at": [
+    12.38,
+    244.96
+   ],
+   "r": 0.6,
+   "do": "song",
+   "song": "gust",
+   "face": [
+    13.59,
+    240.79
+   ],
+   "until": "clear.exitGate"
+  },
+  {
+   "at": [
+    12.38,
+    244.96
+   ],
+   "r": 0.6,
+   "do": "song",
+   "song": "name",
+   "face": [
+    13.59,
+    240.79
+   ],
+   "until": "switch.exitGate"
   }
  ],
  "echoSlots": [
@@ -3226,9 +3377,18 @@
    ],
    "relic": "thread.l2",
    "note": "R6 lock reward"
+  },
+  {
+   "id": "echo_hold",
+   "pos": [
+    -21.73,
+    4.7,
+    71.79
+   ],
+   "note": "R6 lock reward (Anchor)"
   }
  ],
- "startGifts": [
+ "carried": [
   "dash",
   "gust"
  ],
@@ -3264,20 +3424,6 @@
     "NS"
    ],
    "off": 16.1
-  },
-  {
-   "id": "anchor",
-   "at": [
-    25.64,
-    19.6,
-    179.28
-   ],
-   "shrine": "song_anchor",
-   "via": [
-    "a1",
-    "AS"
-   ],
-   "off": 16.3
   }
  ],
  "npcSlots": [
@@ -3297,7 +3443,8 @@
    "kind": "wisp",
    "name": {
     "en": "Sigh",
-    "ru": "Вздох"
+    "ru": "Вздох",
+    "pt": "Suspiro"
    },
    "voice": "wisp",
    "pos": [
@@ -3322,11 +3469,13 @@
       {
        "en": "Ah... air! Take my breath: winds and runes will fill you.",
        "ru": "Ах... воздух! Возьми моё дыхание: ветра и руны наполнят тебя.",
+       "pt": "Ah... ar! Toma o meu fôlego: ventos e runas encher-te-ão.",
        "gift": true
       },
       {
        "en": "Fly from wind to wind now. I will not hold you.",
-       "ru": "Лети теперь от ветра к ветру. Я тебя не держу."
+       "ru": "Лети теперь от ветра к ветру. Я тебя не держу.",
+       "pt": "Voa de vento em vento agora. Não te seguro."
       }
      ]
     },
@@ -3335,7 +3484,8 @@
      "lines": [
       {
        "en": "The Keepers bound me in that totem to turn the winds. Follow me: I show what the path does not.",
-       "ru": "Хранители заперли меня в тотеме, чтобы я поворачивал ветра. Следуй за мной: я покажу то, чего не покажет тропа."
+       "ru": "Хранители заперли меня в тотеме, чтобы я поворачивал ветра. Следуй за мной: я покажу то, чего не покажет тропа.",
+       "pt": "Os Zeladores prenderam-me naquele totem para girar os ventos. Segue-me: mostro o que o caminho não mostra."
       }
      ]
     },
@@ -3344,7 +3494,8 @@
      "lines": [
       {
        "en": "You sang it as if you knew me. Maybe you did, once.",
-       "ru": "Ты спел так, будто знал меня. Может, когда-то и знал."
+       "ru": "Ты спел так, будто знал меня. Может, когда-то и знал.",
+       "pt": "Cantaste-a como se me conhecesses. Talvez conhecesses, outrora."
       }
      ]
     },
@@ -3354,7 +3505,8 @@
      "lines": [
       {
        "en": "Hee! You found what they hid. Remembering is waking, even for wind.",
-       "ru": "Хи! Ты нашёл то, что они спрятали. Вспомнить значит проснуться, даже ветру."
+       "ru": "Хи! Ты нашёл то, что они спрятали. Вспомнить значит проснуться, даже ветру.",
+       "pt": "Hi! Encontraste o que esconderam. Recordar é acordar, mesmo para o vento."
       }
      ]
     },
@@ -3363,7 +3515,8 @@
      "lines": [
       {
        "en": "One of my breaths is still caught... in a stone past the cliff where you woke. Sing it loose, some day?",
-       "ru": "Один мой вздох всё ещё в плену... в камне за обрывом, где ты проснулся. Освободишь его когда-нибудь?"
+       "ru": "Один мой вздох всё ещё в плену... в камне за обрывом, где ты проснулся. Освободишь его когда-нибудь?",
+       "pt": "Um dos meus fôlegos ainda está preso... numa pedra além do penhasco onde acordaste. Cantas-lho solto, um dia?"
       }
      ]
     },
@@ -3373,7 +3526,8 @@
      "lines": [
       {
        "en": "Hee... it found me. Now my Name carries further: farther runes will hear you.",
-       "ru": "Хи... он нашёл меня. Теперь моё Имя летит дальше: тебя услышат и дальние руны."
+       "ru": "Хи... он нашёл меня. Теперь моё Имя летит дальше: тебя услышат и дальние руны.",
+       "pt": "Hi... encontrou-me. Agora o meu Nome chega mais longe: runas mais distantes ouvir-te-ão."
       }
      ]
     }
@@ -3384,7 +3538,8 @@
    "kind": "kestrel",
    "name": {
     "en": "Tied Kestrel",
-    "ru": "Привязанная Пустельга"
+    "ru": "Привязанная Пустельга",
+    "pt": "Peneireiro Preso"
    },
    "voice": "kestrel",
    "pos": [
@@ -3417,7 +3572,8 @@
      "lines": [
       {
        "en": "Kree! Two cords, two stones... sing to the stones, wanderer!",
-       "ru": "Кри! Два шнура, два камня... спой камням, странник!"
+       "ru": "Кри! Два шнура, два камня... спой камням, странник!",
+       "pt": "Kree! Duas cordas, duas pedras... canta às pedras, caminhante!"
       }
      ]
     },
@@ -3427,7 +3583,8 @@
      "lines": [
       {
        "en": "Kree! One! The other one, quick!",
-       "ru": "Кри! Один! Теперь второй, скорее!"
+       "ru": "Кри! Один! Теперь второй, скорее!",
+       "pt": "Kree! Uma! A outra, depressa!"
       }
      ]
     },
@@ -3442,11 +3599,13 @@
       {
        "en": "Kree! Free! Take my wings: push off twice in the air.",
        "ru": "Кри! Свобода! Прими крылья: в воздухе оттолкнись дважды.",
+       "pt": "Kree! Livre! Toma as minhas asas: impulsiona-te duas vezes no ar.",
        "gift": true
       },
       {
        "en": "Kree! Up, up, as high as the wind goes!",
-       "ru": "Кри! Вверх, вверх, до самого ветра!"
+       "ru": "Кри! Вверх, вверх, до самого ветра!",
+       "pt": "Kree! Para cima, para cima, tão alto quanto o vento vai!"
       }
      ]
     },
@@ -3455,7 +3614,8 @@
      "lines": [
       {
        "en": "Kree... Orren's knots. He tied everything he loved so it could not leave.",
-       "ru": "Кри... Узлы Оррена. Он привязывал всё, что любил, чтобы оно не ушло."
+       "ru": "Кри... Узлы Оррена. Он привязывал всё, что любил, чтобы оно не ушло.",
+       "pt": "Kree... os nós de Orren. Atou tudo o que amava para que não pudesse partir."
       }
      ]
     }
@@ -3503,35 +3663,6 @@
    ],
    "fire": [
     "song_name"
-   ]
-  },
-  {
-   "name": "shrine_anchor",
-   "pos": [
-    24.9,
-    22.2,
-    178.22
-   ],
-   "look": [
-    26.85,
-    21.8,
-    181
-   ]
-  },
-  {
-   "name": "shrine_anchor_sung",
-   "pos": [
-    24.9,
-    22.2,
-    178.22
-   ],
-   "look": [
-    26.85,
-    21.8,
-    181
-   ],
-   "fire": [
-    "song_anchor"
    ]
   },
   {
@@ -3828,6 +3959,48 @@
    "fire": [
     "sc"
    ]
+  },
+  {
+   "name": "exitGate",
+   "pos": [
+    14.59,
+    20.7,
+    233.99
+   ],
+   "look": [
+    13.59,
+    17.3,
+    240.79
+   ]
+  },
+  {
+   "name": "exitGate_open",
+   "pos": [
+    14.59,
+    20.7,
+    233.99
+   ],
+   "look": [
+    13.59,
+    17.3,
+    240.79
+   ],
+   "fire": [
+    "exitGate"
+   ]
+  },
+  {
+   "name": "lockH",
+   "pos": [
+    6.69,
+    8.7,
+    65.79
+   ],
+   "look": [
+    -21.73,
+    4.7,
+    71.79
+   ]
   }
  ],
  "cutscenes": {
@@ -3875,7 +4048,8 @@
      "dur": 5,
      "text": {
       "en": "Orren's workshop. Here the winds were bound to totems.",
-      "ru": "Мастерская Оррена. Здесь ветры привязали к тотемам."
+      "ru": "Мастерская Оррена. Здесь ветры привязали к тотемам.",
+      "pt": "A oficina de Orren. Aqui os ventos foram atados a totens."
      }
     }
    ],
@@ -4047,7 +4221,8 @@
      "dur": 3.8,
      "text": {
       "en": "The totems let go. The winds remember the way home.",
-      "ru": "Тотемы отпустили. Ветры помнят дорогу домой."
+      "ru": "Тотемы отпустили. Ветры помнят дорогу домой.",
+      "pt": "Os totens largaram. Os ventos recordam o caminho de casa."
      }
     },
     {
@@ -4055,12 +4230,14 @@
      "dur": 4.2,
      "who": {
       "en": "Kestrel",
-      "ru": "Пустельга"
+      "ru": "Пустельга",
+      "pt": "Peneireiro"
      },
      "voice": "kestrel",
      "text": {
       "en": "Kree! All winds lead to the Crown. Ride mine, wanderer!",
-      "ru": "Кррии! Все ветры ведут к Короне. Лети на моём, странник!"
+      "ru": "Кррии! Все ветры ведут к Короне. Лети на моём, странник!",
+      "pt": "Kree! Todos os ventos levam à Coroa. Monta o meu, caminhante!"
      }
     }
    ],
@@ -4501,15 +4678,6 @@
    },
    {
     "from": "G1",
-    "to": "a1",
-    "dist": 2.6,
-    "rise": 0.8,
-    "reach": 3.47,
-    "frac": 0.75,
-    "inAim": true
-   },
-   {
-    "from": "G1",
     "to": "mech_gcrumble_0",
     "dist": 1.6,
     "rise": 0.03,
@@ -4696,6 +4864,19 @@
     "stand": 5.65,
     "gap": 10.78,
     "needs": "Gust II + Name -> lockD_br"
+   },
+   {
+    "from": "N",
+    "to": "lockH_isl",
+    "lock": "anchor",
+    "gap": 16.15,
+    "needs": "Anchor (holds the lockH crumble row, 0.05 s at a touch)"
+   },
+   {
+    "from": "Z",
+    "to": "goal",
+    "gate": "exitGate",
+    "needs": "Gust (clear.exitGate), then Name (switch.exitGate)"
    }
   ],
   "dashReach": 6.62,
@@ -4750,16 +4931,6 @@
    {
     "from": "n1",
     "to": "NS",
-    "dist": 5.3,
-    "rise": 0.3,
-    "reachJump": 4.02,
-    "reachDash": 6.36,
-    "frac": 0.83,
-    "margin": 0.42
-   },
-   {
-    "from": "a1",
-    "to": "AS",
     "dist": 5.3,
     "rise": 0.3,
     "reachJump": 4.02,

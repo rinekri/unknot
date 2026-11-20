@@ -723,7 +723,10 @@ export default {
       emit({ t0: t, shape: 0, p: _p.set(...c), life: 0.22, s0: 4.5, s1: 1.2, col: CREAM, a: 1 });
       emit({ t0: t, shape: 1, p: _p.set(...c), life: 0.5, s0: 0.8, s1: 4.2, col: GOLD, a: 1 });
     });
-    reg.on('song.reject', ({ t, pos }) => { for (let i = 0; i < 2; i++) emit({ t0: t + i * 0.08, shape: 1, p: _p.set(pos[0], pos[1] + 0.5 + i * 0.6, pos[2]), q: _qf, life: 0.4, s0: 2, s1: 7, col: WIND_W, a: 0.8 }); kick(t, { f: 14, s: 0.05, d: 0.25, tau: 0.1 }); });
+    reg.on('song.reject', ({ t, pos, motif, half }) => { // U25 by motif: boulder shudders dust, cords flutter gold, slab sheds grit; half: a faint gold swell
+      if (half) return emit({ t0: t, shape: 1, p: _p.set(pos[0], pos[1] + 0.8, pos[2]), q: _qf, life: 1.2, s0: 1, s1: 3, col: GOLD, a: 0.5 });
+      if (motif) puffs(t, [pos[0], pos[1] + 0.6, pos[2]], 8, { r: 0.8, speed: [0.6, 1.6], up: [0.2, 1], size: [0.15, 0.4], life: [0.5, 0.8], a: 0.5, col: motif === 'cords' ? GOLD : motif === 'slab' ? DUST.rubble : DUST.stone });
+      for (let i = 0; i < 2; i++) emit({ t0: t + i * 0.08, shape: 1, p: _p.set(pos[0], pos[1] + 0.5 + i * 0.6, pos[2]), q: _qf, life: 0.4, s0: 2, s1: 7, col: WIND_W, a: 0.8 }); kick(t, { f: 14, s: 0.05, d: 0.25, tau: 0.1 }); });
     reg.on('rune.unlock', (u) => { S.unlocks.push({ ...u, t0: u.t }); later(u.t + (u.from ? TRAVEL : 0), () => { for (let i = 0; i < 10; i++) emit({ t0: u.t + (u.from ? TRAVEL : 0), shape: 7, p: _p.set(u.pos[0], u.pos[1] + 0.5 + i * 0.15, u.pos[2]), v: _tg.set(Math.sin(i * 2.4) * 2.5, 1.5 + (i % 3), Math.cos(i * 2.4) * 2.5), g: -0.5, drag: 1.2, life: 0.9, s0: 0.5, s1: 1.1, col: WIND_W, a: 0.7 }); }); });
     reg.on('enemy.shrug', ({ t, pos, kind }) => { const c = at(pos, kind === 'squall' || kind === 'minion' ? 0 : 1.1); emit({ t0: t, shape: 1, p: _p.set(...c), life: 0.3, s0: kind === 'boss' ? 5 : 2.4, s1: 0.8, col: INK, a: 0.9, curve: 1 }); puffs(t, c, 4, { r: 0.3, speed: [0.3, 0.8], up: [0, 0.3], size: [0.12, 0.3], life: [0.3, 0.5], a: 0.4, col: INK }); });
     reg.on('enemy.rebind', ({ t, pos }) => { emit({ t0: t, shape: 1, p: _p.set(...at(pos, 1.2)), life: 0.6, s0: 5, s1: 1, col: INK, a: 0.9, curve: 1 }); kick(t, { s: 0.02, tau: 0.2 }); });

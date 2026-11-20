@@ -31,6 +31,8 @@
 //           locked: step aside or back). Staff hits on the shield only ring; hits land from behind or while it recovers from a
 //           shove; a Gust from the side or back, or into its wind-up / rest, staggers it at once (head-on at its post the
 //           ring turns it). U23: staggered, the Name unbinds it like any Warden; only then the thread snaps and the rune is free.
+//   warden {mandatory: true} (U25, set by the generator: l3 wdY, gdV): on the way, three blows never shatter it (cords ring off:
+//           the refusal, or the half swell once the Name is held); only the Name frees it. An optional guard (l2 gdS) shatters and its rune opens.
 // Stone shards (warden, boss) are solid to the hero (pushed out of their footprint each tick, tools/probe_enemies.mjs); squalls
 // are wind: passable, but walking into one buffets the hero aside ('enemy.knock', no hop).
 // Every free shard: flag enemy.<id>.free, 'enemy.unbind' {t, id, kind, pos}, a whispered "...I remember" ('talk.line').
@@ -38,7 +40,7 @@
 // list (songs.js pick(): unbindable; bot.js counters). Songs: 'song.cast' (songs.js) gust -> stun / push, name -> unbind.
 import * as THREE from 'three';
 import { clone as cloneSkinned } from 'three/addons/utils/SkeletonUtils.js';
-import { motifOf } from './songs.js';
+import { motifOf, rejectFeedback } from './songs.js';
 import { tales, getSave, addTo } from '../core/save.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { bake } from './marks.js';
@@ -64,7 +66,7 @@ function flinchSquall(ctx, e, t, ux, uz, k) {
 // before the Name is known a stunned squall can only be blown off the island: no reward, back at its post after the next respawn
 function disperse(ctx, e, ux, uz) { e.unbindable = false; e.kv = [ux * 11, uz * 11]; setState(ctx, e, 'blown', 'disperse'); }
 const SQ_OPEN = ['hover', 'near', 'tele', 'charge', 'recover', 'pull', 'flinch']; // a squall a blow stuns
-const LINE = { en: '…I remember', ru: '…я помню' };
+const LINE = { en: '…I remember', ru: '…я помню', pt: '…recordo' };
 // The squall's body: a small whirlwind (unit size, scaled 2 at render), three wind ribbons spiralling up a funnel that widens
 // from a tight foot, a few thin outer wisps, and leaves caught in the spin; vertex-coloured, so the instance tint greys it when dazed.
 function vortexGeo() {
@@ -175,7 +177,7 @@ export default {
     });
     WH = { flare: {}, unl: {} }; // U12 wind knots on bound runes (render): last flare t, unwinding from t
     reg.on('rune.unlock', ({ t, id, from }) => { WH.unl[id] = t + (from ? 0.7 : 0); }); // fx.js: the gold thread arrives first
-    reg.on('song.reject', ({ t, id, pos }) => { WH.flare[id] = t; const p = reg.get('player'), dx = p.pos.x - pos[0], dz = p.pos.z - pos[2], n = Math.hypot(dx, dz) || 1; if (n < 6) knock.set((dx / n) * 4, 0, (dz / n) * 4); }); // U12: a bound rune's whirl shoves the singer back
+    reg.on('song.reject', ({ t, id, pos, motif, bound }) => { if (motif && !bound) return; WH.flare[id] = t; const p = reg.get('player'), dx = p.pos.x - pos[0], dz = p.pos.z - pos[2], n = Math.hypot(dx, dz) || 1; if (n < 6) knock.set((dx / n) * 4, 0, (dz / n) * 4); }); // U12: a bound rune's whirl shoves the singer back
     for (const e of E) if (flags[`enemy.${e.id}.free`] || flags[`broken.${e.id}`]) e.state = 'gone'; // freed, or shattered (R4: until a level restart)
     reg.on('player.pogo', (ev) => { // R5 pogo: a shard under the feet is struck from above (squall stunned, warden hit); either way a bounce
       for (const e of E) {
@@ -192,7 +194,8 @@ export default {
         if (e.unbindable && e.kind !== 'boss' && (e.state === 'stun' || e.state === 'stagger') && flat(_v.set(pos[0], 0, pos[2]), e.pos) < 2.2 && Math.abs(e.pos.y - pos[1]) < 2.5) { // R4: striking a stunned shard cracks it; the third blow shatters it (no updraft / step)
           e.shat = (e.shat ?? 0) + 1; e.st = Math.min(e.st, 0.3); // a blow holds it down
           reg.set('enemy.crack', { t, id: e.id, kind: e.kind, pos: e.pos.toArray(), n: e.shat });
-          if (e.shat >= 3) { if (e.kind === 'squall' && !flags['gift.name']) disperse(ctx, e, Math.sin(h), Math.cos(h)); else shatter(ctx, e); }
+          if (e.shat >= 3 && !e.d.mandatory) { if (e.kind === 'squall' && !flags['gift.name']) disperse(ctx, e, Math.sin(h), Math.cos(h)); else shatter(ctx, e); } // U25: a Warden on a mandatory path (`mandatory`, set by the generator) never shatters: only the Name frees it; an optional one (l2 gdS) shatters
+          else if (e.shat >= 3 && !(t - (e.rejT ?? -9) < 1.5)) { e.rejT = t; rejectFeedback({ id: e.id, pos: e.pos.toArray(), motif: 'cords' }, null, !!flags['gift.name']); } // U25: the blow that would have shattered it rings off its cords: no Name, the refusal (gold flash, dissonant chord); Name held, the half swell (sing it)
           continue;
         }
         const r = e.kind === 'squall' ? SQ.strikeR : e.kind === 'boss' ? BOSS.strikeR : WD.strikeR, dx = e.pos.x - pos[0], dz = e.pos.z - pos[2], d = Math.hypot(dx, dz);
@@ -227,7 +230,7 @@ export default {
           else if (sq && (e.state === 'tele' || (!maw_ && e.state === 'charge'))) stunSquall(ctx, e, true);
           else if (sq && !maw_ && ['hover', 'near', 'recover', 'flinch'].includes(e.state)) flinchSquall(ctx, e, t, ux, uz, kb); // blown back, harder with the stage
           else if (e.d.guard && ['patrol', 'tele', 'recover', 'flinch'].includes(e.state)) { // U23: the ring shield turns a Gust met head-on; from the side or back, or into its wind-up / rest, it reels
-            if (e.state === 'patrol' && -ux * e.dir[0] - uz * e.dir[1] > 0.3) { e.blockT = t; reg.set('enemy.block', { t, id: e.id, kind: e.kind, pos: e.pos.toArray() }); reg.set('audio.cue', { name: 'enemy_block' }); continue; }
+            if (e.state === 'patrol' && -ux * e.dir[0] - uz * e.dir[1] > 0.3) { e.blockT = t; c.blocked ??= e.id; reg.set('enemy.block', { t, id: e.id, kind: e.kind, pos: e.pos.toArray() }); reg.set('audio.cue', { name: 'enemy_block' }); continue; } // U25 c.blocked: the shield rang, no refusal from a rune behind it (songs.js)
             setState(ctx, e, 'stagger', 'stagger'); e.unbindable = true; e.hits = [];
           }
           else if (e.kind === 'warden' && ['patrol', 'tele', 'recover', 'flinch'].includes(e.state)) { // driven along the push: a wall or the rim staggers it
@@ -301,7 +304,7 @@ export default {
       if (e.kind === 'squall') squall(ctx, e, dt, t, p, hero, wind);
       else if (e.kind === 'warden') warden(ctx, e, dt, t, p, hero);
       else boss(ctx, e, dt, t, p, hero);
-      if (e.d.guard) { const k = `enemy.${e.id}.open`, open = ['free', 'gone'].includes(e.state); /* U23: one rule for every Warden: stagger it, Name it; only then its thread snaps and the rune is free */ if (!!flags[k] !== open) { flags[k] = open; reg.set('flags', flags); } }
+      if (e.d.guard) { const k = `enemy.${e.id}.open`, open = e.state === 'free' || !!flags[`enemy.${e.id}.free`] || (!e.d.mandatory && !!flags[`broken.${e.id}`]); /* U25: freed (a respawn turns it 'gone', the flag stays); shattered opens an optional guard only (l2 gdS), never a mandatory one */ /* U23: one rule for every Warden: stagger it, Name it; only then its thread snaps and the rune is free */ if (!!flags[k] !== open) { flags[k] = open; reg.set('flags', flags); } }
     }
     if (wind && knock.lengthSq() > 1e-4) { wind.x += knock.x; wind.z += knock.z; knock.multiplyScalar(Math.exp(-dt / KNOCK_TAU)); }
     for (let i = D.length - 1; i >= 0; i--) { // drop motes: hang where the shard came apart, fly to the hero inside 1.5 m

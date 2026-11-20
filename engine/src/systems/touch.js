@@ -49,7 +49,7 @@ const forced = /[?&]touch=1\b/.test(globalThis.location?.search ?? '');
 const coarse = () => { try { return !!globalThis.matchMedia?.('(pointer: coarse)').matches; } catch { return false; } };
 const st = { stick: null, look: null, x: 0, y: 0, run: false, lookDx: 0, lookDy: 0, song: null, held: {}, latch: {}, skipIds: new Set() };
 const el = {};
-const L = (en, ru) => (game?.settings.lang === 'ru' ? ru : en);
+const L = (en, ru, pt) => ({ ru, pt }[game?.settings.lang] ?? en); // U25: pt, en as fallback
 const want = () => { const m = game?.settings.touchControls; return m === 'on' || (m !== 'off' && (seen || forced || coarse())); };
 const key = (type, code) => dispatchEvent(new KeyboardEvent(type, { code, key: code, bubbles: true, cancelable: true }));
 
@@ -154,7 +154,7 @@ export function touchFrame(reg) {
   if (card !== rotated) {
     rotated = card;
     el.rot.classList.toggle('on', card);
-    if (card) { el.rot.lastChild.textContent = L('Turn your device sideways', 'Поверните устройство горизонтально'); if (!paused) { key('keydown', 'KeyP'); key('keyup', 'KeyP'); } }
+    if (card) { el.rot.lastChild.textContent = L('Turn your device sideways', 'Поверните устройство горизонтально', 'Vira o telemóvel para o lado'); if (!paused) { key('keydown', 'KeyP'); key('keyup', 'KeyP'); } }
   }
   const show = on && !card && !paused && !document.body.classList.contains('cut') && !reg.get('end');
   if (show !== lastShow) { lastShow = show; root.classList.toggle('on', show); if (!show) releaseAll(); }

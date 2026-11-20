@@ -10,7 +10,7 @@
 import { GLYPH, SONG_COL } from './songs.js';
 
 const INK = '#342d24', WOB = 'filter="url(#hud-wob)"';
-export const NAME = { en: 'Unknot', ru: 'Распутать' };
+export const NAME = { en: 'Unknot', ru: 'Распутать', pt: 'Unknot' };
 export const DEFS = '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="hud-wob" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="2.2"/></filter></svg>';
 
 const ICO = {
@@ -52,7 +52,7 @@ export function wordmark(lang = 'en', state = null, cls = '') { // state: 'live'
     <path d="${d(k)}" fill="none" stroke="#8a6427" stroke-width="5.200" stroke-linecap="round" opacity=".35" transform="translate(0 2)">${anim}</path>
     <path d="${d(k)}" fill="none" stroke="#e0a83f" stroke-width="3.400" stroke-linecap="round">${anim}</path>
     <path d="${d(k)}" fill="none" stroke="#fff3cf" stroke-width="1" stroke-linecap="round" stroke-dasharray="5 7" opacity=".8">${anim}</path>
-    <text x="${c}" y="66" text-anchor="middle">${NAME[lang] ?? NAME.en}</text></svg>`;
+    <text x="${c}" y="66" text-anchor="middle">${NAME[lang] ?? NAME.en}</text>${lang === 'pt' ? `<text x="${c}" y="97" text-anchor="middle" style="font-size:15px;letter-spacing:.2em">«Desatar»</text>` : ''}</svg>`; // U25 pt: the name stays, «Desatar» under it
 }
 
 // ---- islands ----

@@ -11,8 +11,8 @@
 //     hung on chains. The hero within r of `near`: it creaks, then lowers at v m/s through the gap, `drop` m, then falls away and
 //     re-hangs after REHANG s. Anchor (songs.js pick: 'trials.anchor', m.free = no ring alignment, the skill is the moment) holds it
 //     `hold` s where it is, then it lowers on. Respawn re-hangs it. R4 wasted anchor: held with nobody stepping on it, the strain
-//     tells (the slab shudders, grit runs off its cracks, the chains jitter) and when the hold ends its chains snap: it drops for
-//     good (broken.<id>, 'break'); the ledge beyond is optional and has its own way back.
+//     tells (the slab shudders, grit runs off its cracks, the chains jitter) and when the hold ends its chains snap: it drops
+//     ('break', broken.<id> counted as a mistake) and re-hangs on fresh chains after REHANG s, like a lowered one.
 // Render: bells and slabs hang on thin hemp rope / iron chain from a floating rock overhead (finite, no ink on rope), faded or
 // hidden near the camera and where they would cross the camera's view of the hero.
 // Registry: 'trials' = the live list (bot.js reads slab state), 'trials.anchor' = the slabs that can be anchored now.
@@ -267,7 +267,7 @@ function buildSlab(ctx, o) {
 }
 // the four chains, ring to hook, a link every LINK m (hidden near the camera and across its view of the hero); strain: they jitter
 function chains(o, t, cam, hero, strain) {
-  const up = o.node.visible && o.state !== 'broken';
+  const up = o.node.visible;
   if (up) o.vis.updateMatrixWorld(true);
   let kRock = 1;
   if (hero) _h.subVectors(hero, cam);
@@ -291,7 +291,7 @@ function chains(o, t, cam, hero, strain) {
   o.links.instanceMatrix.needsUpdate = true;
   if (hero) fade(o.rock, Math.min(1, (up ? kRock : 1) * 1.5));
 }
-function rehang(o) { if (flags[`broken.${o.id}`]) { o.state = 'broken'; o.node.visible = false; o.body.enabled = false; return; } o.state = 'idle'; o.st = 0; o.cur.fromArray(o.d.pos); o.node.visible = true; o.node.position.copy(o.cur); o.body.enabled = true; o.body.update(); }
+function rehang(o) { o.state = 'idle'; o.st = 0; o.cur.fromArray(o.d.pos); o.node.visible = true; o.node.position.copy(o.cur); o.body.enabled = true; o.body.update(); }
 function slab(ctx, o, dt, p, t) {
   const reg = ctx.registry, d = o.d;
   if (o.state === 'idle' && p && Math.hypot(p.pos.x - d.near[0], p.pos.z - d.near[1]) < d.r) { o.state = 'creak'; o.st = 0; reg.set('crumble.warn', { t, pos: o.cur.toArray() }); reg.set('audio.cue', { name: 'stones', gain: 0.7 }); }
@@ -302,13 +302,13 @@ function slab(ctx, o, dt, p, t) {
   } else if (o.state === 'held') {
     if (p?.groundBody === o.body) o.used = true;
     if (!o.used && o.st > d.hold - 2 && t - (o.dustT ?? -9) > 0.7) { o.dustT = t; reg.set('crumble.warn', { t, pos: o.cur.toArray() }); } // the strain: grit runs off it
-    if (o.st >= d.hold && !o.used) { // R4 wasted anchor: held for nobody, its chains give: it drops for good
+    if (o.st >= d.hold && !o.used) { // R4 wasted anchor: held for nobody, its chains give: it drops (re-hung after REHANG)
       o.state = 'snap'; o.st = 0; o.body.enabled = false; reg.set('trials.anchor', []);
       flags[`broken.${d.id}`] = true; reg.set('flags', flags);
       reg.set('break', { t, id: d.id, pos: [o.cur.x, o.cur.y - 0.25, o.cur.z], size: [d.size[0], 0.6], rotY: Math.PI / 2, by: 'snap' });
       reg.set('audio.cue', { name: 'crack', gain: 1 });
     } else if (o.st >= d.hold) { o.state = 'lower'; o.st = 0; reg.set('trials.anchor', [o]); }
-  } else if (o.state === 'snap') { o.cur.y -= (2 + 9.8 * o.st) * dt; o.node.position.copy(o.cur); if (o.st > 1.6) { o.state = 'broken'; o.node.visible = false; } }
+  } else if (o.state === 'snap') { o.cur.y -= (2 + 9.8 * o.st) * dt; o.node.position.copy(o.cur); if (o.st > 1.6) { o.state = 'gone'; o.st = 0; o.node.visible = false; } }
   else if (o.state === 'gone' && o.st >= REHANG && !(p && Math.hypot(p.pos.x - d.near[0], p.pos.z - d.near[1]) < d.r)) rehang(o);
   if (o.state === 'lower' || o.state === 'idle') { o.node.position.copy(o.cur); o.body.update(); }
 }

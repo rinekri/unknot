@@ -20,7 +20,7 @@ import { getSave, ECHOES, TALES } from '../core/save.js';
 const KEY = 'sw.meta.v1', TOAST_S = 2;
 const q = new URLSearchParams(globalThis.location?.search ?? '');
 const memOnly = q.has('test') || q.has('bot') || typeof localStorage === 'undefined';
-const L = (en, ru) => tr({ en, ru });
+const L = (en, ru, pt) => tr({ en, ru, pt });
 
 // ---- challenges: thresholds from the bots, seed 1 (tools/meta_gate.mjs challenges proves each one; playtest/r10/challenges.json) ----
 // mid bot clock: l1 128.1 s, l2 162.9 s, l3 290.2 s (best 146 / 177.9 / 306.8). silver = generous, gold = the mid bot + ~4 %
@@ -38,21 +38,21 @@ export function challenges(id) {
   const c = CH_LEVELS[id];
   if (!c) return [];
   return [
-    { id: 'silver', name: { en: `Silver: under ${fmt(c.silver)}`, ru: `Серебро: быстрее ${fmt(c.silver)}` }, ok: (r) => r.t <= c.silver },
-    { id: 'gold', name: { en: `Gold: under ${fmt(c.gold)}`, ru: `Золото: быстрее ${fmt(c.gold)}` }, ok: (r) => r.t <= c.gold },
-    { id: 'breath', name: { en: `Breathless: ${c.breath} breath or less`, ru: `Без дыхания: не больше ${c.breath}` }, ok: (r) => r.breathUsed <= c.breath + 0.01 },
-    { id: 'untouched', name: { en: 'Untouched: no falls, no frays', ru: 'Нетронутый: без падений и надрывов' }, ok: (r) => !r.falls && !r.frays },
-    { id: 'light', name: { en: `Light step: ${c.jumps} jumps or fewer`, ru: `Лёгкий шаг: не больше ${c.jumps} прыжков` }, ok: (r) => r.jumps <= c.jumps },
+    { id: 'silver', name: { en: `Silver: under ${fmt(c.silver)}`, ru: `Серебро: быстрее ${fmt(c.silver)}`, pt: `Prata: abaixo de ${fmt(c.silver)}` }, ok: (r) => r.t <= c.silver },
+    { id: 'gold', name: { en: `Gold: under ${fmt(c.gold)}`, ru: `Золото: быстрее ${fmt(c.gold)}`, pt: `Ouro: abaixo de ${fmt(c.gold)}` }, ok: (r) => r.t <= c.gold },
+    { id: 'breath', name: { en: `Breathless: ${c.breath} breath or less`, ru: `Без дыхания: не больше ${c.breath}`, pt: `Sem fôlego: ${c.breath} fôlego ou menos` }, ok: (r) => r.breathUsed <= c.breath + 0.01 },
+    { id: 'untouched', name: { en: 'Untouched: no falls, no frays', ru: 'Нетронутый: без падений и надрывов', pt: 'Intocado: sem quedas, sem desfiar' }, ok: (r) => !r.falls && !r.frays },
+    { id: 'light', name: { en: `Light step: ${c.jumps} jumps or fewer`, ru: `Лёгкий шаг: не больше ${c.jumps} прыжков`, pt: `Passo leve: ${c.jumps} saltos ou menos` }, ok: (r) => r.jumps <= c.jumps },
     c.peace === 'pacifist'
-      ? { id: 'pacifist', name: { en: 'Pacifist: never strike a shard', ru: 'Миротворец: ни одного удара по осколку' }, ok: (r) => !r.hits }
+      ? { id: 'pacifist', name: { en: 'Pacifist: never strike a shard', ru: 'Миротворец: ни одного удара по осколку', pt: 'Pacifista: nunca golpear um estilhaço' }, ok: (r) => !r.hits }
       : c.peace === 'liberator'
-        ? { id: 'liberator', name: { en: 'Liberator: unbind every shard', ru: 'Освободитель: развяжи все осколки' }, ok: (r) => r.enemies > 0 && r.unbound >= r.enemies }
-        : { id: 'restorer', name: { en: 'Restorer: break nothing', ru: 'Хранитель: ничего не сломать' }, ok: (r) => !r.broken },
+        ? { id: 'liberator', name: { en: 'Liberator: unbind every shard', ru: 'Освободитель: развяжи все осколки', pt: 'Libertador: soltar todos os estilhaços' }, ok: (r) => r.enemies > 0 && r.unbound >= r.enemies }
+        : { id: 'restorer', name: { en: 'Restorer: break nothing', ru: 'Хранитель: ничего не сломать', pt: 'Restaurador: não partir nada' }, ok: (r) => !r.broken },
   ];
 }
 
 // ---- achievements (25) ----
-const G = { story: { en: 'Story', ru: 'История' }, mastery: { en: 'Mastery', ru: 'Мастерство' }, explore: { en: 'Explorer', ru: 'Исследователь' }, secret: { en: 'Secrets', ru: 'Тайны' }, speed: { en: 'Speed', ru: 'Скорость' }, loom: { en: 'Loom and trials', ru: 'Ткацкий стан и испытания' } };
+const G = { story: { en: 'Story', ru: 'История', pt: 'História' }, mastery: { en: 'Mastery', ru: 'Мастерство', pt: 'Mestria' }, explore: { en: 'Explorer', ru: 'Исследователь', pt: 'Explorador' }, secret: { en: 'Secrets', ru: 'Тайны', pt: 'Segredos' }, speed: { en: 'Speed', ru: 'Скорость', pt: 'Velocidade' }, loom: { en: 'Loom and trials', ru: 'Ткацкий стан и испытания', pt: 'Tear e desafios' } };
 const a = (id, g, en, ru, len, lru, ok, secret = false) => ({ id, g, name: { en, ru }, lore: { en: len, ru: lru }, ok, secret });
 const ends = (s) => [s.ending?.last, s.ending?.best];
 const allCh = (m, pred) => Object.keys(CH_LEVELS).every((lv) => challenges(lv).filter(pred).every((c) => m.ch[`${lv}.${c.id}`]));
@@ -184,7 +184,7 @@ function nextToast() {
   toastOn = true; style();
   const el = document.createElement('div');
   el.className = document.querySelector('.hud-panel') ? 'meta-toast low' : 'meta-toast'; // a menu is open (left column): sit top-right, clear of its header
-  el.innerHTML = `${badge(ach.g)}<span><small>${L('Achievement', 'Достижение')}</small>${tr(ach.name)}</span>`;
+  el.innerHTML = `${badge(ach.g)}<span><small>${L('Achievement', 'Достижение', 'Conquista')}</small>${tr(ach.name)}</span>`;
   document.body.append(el);
   cur?.registry.set('audio.cue', { name: 'chime', gain: 0.5 });
   setTimeout(() => { el.remove(); nextToast(); }, TOAST_S * 1000 + 150);
@@ -219,7 +219,7 @@ function finish(ctx) {
 }
 export const resultLine = () => { // results card note: the daily trial walked, seeds earned (the seals themselves are drawn by hud.js)
   const r = cur?.registry.get('meta.result');
-  return [r?.daily ? `${L('Daily trial', 'Испытание дня')} · ${tr(MODS[r.daily.mod]?.name)}` : '', lastNew.length ? `+${lastNew.length} ${L('seed', 'семя')}` : ''].filter(Boolean).join(' · ');
+  return [r?.daily ? `${L('Daily trial', 'Испытание дня', 'Desafio diário')} · ${tr(MODS[r.daily.mod]?.name)}` : '', lastNew.length ? `+${lastNew.length} ${L('seed', 'семя', 'semente')}` : ''].filter(Boolean).join(' · ');
 };
 
 // ---- menu panels (hud.js passes its helpers: h = {setPanel, mk, goTo, reg}) ----
@@ -235,15 +235,15 @@ export function showAchievements(h, back) { // embroidered badges, one colour an
   const [grid, name] = cardGrid(h, [...Object.keys(G)].flatMap((g) => ACH.filter((x) => x.g === g)).map((x) => {
     const got = !!meta.ach[x.id], hide = x.secret && !got, v = h.mk('i');
     v.innerHTML = badge(x.g, got, x.secret);
-    return { key: x.id, visual: v, locked: !got, label: hide ? '? ? ?' : tr(x.name), note: tr(G[x.g]), lore: hide ? L('A secret of the mountain.', 'Тайна горы.') : tr(x.lore) };
+    return { key: x.id, visual: v, locked: !got, label: hide ? '? ? ?' : tr(x.name), note: tr(G[x.g]), lore: hide ? L('A secret of the mountain.', 'Тайна горы.', 'Um segredo da montanha.') : tr(x.lore) };
   }), { onFocus: (c) => { lore.textContent = c.lore; }, onPick: () => cueOf(h)('tick', 0.3) });
   grid.classList.add('meta-ach'); grid.firstChild.dataset.first = '';
   page.append(grid);
-  h.setPanel('achievements', `<h1>${L('Achievements', 'Достижения')} <small class="hud-note">${Object.keys(meta.ach).length}/${ACH.length}</small></h1>`, [[L('Back', 'Назад'), back, false, 'back']], [page, name, lore], back);
+  h.setPanel('achievements', `<h1>${L('Achievements', 'Достижения', 'Conquistas')} <small class="hud-note">${Object.keys(meta.ach).length}/${ACH.length}</small></h1>`, [[L('Back', 'Назад', 'Voltar'), back, false, 'back']], [page, name, lore], back);
 }
 
-const RAR = { common: { en: 'common', ru: 'обычное' }, rare: { en: 'rare', ru: 'редкое' }, legendary: { en: 'legendary', ru: 'легендарное' } };
-const SLOT = { pattern: { en: 'Cloak', ru: 'Плащ' }, tip: { en: 'Staff tip', ru: 'Навершие' }, trail: { en: 'Trail', ru: 'След' }, voice: { en: 'Voice', ru: 'Голос' }, backdrop: { en: 'Title sky', ru: 'Небо меню' } };
+const RAR = { common: { en: 'common', ru: 'обычное', pt: 'comum' }, rare: { en: 'rare', ru: 'редкое', pt: 'raro' }, legendary: { en: 'legendary', ru: 'легендарное', pt: 'lendário' } };
+const SLOT = { pattern: { en: 'Cloak', ru: 'Плащ', pt: 'Capa' }, tip: { en: 'Staff tip', ru: 'Навершие', pt: 'Ponta do cajado' }, trail: { en: 'Trail', ru: 'След', pt: 'Rasto' }, voice: { en: 'Voice', ru: 'Голос', pt: 'Voz' }, backdrop: { en: 'Title sky', ru: 'Небо меню', pt: 'Céu do título' } };
 // ---- the Keeper's Loom and the wardrobe: a shrine in the scene (loomscene.js) beside the panel ----
 const st = () => ({ pity: meta.loom.pity / PITY, dust: Math.min(1, meta.loom.dust / DUST_COST) });
 const cueOf = (h) => (name, gain = 0.6) => h.reg()?.set('audio.cue', { name, gain });
@@ -260,8 +260,8 @@ const ICON = { // tab glyphs, ink on cream
 const icon = (k) => `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICON[k]}</svg>`;
 function purse(h) { // seeds of song as glowing seeds, thread dust as the spindle's five turns
   const n = seeds(), d = meta.loom.dust, el = h.mk('div', 'meta-purse');
-  el.innerHTML = `<div title="${L('Seeds of song', 'Семена песни')}"><span class="meta-seeds">${n > 0 ? Array.from({ length: Math.min(n, 10) }, (_, i) => `<i style="animation-delay:${-i * 0.23}s">${SEED}</i>`).join('') : `<i class="none">${SEED}</i>`}</span><small>${L('Seeds of song', 'Семена песни')} · ${n}</small></div>
-    <div title="${L('Thread dust', 'Нитяная пыль')}"><span class="meta-dust">${Array.from({ length: DUST_COST }, (_, i) => `<i class="${i < d ? 'on' : ''}"></i>`).join('')}</span><small>${L('Thread dust', 'Нитяная пыль')} · ${d}/${DUST_COST}</small></div>`;
+  el.innerHTML = `<div title="${L('Seeds of song', 'Семена песни', 'Sementes de canção')}"><span class="meta-seeds">${n > 0 ? Array.from({ length: Math.min(n, 10) }, (_, i) => `<i style="animation-delay:${-i * 0.23}s">${SEED}</i>`).join('') : `<i class="none">${SEED}</i>`}</span><small>${L('Seeds of song', 'Семена песни', 'Sementes de canção')} · ${n}</small></div>
+    <div title="${L('Thread dust', 'Нитяная пыль', 'Pó de fio')}"><span class="meta-dust">${Array.from({ length: DUST_COST }, (_, i) => `<i class="${i < d ? 'on' : ''}"></i>`).join('')}</span><small>${L('Thread dust', 'Нитяная пыль', 'Pó de fio')} · ${d}/${DUST_COST}</small></div>`;
   return el;
 }
 const pic = (it, px = 96) => { const c = Object.assign(document.createElement('canvas'), { width: px * 2, height: px * 2 }); drawItem(c.getContext('2d'), px * 2, it); return c; };
@@ -271,16 +271,16 @@ export function showLoom(h, back) {
   loomScene.endPull(); loomScene.setState(st()); loomScene.preview({ ...meta.eq });
   const n = seeds(), L0 = meta.loom, out = leave(back), again = () => showLoom(h, back), info = h.mk('div', 'meta-odds');
   info.hidden = !oddsOpen;
-  info.innerHTML = `<p><b>${L('common', 'обычное')} ${ODDS.common * 100}%</b> · <b class="rare">${L('rare', 'редкое')} ${ODDS.rare * 100}%</b> · <b class="legendary">${L('legendary', 'легендарное')} ${ODDS.legendary * 100}%</b></p>
-    <p>${L(`A legendary is certain by the ${PITY}th pull (about 9% of pulls overall): the tapestry on the loom grows with every pull and is finished in gold.`, `Легендарное гарантировано к ${PITY}-й попытке (около 9% в среднем): гобелен на стане растёт с каждой попыткой и завершается золотом.`)}
-    ${L('Pulls since the last legendary', 'С последнего легендарного')}: ${L0.pity}/${PITY}. ${L(`A duplicate unravels into thread dust; ${DUST_COST} dust weaves a common of your choice.`, `Повтор распускается в пыль; ${DUST_COST} пыли = обычное на выбор.`)}</p>
-    <p>${L('Looks only: the loom never changes how the game plays. Seeds come from challenges, achievements, daily trials and echoes; never from money.', 'Только внешний вид: стан не меняет игру. Семена дают испытания, достижения, испытания дня и эхо; никогда не деньги.')}</p>`;
-  h.setPanel('loom', `<h1>${L('Keeper\'s Loom', 'Стан Хранителей')}</h1>`, [
-    [L('Sing to the loom · 1 seed', 'Спеть стану · 1 семя'), () => weave(h, back), n < 1, 'note'],
-    [L(`Weave a common · ${DUST_COST} dust`, `Соткать обычное · ${DUST_COST} пыли`), () => showDust(h, again), L0.dust < DUST_COST],
-    [L('Wardrobe', 'Гардероб'), () => showWardrobe(h, again), false, 'cloak', true],
-    [L('Odds', 'Шансы'), () => { oddsOpen = !oddsOpen; again(); }, false, 'eye', true],
-    [L('Back', 'Назад'), out, false, 'back'],
+  info.innerHTML = `<p><b>${L('common', 'обычное', 'comum')} ${ODDS.common * 100}%</b> · <b class="rare">${L('rare', 'редкое', 'raro')} ${ODDS.rare * 100}%</b> · <b class="legendary">${L('legendary', 'легендарное', 'lendário')} ${ODDS.legendary * 100}%</b></p>
+    <p>${L(`A legendary is certain by the ${PITY}th pull (about 9% of pulls overall): the tapestry on the loom grows with every pull and is finished in gold.`, `Легендарное гарантировано к ${PITY}-й попытке (около 9% в среднем): гобелен на стане растёт с каждой попыткой и завершается золотом.`, `Um lendário é certo à ${PITY}.ª tentativa (cerca de 9% das tentativas no total): a tapeçaria no tear cresce a cada tentativa e acaba-se a ouro.`)}
+    ${L('Pulls since the last legendary', 'С последнего легендарного', 'Tentativas desde o último lendário')}: ${L0.pity}/${PITY}. ${L(`A duplicate unravels into thread dust; ${DUST_COST} dust weaves a common of your choice.`, `Повтор распускается в пыль; ${DUST_COST} пыли = обычное на выбор.`, `Um repetido desfaz-se em pó de fio; ${DUST_COST} de pó tece um comum à tua escolha.`)}</p>
+    <p>${L('Looks only: the loom never changes how the game plays. Seeds come from challenges, achievements, daily trials and echoes; never from money.', 'Только внешний вид: стан не меняет игру. Семена дают испытания, достижения, испытания дня и эхо; никогда не деньги.', 'Apenas aspeto: o tear nunca altera a forma de jogar. As sementes vêm de desafios, conquistas, desafios diários e ecos; nunca de dinheiro.')}</p>`;
+  h.setPanel('loom', `<h1>${L('Keeper\'s Loom', 'Стан Хранителей', 'Tear do Zelador')}</h1>`, [
+    [L('Sing to the loom · 1 seed', 'Спеть стану · 1 семя', 'Canta ao tear · 1 semente'), () => weave(h, back), n < 1, 'note'],
+    [L(`Weave a common · ${DUST_COST} dust`, `Соткать обычное · ${DUST_COST} пыли`, `Tecer um comum · ${DUST_COST} de pó`), () => showDust(h, again), L0.dust < DUST_COST],
+    [L('Wardrobe', 'Гардероб', 'Guarda-roupa'), () => showWardrobe(h, again), false, 'cloak', true],
+    [L('Odds', 'Шансы', 'Probabilidades'), () => { oddsOpen = !oddsOpen; again(); }, false, 'eye', true],
+    [L('Back', 'Назад', 'Voltar'), out, false, 'back'],
   ], [purse(h), info], out);
 }
 let weaveTok = 0;
@@ -290,18 +290,18 @@ export function weave(h, back) { // one pull: the ritual plays on the loom (skip
   loomScene.endPull();
   const r = pull(meta.loom, meta.owned), it = r.item, tok = ++weaveTok, home = () => { weaveTok++; showLoom(h, back); };
   persist();
-  h.setPanel('loom-weave', `<h1>${L('Keeper\'s Loom', 'Стан Хранителей')}</h1><p class="hud-note">${L('the loom is weaving…', 'стан ткёт…')}</p>`, [[L('Skip', 'Пропустить'), loomScene.skip, false, 'skip']], purse(h), loomScene.skip);
+  h.setPanel('loom-weave', `<h1>${L('Keeper\'s Loom', 'Стан Хранителей', 'Tear do Zelador')}</h1><p class="hud-note">${L('the loom is weaving…', 'стан ткёт…', 'o tear está a tecer…')}</p>`, [[L('Skip', 'Пропустить', 'Passar'), loomScene.skip, false, 'skip']], purse(h), loomScene.skip);
   loomScene.pull(r, st(), () => {
     if (tok !== weaveTok) return;
     if (!r.dupe) loomScene.preview({ ...meta.eq, [it.slot]: it.id }, { trail: it.slot === 'trail' ? it.col : null }); // the hero tries it on
     checkAch(false);
     const box = h.mk('div', `meta-weave ${r.rarity}`);
     box.append(pic(it));
-    box.insertAdjacentHTML('beforeend', `<small>${tr(RAR[r.rarity])} · ${tr(SLOT[it.slot])}</small><em>${tr(it.name)}</em><small>${r.dupe ? L('already yours: it unravels into thread dust', 'уже есть: распускается в нитяную пыль') : L('new', 'новое')}</small>`);
-    h.setPanel('loom-weave', `<h1>${L('Keeper\'s Loom', 'Стан Хранителей')}</h1>`, [
-      [L('Wear it', 'Надеть'), () => { equip(it.slot, it.id); home(); loomScene.flourish(); cueOf(h)('cloth', 0.7); }, false, 'check'],
-      [L('Sing again · 1 seed', 'Спеть ещё · 1 семя'), () => weave(h, back), seeds() < 1, 'note'],
-      [L('Back', 'Назад'), home, false, 'back'],
+    box.insertAdjacentHTML('beforeend', `<small>${tr(RAR[r.rarity])} · ${tr(SLOT[it.slot])}</small><em>${tr(it.name)}</em><small>${r.dupe ? L('already yours: it unravels into thread dust', 'уже есть: распускается в нитяную пыль', 'já é teu: desfaz-se em pó de fio') : L('new', 'новое', 'recorde')}</small>`);
+    h.setPanel('loom-weave', `<h1>${L('Keeper\'s Loom', 'Стан Хранителей', 'Tear do Zelador')}</h1>`, [
+      [L('Wear it', 'Надеть', 'Vestir'), () => { equip(it.slot, it.id); home(); loomScene.flourish(); cueOf(h)('cloth', 0.7); }, false, 'check'],
+      [L('Sing again · 1 seed', 'Спеть ещё · 1 семя', 'Cantar outra vez · 1 semente'), () => weave(h, back), seeds() < 1, 'note'],
+      [L('Back', 'Назад', 'Voltar'), home, false, 'back'],
     ], [box, purse(h)], home);
   });
 }
@@ -345,13 +345,13 @@ function showWardrobe(h, back, focusId = null) {
   const plain = `plain.${slot}`, items = [null, ...POOL.filter((i) => i.slot === slot)].map((it) => {
     const own = !it || !!meta.owned[it.id], key = it?.id ?? plain;
     return { it, key, locked: !own, on: (meta.eq[slot] ?? null) === (it?.id ?? null), rarity: it?.rarity, visual: visual(h, slot, own ? it : null, own ? key : plain),
-      label: it ? tr(it.name) : L('Plain', 'Простой'), note: it ? `${tr(RAR[it.rarity])}${own ? '' : ` · ${L('not yet woven', 'ещё не соткано')}`}` : L('as the mountain made it', 'как создала гора') };
+      label: it ? tr(it.name) : L('Plain', 'Простой', 'Simples'), note: it ? `${tr(RAR[it.rarity])}${own ? '' : ` · ${L('not yet woven', 'ещё не соткано', 'ainda não tecido')}`}` : L('as the mountain made it', 'как создала гора', 'como a montanha o fez') };
   });
   if (slot === 'pattern' || slot === 'tip') loomScene.wantThumbs(items.filter((c) => !c.locked).map((c) => ({ key: c.key, eq: c.it ? { [slot]: c.it.id } : {}, kind: slot })));
   const show = (c) => {
     const id = c.locked ? meta.eq[slot] : c.it?.id ?? null, tcol = byId(slot === 'trail' ? id : meta.eq.trail)?.col;
     loomScene.preview({ ...meta.eq, [slot]: id }, { trail: slot === 'trail' ? tcol ?? '#fff3d0' : null, zoom: slot === 'tip' ? 'tip' : null });
-    if (slot === 'voice' && !c.locked) { const reg = h.reg(); reg?.set('talk.line', { voice: 'wisp', text: L('La li lo, the wind remembers', 'Ла ли ло, ветер помнит'), dur: 1.3 }); reg?.set('talk.line', null); }
+    if (slot === 'voice' && !c.locked) { const reg = h.reg(); reg?.set('talk.line', { voice: 'wisp', text: L('La li lo, the wind remembers', 'Ла ли ло, ветер помнит', 'La li lo, o vento recorda'), dur: 1.3 }); reg?.set('talk.line', null); }
   };
   const pick = (c, b) => {
     if (c.locked) { cue('deny', 0.5); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); return; }
@@ -359,8 +359,8 @@ function showWardrobe(h, back, focusId = null) {
     for (const x of b.parentNode.children) x.classList.toggle('on', x === b);
     loomScene.flourish(); cue('cloth', 0.7); cue('chime', 0.35);
   };
-  const p = h.setPanel('wardrobe', `<h1>${L('Wardrobe', 'Гардероб')}</h1><p class="hud-note">${L('Woven', 'Соткано')} ${Object.keys(meta.owned).length}/${POOL.length} · ${L('drag the hero to turn', 'тяни героя, чтобы повернуть')}</p>`,
-    [[L('Back', 'Назад'), out, false, 'back']], cardGrid(h, items, { tabs, onFocus: show, onPick: pick, focusId: focusId === 'tab' ? null : focusId ?? (meta.eq[slot] ?? plain) }), out);
+  const p = h.setPanel('wardrobe', `<h1>${L('Wardrobe', 'Гардероб', 'Guarda-roupa')}</h1><p class="hud-note">${L('Woven', 'Соткано', 'Tecido')} ${Object.keys(meta.owned).length}/${POOL.length} · ${L('drag the hero to turn', 'тяни героя, чтобы повернуть', 'arrasta o herói para rodar')}</p>`,
+    [[L('Back', 'Назад', 'Voltar'), out, false, 'back']], cardGrid(h, items, { tabs, onFocus: show, onPick: pick, focusId: focusId === 'tab' ? null : focusId ?? (meta.eq[slot] ?? plain) }), out);
   if (focusId === 'tab') h.focus(p.querySelector('.meta-tabs .on'));
   if (focusId === 'tab') show(items.find((c) => c.on) ?? items[0]);
 }
@@ -373,18 +373,18 @@ function showDust(h, back) {
     meta.loom.dust -= DUST_COST; meta.owned[c.it.id] = 1; persist();
     cueOf(h)('chime', 0.6); back();
   };
-  h.setPanel('dust', `<h1>${L('Weave a common', 'Соткать обычное')}</h1><p class="hud-note">${can ? L('The spindle is full: choose a thread.', 'Веретено полно: выбери нить.') : L('The spindle is not full yet.', 'Веретено ещё не полно.')}</p>`,
-    [[L('Back', 'Назад'), back, false, 'back']], [purse(h), ...(items.length ? cardGrid(h, items, { onPick: pick, focusId: items[0].key }) : [h.mk('p', 'hud-note', L('Every common is already yours.', 'Все обычные уже есть.'))])], back);
+  h.setPanel('dust', `<h1>${L('Weave a common', 'Соткать обычное', 'Tecer um comum')}</h1><p class="hud-note">${can ? L('The spindle is full: choose a thread.', 'Веретено полно: выбери нить.', 'O fuso está cheio: escolhe um fio.') : L('The spindle is not full yet.', 'Веретено ещё не полно.', 'O fuso ainda não está cheio.')}</p>`,
+    [[L('Back', 'Назад', 'Voltar'), back, false, 'back']], [purse(h), ...(items.length ? cardGrid(h, items, { onPick: pick, focusId: items[0].key }) : [h.mk('p', 'hud-note', L('Every common is already yours.', 'Все обычные уже есть.', 'Todos os comuns já são teus.'))])], back);
 }
 export function showDaily(h, back, levels) {
   style();
   const d = today(), lv = levels.find((l) => l.id === d.level), best = meta.daily[d.date], card = h.mk('div', 'meta-day');
   card.innerHTML = `${island(d.level)}<b>${lv?.n ?? ''}</b><h2>${tr(lv?.title ?? d.level)}</h2><p class="mod">${tr(MODS[d.mod].name)}: ${tr(MODS[d.mod].text)}</p>
-    <p>${best ? `${L('Today\'s best', 'Лучшее сегодня')}: ${fmtCs(best.t)}` : L('Not yet walked today.', 'Сегодня ещё не пройдено.')}</p>
-    <p class="hud-note">${best ? L('Today\'s seed is yours. Walk again for a better time.', 'Семя дня получено. Можно улучшить время.') : L('Reach the end once today for a seed of song.', 'Дойди до конца сегодня, чтобы получить семя песни.')}</p>`;
-  h.setPanel('daily', `<h1>${L('Daily trial', 'Испытание дня')}</h1><p class="hud-note">${d.date}</p>`, [
-    [L('Begin', 'Начать'), () => { arm(d); h.goTo(d.level, { reset: true, card: true, outMs: 500 }); }, false, 'play'],
-    [L('Back', 'Назад'), back, false, 'back'],
+    <p>${best ? `${L('Today\'s best', 'Лучшее сегодня', 'Melhor de hoje')}: ${fmtCs(best.t)}` : L('Not yet walked today.', 'Сегодня ещё не пройдено.', 'Ainda não percorrido hoje.')}</p>
+    <p class="hud-note">${best ? L('Today\'s seed is yours. Walk again for a better time.', 'Семя дня получено. Можно улучшить время.', 'A semente de hoje é tua. Percorre de novo para um tempo melhor.') : L('Reach the end once today for a seed of song.', 'Дойди до конца сегодня, чтобы получить семя песни.', 'Chega ao fim uma vez hoje para ganhar uma semente de canção.')}</p>`;
+  h.setPanel('daily', `<h1>${L('Daily trial', 'Испытание дня', 'Desafio diário')}</h1><p class="hud-note">${d.date}</p>`, [
+    [L('Begin', 'Начать', 'Começar'), () => { arm(d); h.goTo(d.level, { reset: true, card: true, outMs: 500 }); }, false, 'play'],
+    [L('Back', 'Назад', 'Voltar'), back, false, 'back'],
   ], card, back);
 }
 const fmtCs = (s) => { const c = Math.floor(s * 100); return `${String(Math.floor(c / 6000)).padStart(2, '0')}:${String(Math.floor(c / 100) % 60).padStart(2, '0')}.${String(c % 100).padStart(2, '0')}`; };

@@ -174,6 +174,11 @@ export default {
       }).find((q) => q.g && Math.abs(q.g.y - sw.pos[1]) < 0.6) ?? { sd: 1, x: sw.pos[0] + side.x * off, z: sw.pos[2] + side.z * off, g: null };
       const gx = sw.pos[0] + out.x * (hd + 0.25), gz = sw.pos[2] + out.z * (hd + 0.25), gy = L.collide.groundAt(gx, gz, sw.pos[1] + 1.5)?.y ?? sw.pos[1]; // in front of the carved face
       o.position.set(gx, gy - 0.05, gz); o.rotation.y = yaw; o.scale.set(sc * STONE_W, sc, sc * STONE_W); o.name = `guststone_${sw.m.id}`;
+      if (sw.stone) { // level.js's collider takes this boulder's footprint and height, and its rest spot (marks.js inits before play: deterministic)
+        const n = sw.stone.node; n.scale.set(2 * hw * 0.9, STONE_H * 0.95, 2 * hd * 0.9); n.position.set(gx, gy - 0.05 + STONE_H * 0.95 / 2, gz); n.rotation.y = yaw;
+        sw.stone.rest = [spot.x, spot.z]; if (!sw.dusty) { n.position.x = spot.x; n.position.z = spot.z; }
+        sw.stone.body.update(); sw.stone.body.delta.identity();
+      }
       const stone = o.getObjectByName('stone'), groove = o.getObjectByName('groove');
       stone.geometry.computeBoundingBox();
       const foot = new THREE.Vector3(stone.position.x, stone.position.y + stone.geometry.boundingBox.min.y * stone.scale.y, stone.position.z);

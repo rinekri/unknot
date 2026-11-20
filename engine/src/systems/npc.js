@@ -41,7 +41,7 @@ export const lineDur = (text) => Math.max(2, text.length * 0.06);
 const ease = (u) => u * u * (3 - 2 * u);
 const clamp01 = (u) => Math.min(1, Math.max(0, u));
 const _v = new THREE.Vector3(), _w = new THREE.Vector3(), _u = new THREE.Vector3();
-const KEEPER = { d: { id: 'keeper', name: { en: 'Keeper', ru: 'Хранитель' }, voice: 'whisper' } };
+const KEEPER = { d: { id: 'keeper', name: { en: 'Keeper', ru: 'Хранитель', pt: 'Zelador' }, voice: 'whisper' } };
 let S, glowTex;
 
 function makeGlowTex() { // soft round sprite

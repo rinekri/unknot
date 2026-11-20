@@ -134,7 +134,7 @@ const rune2 = { id: 'rune2', glb: RUNE, pos: [H2.x + 1.2, H2.y, H2.z], rotY: -Ma
 // (marks.js); sung to from shrineSpot it answers and gives the Gust.
 // U19: on GS, at its far side from the dash in; its first use is the boulder on rune1 (H1), carved with the same wind cone (marks.js).
 const gsU = ((d) => [(GS.x - I.q1.x) / d, (GS.z - I.q1.z) / d])(Math.hypot(GS.x - I.q1.x, GS.z - I.q1.z)), SHRINE_K = 1.9; // SHRINE_K: a song-shrine stands near twice a ruin pillar
-const shrineSpot = [GS.x - gsU[0] * 0.3, GS.z - gsU[1] * 0.3], gust1Spot = [H1.x + 1.7, H1.z];
+const shrineSpot = [GS.x - gsU[0] * 0.3, GS.z - gsU[1] * 0.3], gust1Spot = [H1.x - 0.6, H1.z + 1.8], breathSpot = [H1.x + 1.7, H1.z]; // U25: the Gust is sung from north of the boulder, facing south-east past it: the shrine on GS stands in the play camera's frame (kit songGates); the breath is drawn at the cairn first
 const songGust = { id: 'song_gust', glb: PILLAR, pos: [GS.x + gsU[0] * 1.8, GS.y, GS.z + gsU[1] * 1.8], rotY: 0, scale: SHRINE_K }; songGust.rotY = facing(songGust.pos, [shrineSpot[0], 0, shrineSpot[1]]);
 const dQ = toward(D, I.q1, 1.2), gsIn = toward(GS, I.q1, 1.3), q1At = [I.q1.x, I.q1.y, I.q1.z], qRoute = [[D.x + 0.8, D.y, D.z + 1.0], dQ, q1At, gsIn, [shrineSpot[0], GS.y, shrineSpot[1]], gsIn, q1At, dQ];
 const props = [
@@ -158,7 +158,7 @@ const route = [
   [B.x + 1.8, B.y, rimNear(B) + 1.4], [names[1].spot[0], B.y, names[1].spot[1]], [names[2].spot[0], B.y, names[2].spot[1]], [B.x, B.y, rimFar(B) - 3.6], [golemC[0], golem.top, golemC[1]], [C.x, C.y, rimNear(C) + 1.5], [C.x, C.y, C.z], [C.x, C.y, rimFar(C) - 1.5],
   [X1.x, X1.y, rimNear(X1) + 1.5], [X1.x, X1.y, X1.z + 1], ...qpads.map(mid), [X2.x, X2.y, rimNear(X2) + 1.1], [X2.x, X2.y, X2.z + 1],
   [X3.x, X3.y, rimNear(X3) + 1.5], [X3.x, X3.y, X3.z], [spotS[0], X3.y, spotS[1]], [X3.x, X3.y, rimFar(X3) - 1.0], ...span.map(mid), [X4.x, X4.y, rimNear(X4) + 1.5], [X4.x - 1, X4.y, X4.z],
-  at('k1'), at('k2'), at('k3'), [D.x, D.y, rimNear(D) + 1.5], ...qRoute, [D.x - 1.5, D.y, D.z], [D.x - 4.5, D.y, D.z - 0.5], at('w1'), at('w2'), at('w3'), at('w4'), [gust1Spot[0], H1.y, gust1Spot[1]], [spot1[0], H1.y, spot1[1]], at('w4'), at('w3'), at('w2'), at('w1'), [D.x - 3, D.y, D.z - 2], [D.x - 0.5, D.y, rimFar(D) - 2], [liftC[0], D.y, liftC[1]],
+  at('k1'), at('k2'), at('k3'), [D.x, D.y, rimNear(D) + 1.5], ...qRoute, [D.x - 1.5, D.y, D.z], [D.x - 4.5, D.y, D.z - 0.5], at('w1'), at('w2'), at('w3'), at('w4'), [breathSpot[0], H1.y, breathSpot[1]], [gust1Spot[0], H1.y, gust1Spot[1]], [spot1[0], H1.y, spot1[1]], at('w4'), at('w3'), at('w2'), at('w1'), [D.x - 3, D.y, D.z - 2], [D.x - 0.5, D.y, rimFar(D) - 2], [liftC[0], D.y, liftC[1]],
   [E.x, E.y, rimNear(E) + 1.5], [E.x + 1, E.y, E.z], [E.x, E.y, rimFar(E) - 1.5],
   ...crumbles.slice(0, CR.n).map((p) => [p.x, p.top, (p.z0 + p.z1) / 2]), [F.x, F.y, rimNear(F) + 1.1], [F.x, F.y, F.z], [crumbles[3].x, crumbles[3].top, (crumbles[3].z0 + crumbles[3].z1) / 2],
   [G.x, G.y, rimNear(G) + 1.5], [G.x + 0.5, G.y, G.z], [G.x + 3.5, G.y, G.z - 0.5], at('g1'), at('g2'), at('g3'), at('g4'), [rune2Spot[0], H2.y, rune2Spot[1]], at('g4'), at('g3'), at('g2'), at('g1'), [G.x + 2.5, G.y, G.z + 1.5], [T.x, G.y, stairs[0].z0 - 1.2],
@@ -175,7 +175,7 @@ function outroClear(x, z, r) {
   const u = THREE.MathUtils.clamp(((x - ax) * vx + (z - az) * vz) / (vx * vx + vz * vz), 0, 1);
   return Math.hypot(ax + vx * u - x, az + vz * u - z) > r + 1.0;
 }
-const route0 = route.filter((q) => ![...qRoute, [gust1Spot[0], 0, gust1Spot[1]]].some((d) => r2(d[0]) === q[0] && r2(d[2]) === q[2])), /* U19: decor laid out as before the shrines' detours (the seed draws stay put) */ props0 = props.filter((p) => p !== songGust); // U18: decor laid out as before the song-shrine (the seed draws stay put), cleared around it below
+const route0 = route.filter((q) => ![...qRoute, [gust1Spot[0], 0, gust1Spot[1]], [breathSpot[0], 0, breathSpot[1]]].some((d) => r2(d[0]) === q[0] && r2(d[2]) === q[2])), /* U19: decor laid out as before the shrines' detours (the seed draws stay put) */ props0 = props.filter((p) => p !== songGust); // U18: decor laid out as before the song-shrine (the seed draws stay put), cleared around it below
 const decor = K.decorate([
   { on: I.start, glb: ARCH, s: [0.95, 1.1] }, { on: I.start, glb: RUBBLE, n: 2, s: [0.85, 1.0] }, { on: I.start, glb: TREE, s: [0.9, 1.0] },
   { on: A, glb: RUBBLE, s: [0.85, 1.0] }, { on: B, glb: RUBBLE, s: [0.85, 1.0] }, { on: C, glb: ARCH, s: [0.9, 1.0] }, { on: C, glb: RUBBLE, s: [0.85, 1.0] },
@@ -204,8 +204,8 @@ shrine.rotY = SUN_YAW;
 // ---------- world.glb + collider.glb ----------
 const world = new THREE.Scene();
 const play = Object.values(I);
-const rocks = K.islandMeshes(world, play, [[nextIsl.x, nextIsl.z, nextIsl.R * 1.8]]);
-K.distantRing(world, new THREE.Vector3(G.x / 2, 0, G.z / 2), { clear: [[nextIsl.x, nextIsl.z, nextIsl.R * 1.8], [T.x, T.z, 60]] }); // and none within 60 m of the goal terrace: the low-detail haze rock read as a flat pale slab up close
+const rocks = K.islandMeshes(world, play, [[nextIsl.x, nextIsl.z, nextIsl.R * 1.8]], route);
+K.distantRing(world, new THREE.Vector3(G.x / 2, 0, G.z / 2), { route, clear: [[nextIsl.x, nextIsl.z, nextIsl.R * 1.8], [T.x, T.z, 60]] }); // and none within 60 m of the goal terrace: the low-detail haze rock read as a flat pale slab up close
 const farDecor = K.farIsland(world, { name: 'l2', kind: 'totems', ...nextIsl }); // Orren's workshop, the next level, seen from the goal
 const beacon = K.landmark(world, { x: G.x / 2 + Math.sin(0.5) * 340, z: G.z / 2 + Math.cos(0.5) * 340 }); // the Crown, far ahead
 const falls = K.waterfalls(world, play, rocks, 3, route);
@@ -314,7 +314,7 @@ const level = {
     { id: 't_stairs', shape: { kind: 'poly', pts: poly(G.x - 5, G.z - 5, G.x + 5, G.z + 1) }, teaches: 'timed_bridge', ifFlag: null, once: true },
     { id: 't_crumble', shape: { kind: 'poly', pts: poly(E.x - 4, rimFar(E) - 4, E.x + 4, rimFar(E)) }, teaches: 'crumble', ifFlag: null, once: true },
     { id: 't_shrine', shape: { kind: 'poly', pts: poly(shrine.pos[0] - 3.5, shrine.pos[2] - 3.5, shrine.pos[0] + 3.5, shrine.pos[2] + 3.5) }, ifFlag: 'switch.shrine', once: true,
-      hint: { en: 'Carved under the sunrise: "We woke first, so that we could wake the others."', ru: 'Вырезано под восходом: «Мы проснулись первыми, чтобы будить других».' } },
+      hint: { en: 'Carved under the sunrise: "We woke first, so that we could wake the others."', ru: 'Вырезано под восходом: «Мы проснулись первыми, чтобы будить других».', pt: 'Gravado sob o nascente: "Despertámos primeiro, para podermos despertar os outros."' } },
   ],
   checkpoints: [
     cp('c_A', [A.x, A.y, A.z - 2], [A.x, 0, rimFar(A)]),
@@ -363,7 +363,7 @@ const level = {
     { at: (([x, , z]) => [x, z])(toward(I.q1, GS, 0.6)).map(r2), r: 1.2, do: 'dash', air: true }, // U19: off D to the Gust's shrine island: a hop, an air dash
     { at: shrineSpot.map(r2), r: 0.6, do: 'sing', switch: 'song_gust', until: 'switch.song_gust' },
     { at: (([x, , z]) => [x, z])(toward(GS, I.q1, 0.6)).map(r2), r: 1.2, do: 'dash', air: true }, // and back
-    { at: gust1Spot.map(r2), y: H1.y, r: 0.6, do: 'wait', until: 'breath' }, // at the cairn c_H1: a full breath for the song
+    { at: breathSpot.map(r2), y: H1.y, r: 0.6, do: 'wait', until: 'breath' }, // at the cairn c_H1: a full breath for the song
     { at: gust1Spot.map(r2), y: H1.y, r: 0.6, do: 'song', song: 'gust', face: [rune1.pos[0], rune1.pos[2]].map(r2), until: 'clear.rune1' }, // the Gust's first use: the boulder off rune1
     { at: spot1.map(r2), r: 0.6, do: 'sing', switch: 'rune1', until: 'switch.rune1' }, // hidden: four hops west
     { at: [D.x - 0.5, rimFar(D) - 2].map(r2), y: D.y, r: 0.6, do: 'wait', until: 'bottom.lift' }, // the lift waits down once woken
@@ -388,23 +388,23 @@ const level = {
   gifts: [{ id: 'dash', at: r2v([golemC[0], golem.top, golemC[1]]), npc: 'pebble' }, { id: 'gust', at: r2v([shrineSpot[0], GS.y, shrineSpot[1]]), shrine: 'song_gust', via: ['q1', 'GS'] }], // kit giftOrder: Kamen's dash, given on its back
   npcSlots: [{ id: 'golem', pos: r2v([C.x + 1.5, C.y, rimNear(C) + 2]), note: 'golem across the B -> C dash gap: in view from B before the first air dash' }],
   npcs: [
-    { id: 'pebble', kind: 'golem', name: { en: 'Kamen', ru: 'Камень' }, voice: 'golem', node: golem.name, pos: r2v(golemHead), switches: names.map((n) => n.id), lure: true,
+    { id: 'pebble', kind: 'golem', name: { en: 'Kamen', ru: 'Камень', pt: 'Kamen' }, voice: 'golem', node: golem.name, pos: r2v(golemHead), switches: names.map((n) => n.id), lure: true,
       bark: { talk: 'pebble_ask', r: 8, until: 'npc.pebble.awake', every: 15 }, talk: [ // re-asks while near until it wakes
       { id: 'pebble_ask', once: false, lines: [
-        { en: '...my names... carved on three stones, near... sing to them... and I will remember...', ru: '...мои имена... вырезаны на трёх камнях, рядом... спой им... и я вспомню...' },
+        { en: '...my names... carved on three stones, near... sing to them... and I will remember...', ru: '...мои имена... вырезаны на трёх камнях, рядом... спой им... и я вспомню...', pt: '...os meus nomes... gravados em três pedras, perto... canta-lhes... e eu recordarei...' },
       ] },
       { id: 'pebble_call', until: 'npc.pebble.awake', lines: [ // t_call: on B, past the wall
-        { en: '...little wind... over here... my names... on the stones... sing to them...', ru: '...ветерок... сюда... мои имена... на камнях... спой им...' },
+        { en: '...little wind... over here... my names... on the stones... sing to them...', ru: '...ветерок... сюда... мои имена... на камнях... спой им...', pt: '...pequeno vento... aqui... os meus nomes... nas pedras... canta-lhes...' },
       ] },
-      { id: 'pebble_1', on: 'npc.pebble.1', r: 13, lines: [{ en: '...one name. Yes... that was mine.', ru: '...одно имя. Да... это было моё.' }] },
-      { id: 'pebble_2', on: 'npc.pebble.2', lines: [{ en: '...two. One more, and I wake.', ru: '...два. Ещё одно, и я проснусь.' }] },
+      { id: 'pebble_1', on: 'npc.pebble.1', r: 13, lines: [{ en: '...one name. Yes... that was mine.', ru: '...одно имя. Да... это было моё.', pt: '...um nome. Sim... esse era meu.' }] },
+      { id: 'pebble_2', on: 'npc.pebble.2', lines: [{ en: '...two. One more, and I wake.', ru: '...два. Ещё одно, и я проснусь.', pt: '...dois. Mais um, e eu acordo.' }] },
       { id: 'pebble_wake', on: 'npc.pebble.3', set: ['npc.pebble.awake', 'gift.dash'], lines: [
-        { en: 'Take this, little wind: the Dash. Fall like a stone.', ru: 'Возьми, ветерок: Рывок. Срывайся, как камень.', gift: true }, // U16: two short lines (~6 s); the flavour moved to pebble_far
-        { en: 'Now climb on. I will carry you over.', ru: 'Теперь забирайся. Я перенесу тебя.' }, // U18: one gift per moment; the Gust waits at its shrine on D
+        { en: 'Take this, little wind: the Dash. Fall like a stone.', ru: 'Возьми, ветерок: Рывок. Срывайся, как камень.', pt: 'Toma, pequeno vento: o Impulso. Cai como uma pedra.', gift: true }, // U16: two short lines (~6 s); the flavour moved to pebble_far
+        { en: 'Now climb on. I will carry you over.', ru: 'Теперь забирайся. Я перенесу тебя.', pt: 'Agora sobe. Eu levo-te para o outro lado.' }, // U18: one gift per moment; the Gust waits at its shrine on D
       ] },
       { id: 'pebble_far', on: 'top.golem', if: 'npc.pebble.awake', lines: [
-        { en: 'No one had said my names for a very long time. I was a bridge for the Keepers.', ru: 'Давно никто не звал меня по именам. Я был мостом для Хранителей.' },
-        { en: 'Orren tied the knot above us. Go and see what is left of him.', ru: 'Оррен завязал узел над нами. Иди, посмотри, что от него осталось.' },
+        { en: 'No one had said my names for a very long time. I was a bridge for the Keepers.', ru: 'Давно никто не звал меня по именам. Я был мостом для Хранителей.', pt: 'Há muito tempo que ninguém dizia os meus nomes. Eu era uma ponte para os Zeladores.' },
+        { en: 'Orren tied the knot above us. Go and see what is left of him.', ru: 'Оррен завязал узел над нами. Иди, посмотри, что от него осталось.', pt: 'Orren atou o nó por cima de nós. Vai ver o que resta dele.' },
       ] },
     ] },
   ],
@@ -444,10 +444,10 @@ const level = {
         { at: 21.5, pos: r2v([SPAWN[0] - Math.sin(SH0) * 5.8, SPAWN[1] + 3, SPAWN[2] - Math.cos(SH0) * 5.8]), look: r2v([SPAWN[0], SPAWN[1] + 1.4, SPAWN[2]]) }, // where the play camera takes over (camera.js ARM, PITCH, FOCUS_Y)
       ],
       lines: [
-        { at: 0.4, dur: 4.6, text: { en: 'The Keepers sang a mountain into the sky…', ru: 'Хранители песней подняли гору в небо…' } },
-        { at: 5.2, dur: 4.4, text: { en: 'Its stones had names, and the winds knew them all…', ru: 'У её камней были имена, и ветры знали их все…' } },
-        { at: 10, dur: 4.6, text: { en: 'Then Orren tied every wind into one knot, and the stones fell asleep.', ru: 'Потом Оррен связал все ветры в один узел, и камни уснули.' } },
-        { at: 15, dur: 5.2, text: { en: 'Wake, child of the last Keeper. Climb to the Crown and loosen the knot.', ru: 'Проснись, дитя последнего Хранителя. Поднимись к Короне и ослабь узел.' } },
+        { at: 0.4, dur: 4.6, text: { en: 'The Keepers sang a mountain into the sky…', ru: 'Хранители песней подняли гору в небо…', pt: 'Os Zeladores cantaram uma montanha até ao céu…' } },
+        { at: 5.2, dur: 4.4, text: { en: 'Its stones had names, and the winds knew them all…', ru: 'У её камней были имена, и ветры знали их все…', pt: 'As suas pedras tinham nomes, e os ventos conheciam-nos todos…' } },
+        { at: 10, dur: 4.6, text: { en: 'Then Orren tied every wind into one knot, and the stones fell asleep.', ru: 'Потом Оррен связал все ветры в один узел, и камни уснули.', pt: 'Depois Orren atou todos os ventos num só nó, e as pedras adormeceram.' } },
+        { at: 15, dur: 5.2, text: { en: 'Wake, child of the last Keeper. Climb to the Crown and loosen the knot.', ru: 'Проснись, дитя последнего Хранителя. Поднимись к Короне и ослабь узел.', pt: 'Acorda, filho do último Zelador. Sobe à Coroa e afrouxa o nó.' } },
       ],
       events: [
         { at: 0, duck: { db: -9, seconds: 21.5 } },
@@ -472,8 +472,8 @@ const level = {
         { at: 12, pos: r2v(road(-1, 4.4, 5)), look: r2v([nextIsl.x, nextIsl.y + 2, nextIsl.z]) }, // he shrinks along the road, the workshop ahead
       ],
       lines: [
-        { at: 0.6, dur: 4.2, who: { en: 'Kamen', ru: 'Камень' }, voice: 'golem', text: { en: 'The stones remember their names. The wind remembers the road: it will carry you, as I carried the Keepers.', ru: 'Камни помнят свои имена. Ветер помнит дорогу: он понесёт тебя, как я носил Хранителей.' } },
-        { at: 5.2, dur: 4.4, who: { en: 'Kamen', ru: 'Камень' }, voice: 'golem', text: { en: 'The winds are bound beyond — to Orren\'s totems. Set them loose.', ru: 'Дальше ветры привязаны к тотемам Оррена. Отпусти их.' } },
+        { at: 0.6, dur: 4.2, who: { en: 'Kamen', ru: 'Камень', pt: 'Kamen' }, voice: 'golem', text: { en: 'The stones remember their names. The wind remembers the road: it will carry you, as I carried the Keepers.', ru: 'Камни помнят свои имена. Ветер помнит дорогу: он понесёт тебя, как я носил Хранителей.', pt: 'As pedras recordam os seus nomes. O vento recorda o caminho: levar-te-á, como eu levei os Zeladores.' } },
+        { at: 5.2, dur: 4.4, who: { en: 'Kamen', ru: 'Камень', pt: 'Kamen' }, voice: 'golem', text: { en: 'The winds are bound beyond — to Orren\'s totems. Set them loose.', ru: 'Дальше ветры привязаны к тотемам Оррена. Отпусти их.', pt: 'Os ventos estão atados mais adiante, nos totens de Orren. Solta-os.' } },
       ],
       events: [
         { at: 0, duck: { db: -8, seconds: 12 } },
@@ -520,14 +520,14 @@ K.own(1601, () => {
   level.checkpoints.push({ id: 'c_lockB', pos: r2v([LB.x, LB.y, LB.z]), r: 2.2, heading: facing([LB.x, 0, LB.z], [C.x, 0, C.z]), wind: true });
   level.triggers.push({ id: 't_kamen_lost', shape: { kind: 'poly', pts: poly(A.x - 4, A.z - 3, A.x + 4, A.z + 3) }, talk: 'pebble_lost', ifFlag: 'gift.name', once: true });
   level.npcs[0].talk.push({ id: 'pebble_lost', lines: [
-    { en: '...one of my names... the wind took it west, past the edge... a stone on a stone. Sing it home?', ru: '...одно моё имя... ветер унёс его на запад, за край... камень на камне. Споёшь ему дорогу домой?' },
+    { en: '...one of my names... the wind took it west, past the edge... a stone on a stone. Sing it home?', ru: '...одно моё имя... ветер унёс его на запад, за край... камень на камне. Споёшь ему дорогу домой?', pt: '...um dos meus nomes... o vento levou-o para oeste, além da beira... uma pedra sobre uma pedra. Cantas-lho de volta?' },
   ] }, { id: 'pebble_home', on: 'switch.kamen_name', lines: [
-    { en: '...I hear it. All my names. Take my Gust again, little wind: it carries further now.', ru: '...Слышу. Все мои имена. Возьми мой Порыв снова, ветерок: теперь он летит дальше.' },
-    { en: '...my brother\'s name is cut somewhere on the Crown. If you pass it... sing it for me.', ru: '...имя моего брата высечено где-то на Короне. Если пройдёшь мимо... спой его для меня.' },
+    { en: '...I hear it. All my names. Take my Gust again, little wind: it carries further now.', ru: '...Слышу. Все мои имена. Возьми мой Порыв снова, ветерок: теперь он летит дальше.', pt: '...ouço-o. Todos os meus nomes. Toma outra vez a minha Rajada, pequeno vento: agora chega mais longe.' },
+    { en: '...my brother\'s name is cut somewhere on the Crown. If you pass it... sing it for me.', ru: '...имя моего брата высечено где-то на Короне. Если пройдёшь мимо... спой его для меня.', pt: '...o nome do meu irmão está gravado algures na Coroa. Se passares por ele... canta-o por mim.' },
   ] }, { id: 'brother_home', on: 'world.kamen.brother', lines: [
-    { en: '...you sang his name. Up on the Crown, he heard. He was never lost: just standing very still.', ru: '...ты спел его имя. Там, на Короне, он услышал. Он не терялся: просто стоял очень тихо.' },
+    { en: '...you sang his name. Up on the Crown, he heard. He was never lost: just standing very still.', ru: '...ты спел его имя. Там, на Короне, он услышал. Он не терялся: просто стоял очень тихо.', pt: '...cantaste o nome dele. Lá em cima, na Coroa, ele ouviu. Nunca esteve perdido: estava só muito quieto.' },
   ] }, { id: 'menhir_joke', on: 'switch.menhir_l1', lines: [
-    { en: '...that one is only a rock, little wind. I sang to it for a century. Good listener, though.', ru: '...это просто камень, ветерок. Я пел ему сто лет. Зато хорошо слушает.' },
+    { en: '...that one is only a rock, little wind. I sang to it for a century. Good listener, though.', ru: '...это просто камень, ветерок. Я пел ему сто лет. Зато хорошо слушает.', pt: '...essa é só uma rocha, pequeno vento. Cantei-lhe durante um século. Mas é boa ouvinte.' },
   ] });
   { // a singable menhir in the spawn ring (Name, again and again): it never answers (meta.js 'menhir' secret counts the songs)
     const mh = decor.find((d) => d.glb === MENHIR);
@@ -590,4 +590,22 @@ K.own(1601, () => {
     ...[[a[0], a[2] - 0.8], far].map((q) => ({ at: q.map(r2), r: 0.7, do: 'go', home: 30, profiles: ['revisit'] }))); // over the mended deck and back
 }
 
-await K.write({ world, collider, inst, level, decor: [...decor, ...farDecor] });
+// U25 the Anchor revisit lock (lockC): a row of sinking stones off k1's east rim to a far islet with a shard of echo; each stone
+// drops at a touch, the Anchor (l3) holds the row. lockA (Name, the corded totem above) stays the cord-bound cave; no second Name lock.
+K.own(1604, () => {
+  const R = makeR6(K, { world, collider, level, salt: 1604 }), K1 = K.isl.k1;
+  const lc = R.anchorLock({ id: 'lockC', from: K1, th: 0, gap: 16, rewards: [{ id: 'echo_hold' }] });
+  R.finish();
+  level.mechanisms.push(...lc.mechanisms);
+  level.echoSlots.push(...lc.rewards.map((e) => ({ ...e, note: 'R6 lock reward (Anchor)' })));
+  const rim = R.standAt(K1, 0, 0.3), isl = [lc.islet.x, lc.islet.z].map(r2), back = R.standAt(lc.islet, Math.PI, 1.2); // U25: 1.2 in, an overshoot at 0.3 stepped on the crumble row and fell
+  const visit = [{ at: [K1.x, K1.z].map(r2), r: 0.6, do: 'go' }, { at: lc.stand, r: 0.5, do: 'go' },
+    { at: lc.stand, r: 0.6, do: 'song', song: 'anchor', face: rim.map(r2), hold: 1.6 }, { at: isl, r: 0.6, do: 'go' },
+    ...lc.rewards.map((e) => ({ at: [e.pos[0], e.pos[2]], r: 0.4, do: 'go' })),
+    { at: back.map(r2), r: 0.5, do: 'go' }, { at: back.map(r2), r: 0.6, do: 'song', song: 'anchor', face: lc.stand, hold: 1.6 }, { at: lc.stand, r: 0.6, do: 'go' }, { at: [K1.x, K1.z].map(r2), r: 0.6, do: 'go' }];
+  const k3 = level.actions.findIndex((a) => a.do === 'dash' && a.air && Math.hypot(a.at[0] - K.isl.k3.x, a.at[1] - K.isl.k3.z) < 3); // before the k3 -> D dash
+  level.actions.splice(k3, 0, ...visit.map((a) => ({ profiles: ['revisit'], ...a })));
+  level.shots.push({ name: 'lockC', pos: r2v([K1.x - 3, K1.y + 4, K1.z - 6]), look: r2v([lc.islet.x, K1.y, lc.islet.z]) });
+});
+
+await K.write({ world, collider, inst, level, gates: [{ song: 'gust', edges: [['D', 'E']], nodes: ['mech_lift'] }], decor: [...decor, ...farDecor] });

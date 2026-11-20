@@ -20,7 +20,7 @@
 // a fizzle (no breath). Logs 'song' {song, id, wasted}, 'songfail' {song, why} and 'fizzle' {song}; the summary counts them.
 // {at, r, do:'fight', enemy, stun?, y?}: inside r, the scripted counter for that shard (enemies.js): a squall is Gusted on its
 // telegraph (worst: too early first), a warden / the boss's ram phase is struck (3 hits), the boss's rings are jumped; unbindable:
-// Name it. Done when the shard is free (stun: once stunned when Name is not gifted yet). Logs 'knock' / 'unbind'; the summary
+// Name it. Done when the shard is free (stun: once stunned when Name is not gifted yet; U25 no Name and no stun: a stunned squall is struck 3x, dispersed: done). Logs 'knock' / 'unbind'; the summary
 // counts knocks and deaths (a fall within 3 s of a knock) per enemy.
 // R4/R5/R9: {.., do:'fight', shatter: true}: strike the stunned shard 3x instead of Naming it (a mistake: broken.<id>).
 // {at, r, do:'airstrike', face?, until?}: grounded inside r, jump in place and strike at the apex (retried on landing until `until`).
@@ -33,7 +33,7 @@ import * as THREE from 'three';
 import { jumpReach, dashReach, dash2Reach } from './player.js';
 import { pick, OVER } from './songs.js';
 
-const LOOKAHEAD = 1.5, STUCK_S = 3, RUNUP = 2.5; // m of run-up before an edge: jog -> run takes ~0.7 m; longer burns breath (player.js) for nothing
+const LOOKAHEAD = 1.5, STUCK_S = 3, RUNUP = 2.5, PUFF_MAX = 6; // m of run-up before an edge: jog -> run takes ~0.7 m; longer burns breath (player.js) for nothing; U25 PUFF_MAX: short-of-breath retries of one action before the run fails
 let pts, idx, log, best, bestT, bestY, holding, rescan, actions, struck, cpT, doneT, profile, knockAt, rolled;
 
 export default {
@@ -61,7 +61,7 @@ export default {
     reg.on('checkpoint', (c) => { add('checkpoint', c.id); cpT = ctx.game.t; });
     reg.on('wind.exit', (w) => add('wind', w));
     reg.on('strike.target', (h) => add('hit', h.id)); // after each strike press: the switch/wall it reached, null = miss
-    reg.on('song.reject', (d) => { add('reject', { id: d.id }); for (const x of actions) if (x.do === 'sing' && x.switch === d.id && !x.until) x.done = rescan = true; }); // a rune still bound by its order: the whirl shoved him back, move on
+    reg.on('song.reject', (d) => { add('reject', { id: d.id, song: d.song, motif: d.motif, half: d.half }); if (d.motif && !d.bound) return; for (const x of actions) if (x.do === 'sing' && x.switch === d.id && !x.until) x.done = rescan = true; }); // a rune still bound by its order: the whirl shoved him back, move on
     reg.on('drop.pick', (d) => add('drop', { kind: d.kind, id: d.id }));
     reg.on('sing.done', (d) => { add('sing', { id: d.id, ok: d.ok, wrong: d.wrong }); doneT = ctx.game.t; for (const a of actions) if (a.do === 'sing' && a.switch === d.id && (d.ok || d.wrong) && !a.until) a.done = true; });
     const songDone = (s) => { const a = actions.find((x) => !x.done); if (a?.do === 'fight') a.seq = null; else if ((a?.do === 'song' || a?.do === 'airsong') && a.song === s) { a.done = true; a.doneAt = ctx.game.t; a.seq = null; } };
@@ -69,7 +69,7 @@ export default {
     reg.on('song.fail', (d) => { add('songfail', { song: d.song, why: d.why }); const a = actions.find((x) => !x.done); if (a?.seq) { a.seq = null; a.tries = (a.tries ?? 0) + 1; a.pressedT = ctx.game.t; } });
     reg.on('enemy.knock', (k) => { add('knock', k.id); knockAt = { t: ctx.game.t, id: k.id }; });
     reg.on('enemy.unbind', (u) => add('unbind', u.id));
-    reg.on('player.puff', (e) => { if (e.song) { add('fizzle', { song: e.song }); songDone(e.song); } });
+    reg.on('player.puff', (e) => { if (!e.song) return; add('fizzle', { song: e.song }); const a = actions.find((x) => !x.done); if (!a) return; a.seq = null; a.pressedT = ctx.game.t + 1.5; if ((a.puffs = (a.puffs ?? 0) + 1) > PUFF_MAX) { ctx.game.errors.push(`bot: ${a.do} ${a.song ?? a.switch ?? a.enemy ?? ''} puffed ${a.puffs}x (no breath for a mandatory song)`); reg.set('end', 'botfail'); } }); // U25: short of breath is not done (a gate song is mandatory): press again once breath is back, PUFF_MAX times, then the run fails loudly
     reg.on('break', (b) => add('break', { id: b.id, by: b.by }));
     reg.on('talk', (k) => add('talk', { id: k.id, npc: k.npc })); // npc.js: a dialogue started
     reg.on('echo', (e) => add('echo', e.id)); // echo.js: an echo counted
@@ -175,6 +175,7 @@ export default {
       return reg.set('input', { move: [dx, dz], jump: p.vel.y > 0 && !act.bounces, run: true, strike: s, down: below }); // hold the take-off jump to its apex
     }
     if (act?.do === 'pogo' && p.grounded && act.leapt) { act.done = rescan = true; }
+    if (act?.do === 'song' && !act.until && !flags[`gift.${act.song}`]) { act.done = true; log.push({ t: +ctx.game.t.toFixed(3), event: 'skip', detail: { song: act.song } }); return; } // U25: an optional song not earned (a stripped-song run): on; a gate's song (until) is waited on
     if (act?.do === 'song' && act.slab && !act.seq) { const o = (reg.get('trials') ?? []).find((x) => x.id === act.slab); if (o?.state !== 'lower' && Math.hypot(p.pos.x - act.at[0], p.pos.z - act.at[1]) <= act.r) { bestT = ctx.game.t; return reg.set('input', { move: [0, 0], jump: false, run: false, face: act.face ? [act.face[0] - p.pos.x, act.face[1] - p.pos.z] : undefined }); } }
     if (act?.do === 'song' && (act.seq || p.grounded && (act.y == null || Math.abs(p.pos.y - act.y) < 1) && Math.hypot(p.pos.x - act.at[0], p.pos.z - act.at[1]) <= act.r)) { // stop, face, play the song
       const f = act.face ?? (act.target ? [act.target[0], act.target[2]] : [p.pos.x + dx, p.pos.z + dz]), face = [f[0] - p.pos.x, f[1] - p.pos.z];
@@ -251,7 +252,9 @@ function fight(reg, act, p, t, flags) {
   if (act.seq) { act.song = act.seq.song; return { ...idle, face: act.seq.face?.() ?? at(e), song: held(act, t) }; }
   if (act.stun && (e.unbindable || e.state === 'stun') && !flags['gift.name'] && !act.shatter) { act.done = true; return idle; }
   const free = p.grounded && p.state !== 'sing' && p.state !== 'strike';
-  if (act.shatter && e.unbindable && e.kind !== 'boss') { // R4 worst: keeps hitting the stunned shard until it shatters
+  if (e.kind === 'squall' && ['blown', 'away'].includes(e.state)) { act.done = true; return idle; } // U25: dispersed without the Name: its lane is clear until the next respawn
+  if (!flags['gift.name'] && e.d.mandatory && e.shat >= 3) { act.done = true; for (const x of actions) if (x.do === 'sing' && x.switch === e.d.guard) x.done = true; return idle; } // U25: no Name: a mandatory Warden's cords rang off the third blow, it cannot be freed: move on (its rune / updraft stays held)
+  if ((act.shatter || !flags['gift.name']) && e.unbindable && e.kind !== 'boss') { // R4 worst: keeps hitting the stunned shard until it shatters (U25: no Name: the third blow disperses a squall, shatters a plain warden)
     const f = at(e), dd = Math.hypot(...f);
     return dd > 1.4 ? { ...idle, move: [f[0] / dd, f[1] / dd] } : { ...idle, face: f, strike: free };
   }

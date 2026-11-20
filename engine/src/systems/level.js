@@ -38,7 +38,8 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 import { DecalGeometry } from 'three/examples/jsm/geometries/DecalGeometry.js';
 import { createCollision } from '../core/collide.js';
 import { clone as cloneSkinned } from 'three/addons/utils/SkeletonUtils.js';
-import { LOCK_GUST, GUST_X2 } from './songs.js';
+import { LOCK_GUST, GUST_X2, LEVEL_SONG, levelEarned, rejectFeedback } from './songs.js';
+import { getSave } from '../core/save.js';
 
 let cairns = []; // checkpoint cairns: {id, mat (cairn_light clone), litT, o, inked (meshes with an ink pass up close)}
 let chimes = [], chimeT = null; // wind cairns' chime rigs: {sp (its spring), mixer, ring (chime_ring action), inside}
@@ -391,9 +392,9 @@ export default {
         if (totem) streamers = streamerGlow(prop); // the streamers are the light
         else if (/rune_stone/.test(prop?.userData.glb) && (glyph = glyphDecal(prop))) ctx.add(glyph); // name stones / stakes carry their own glyph (npc.js)
         let stone = null;
-        if (m.dust && prop) { // the gust boulder marks.js draws is solid: before the carved face, then (blown aside) beside the rune. ponytail: a fixed 1.5 x 2.1 x 1.1 box, not the mesh
+        if (m.dust && prop) { // the gust boulder marks.js draws is solid: before the carved face, then (blown aside) beside the rune. A 1.5 x 2.1 x 1.1 box (unit box, scaled) until marks.js fits it to the boulder it draws
           const yaw = new THREE.Euler().setFromQuaternion(prop.getWorldQuaternion(new THREE.Quaternion()), 'YXZ').y, sx = Math.cos(yaw), sz = -Math.sin(yaw), ox = Math.sin(yaw), oz = Math.cos(yaw);
-          const node = new THREE.Mesh(new THREE.BoxGeometry(1.5, 2.1, 1.1)); node.rotation.y = yaw; node.position.set(pos[0] + ox * 0.8, pos[1] + 1.05, pos[2] + oz * 0.8); node.updateMatrixWorld(true);
+          const node = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1)); node.scale.set(1.5, 2.1, 1.1); node.rotation.y = yaw; node.position.set(pos[0] + ox * 0.8, pos[1] + 1.05, pos[2] + oz * 0.8); node.updateMatrixWorld(true);
           const rest = [1, -1].map((sd) => [pos[0] + sx * 1.1 * sd + ox * 0.2, pos[2] + sz * 1.1 * sd + oz * 0.2]); // marks.js picks the side with ground the same way
           stone = { node, body: collide.addBody(node), rest: rest.find(([x, z]) => Math.abs((collide.groundAt(x, z, pos[1] + 1.5)?.y ?? 1e9) - pos[1]) < 0.6) ?? rest[0] };
         }
@@ -451,8 +452,10 @@ export default {
     };
     flags = {};
     for (const w of winds) flags[`wind.${w.m.id}`] = w.on;
-    // NPC gifts (player.js reads gift.*): the level's startGifts (earlier levels' gifts), ones saved by hud.js, or all (?gifts=all / settings)
-    const gifts = ctx.registry.get('settings')?.allGifts ? ['dash', 'windbreath', 'airdash', 'gust', 'name', 'anchor'] : [...(data.startGifts ?? []), ...(ctx.registry.get('gifts.known') ?? [])];
+    // NPC gifts (player.js reads gift.*): only what was earned (U25: no free gifts): the save's gifts (hud.js / engine.js, ?gifts=a,b in
+    // tests), the song and NPC gifts of every earlier level already completed (a pre-U25 save got them from startGifts; a New journey keeps `best`), or all (?gifts=all / settings)
+    const LV = Object.keys(LEVEL_SONG), done = LV.slice(0, Math.max(0, LV.indexOf(data.id))).filter((lv) => getSave().best[lv] != null).flatMap(levelEarned); // U25: its song and its NPC gifts
+    const gifts = ctx.registry.get('settings')?.allGifts ? ['dash', 'windbreath', 'airdash', 'gust', 'name', 'anchor'] : [...(ctx.registry.get('gifts.known') ?? []), ...done];
     for (const g of gifts) flags[`gift.${g}`] = true;
     ctx.registry.set('flags', flags);
     const fire = (sw, t) => {
@@ -501,11 +504,13 @@ export default {
     // {t, id: null} (a song into the air). Held singTime s ('player.sing'): it fires as a strike once did -> 'sing.done' {t, id, ok,
     // wrong, stones}; ok false: nothing in reach, or (wrong) a rune of a sequence (seq: group id, order: 1..n) sung out of turn: the
     // group dims again. Only the last rune of a sequence carries its targets. Strikes only break walls (and fire their targets).
-    let singing = null, bound = null; // bound (U12): the rune in reach still wrapped by its order (sw.lock, see update)
+    let singing = null, bound = null, dull = null; // dull (U25): a dust-choked rune in reach, sung plain: it refuses (no silent runes); bound (U12): the rune in reach still wrapped by its order (sw.lock, see update)
+    reg.on('song.reject', ({ t, id, half }) => { const sw = half && switches.find((q) => q.m.id === id); if (sw) sw.halfT = t; }); // U25: right song, condition unmet: the glyph half-lights and fades
     reg.on('player.singStart', ({ t, pos }) => {
-      let best = Infinity; singing = null;
+      let best = Infinity, dullD = Infinity; singing = dull = null;
       for (const sw of switches) {
         const d = Math.hypot(pos[0] - sw.pos[0], pos[2] - sw.pos[2]);
+        if (sw.dusty && !sw.lock && !sw.on && d <= SING_R && d < dullD && Math.abs(pos[1] - sw.pos[1]) <= 2.5) { dull = sw; dullD = d; } // U25: the nearest dusty rune
         if (sw.on && sw.m.once !== false || (sw.dusty && !sw.lock) || d > SING_R || Math.abs(pos[1] - sw.pos[1]) > 2.5 || d >= best) continue;
         best = d; singing = sw;
       }
@@ -515,6 +520,7 @@ export default {
     reg.on('player.sing', ({ t }) => {
       const sw = singing; singing = null;
       if (bound) { reg.set('song.reject', { t, id: bound.m.id, pos: bound.pos }); bound = null; } // its whirl flares and shoves the singer back, a dull note (fx / audio / enemies.js)
+      else if (!sw && dull) rejectFeedback({ id: dull.m.id, pos: dull.pos, motif: 'boulder' }, null); // U25: dust on it: a dull thud, the motif pulses
       let ok = !!sw, wrong = false, stones = false;
       if (sw?.m.seq) {
         const grp = switches.filter((w) => w.m.seq === sw.m.seq), next = grp.filter((w) => w.on).length + 1;
@@ -527,7 +533,7 @@ export default {
       } else if (sw) stones = fire(sw, t);
       reg.set('sing.done', { t, id: sw?.m.id ?? null, ok, wrong, stones, note: sw ? noteOf(sw.m.id) : null });
     });
-    reg.on('player.singEnd', () => { singing = bound = null; });
+    reg.on('player.singEnd', () => { singing = bound = dull = null; });
     reg.on('song.cast', (c) => { // songs.js: a song that took its skill check (gust charge, name rhythm, anchor timing)
       const { t, pos, heading, song, reach, target } = c;
       let hit = null, at = null;
@@ -675,7 +681,8 @@ export default {
     }
     for (const sw of switches) { // slow dim pulse until sung awake, then steady gold
       const k = 0.5 + 0.5 * Math.sin(t * 1.6);
-      if (sw.glyph) sw.glyph.material.opacity = sw.on ? 0.9 : sw.dusty ? 0.06 : 0.15 + 0.4 * k;
+      const half = sw.halfT == null ? 0 : 0.5 * Math.max(0, 1 - (t - sw.halfT) / 1.6); // U25 half-light: up to 0.5 over the idle pulse, gone in 1.6 s
+      if (sw.glyph) sw.glyph.material.opacity = sw.on ? 0.9 : Math.max(half, sw.dusty ? 0.06 : 0.15 + 0.4 * k);
       if (sw.streamers) sw.streamers.material.opacity = sw.on ? 0.7 : 0.15 + 0.4 * k;
     }
     for (const w of winds) {

@@ -9,8 +9,8 @@ import { hash } from '../core/rng.js';
 
 export const GALE = 1.5, QUICK = 0.5;
 export const MODS = {
-  gale: { name: { en: 'Gale', ru: 'Шторм' }, text: { en: 'the winds push half again as hard.', ru: 'ветра толкают в полтора раза сильнее.' } },
-  quickstone: { name: { en: 'Quick stone', ru: 'Быстрый камень' }, text: { en: 'crumbling slabs fall twice as fast.', ru: 'осыпи падают вдвое быстрее.' } },
+  gale: { name: { en: 'Gale', ru: 'Шторм', pt: 'Vendaval' }, text: { en: 'the winds push half again as hard.', ru: 'ветра толкают в полтора раза сильнее.', pt: 'os ventos empurram mais metade.' } },
+  quickstone: { name: { en: 'Quick stone', ru: 'Быстрый камень', pt: 'Pedra veloz' }, text: { en: 'crumbling slabs fall twice as fast.', ru: 'осыпи падают вдвое быстрее.', pt: 'as lajes que se desfazem caem duas vezes mais depressa.' } },
 };
 export const COMBOS = [['l1', 'gale'], ['l1', 'quickstone'], ['l2', 'gale'], ['l2', 'quickstone'], ['l3', 'gale'], ['l3', 'quickstone']];
 

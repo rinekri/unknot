@@ -9,6 +9,9 @@
 //   gust    a cone along the heading, GUST_REACH[stage] m (x GUST_X2 with Song II); pushes harder with the stage.
 //   name    the nearest far rune / unbindable shard / broken repairable post (trials.js) within NAME_R x NAME_X[stage] (pick()); stage 3 unbinds every stunned shard in reach.
 //           A rune still bound by its order (level.js sw.lock): 'song.reject' {t, id, pos} (level.js whirl flares, a dull note).
+// U25 rejectFeedback(target, songUsed, half): every refusal goes through it -> 'song.reject' {t, id, pos, song, motif, half}. A song that
+// took nothing answers from the nearest target in REJECT_R: the wrong song gets the target's motif refusal (boulder shudders, cords
+// flutter, slab sways; fx.js, a dissonant chord in audio.js); the right song with its condition unmet half-lights it and fades.
 //   anchor  the nearest crumble / lift / raised bridge / slab / pulling squall within ANCHOR_R, held ANCHOR_HOLD[stage] s.
 // Registry 'songs.state' = the live charge {song, t0, charge, stage} (render: fx glyph, marks, cloak).
 // Shared shape language (fx air glyph, hud journal icons, marks): GLYPH[song] = polylines in unit coords (x right, y up).
@@ -19,6 +22,9 @@ export const STAGE_T = [0.4, 0.9, 1.5], OVER = 2.5, AIR_MAX = 0.6;
 export const GUST_REACH = [2.5, 2.5, 4, 6], NAME_X = [1, 1, 1.3, 1.6], ANCHOR_HOLD = [0.6, 1, 2, 3.5]; // by stage (0 = a tap)
 export const NAME_R = 6, ANCHOR_R = 8;
 export const NAME_R2 = 9, GUST_X2 = 1.5; // R6 Song II (flags song2.name / song2.gust, progress.js): Name wakes from further, Gust blows further
+export const LEVEL_SONG = { l1: 'gust', l2: 'name', l3: 'anchor' }; // U25: the song each level's shrine teaches (a completed level's song counts as earned, level.js)
+export const LEVEL_GIFTS = { l1: ['dash'], l2: ['windbreath', 'airdash'], l3: [] }; // U25: the NPC gifts each level gives (gen_l1 Kamen; gen_l2 Sigh, Kestrel): earned with the level too
+export const levelEarned = (lv) => (LEVEL_SONG[lv] ? [LEVEL_SONG[lv], ...LEVEL_GIFTS[lv]] : []); // U25: what a completed level counts as earned (level.js, hud.js journal)
 export const SONG_COL = { gust: '#9fe3d0', name: '#ffcf6a', anchor: '#8fb2ff' };
 export const stageOf = (charge) => STAGE_T.filter((x) => charge >= x - 1e-6).length;
 export const gustReach = (charge) => GUST_REACH[stageOf(charge)];
@@ -67,17 +73,31 @@ export function pick(reg, song, pos, reach) {
     }
     for (const br of Object.values(L.bridges)) if (br.m.hold != null && br.start !== null) for (const k of br.pieces) near(br, k.cur, br.m.id, br.m, 'bridge');
     for (const e of reg.get('enemies') ?? []) if (e.state === 'pull') near(e, e.pos, e.id, { free: true }, 'enemy'); // a pull squall mid-inhale (enemies.js): rooted against it, it chokes
-    for (const k of reg.get('trials.anchor') ?? []) near(k, k.cur, k.id, k.m, 'trial'); // R5 trials.js: a falling slab (m.free: no ring alignment, the skill is the moment)
+    for (const k of reg.get('trials.anchor') ?? []) { best = ANCHOR_R; near(k, k.cur, k.id, k.m, 'trial'); } // R5 trials.js: a falling slab (m.free: no ring alignment, the skill is the moment); U25: a lowering slab in reach beats a nearer held bridge
   }
   return out;
 }
 
-let S, refund;
+const REJECT_R = 7;
+let S, refund, CTX;
+export function rejectFeedback(target, songUsed, half = false) {
+  CTX.registry.set('song.reject', { t: CTX.game.t, id: target.id, pos: target.pos, song: songUsed, motif: target.motif, half, bound: !!target.bound });
+}
+// the nearest song target a missed cast was meant for: a dusty rune (boulder), an unwoken far rune (cords), a crumble / held bridge / slab
+function missedTarget(reg, pos) {
+  const L = reg.get('level')?.targets; if (!L) return null;
+  let best = REJECT_R, out = null;
+  const near = (q, id, motif, songs) => { const d = Math.hypot(q[0] - pos[0], q[2] - pos[2]); if (d < best && Math.abs(q[1] - pos[1]) < 4) { best = d; out = { id, pos: q, motif, songs }; } }; // songs: the songs it answers (U25: one of them missed: out of reach or its condition unmet -> half)
+  for (const sw of L.switches) if (!sw.on && (sw.dusty || sw.m.far)) { near(sw.pos, sw.m.id, sw.dusty ? 'boulder' : 'cords', [...(sw.dusty ? ['gust'] : []), ...(sw.m.far ? ['name'] : [])]); if (out?.id === sw.m.id) out.bound = !!sw.lock; }
+  for (const k of L.mechs) if (k.m.kind === 'crumble' && k.body.enabled) near(k.cur.toArray(), k.m.group ?? k.m.id, 'slab', ['anchor']);
+  for (const o of reg.get('trials') ?? []) if (o.kind === 'slab' && ['idle', 'creak', 'lower'].includes(o.state)) near(o.cur.toArray(), o.id, 'slab', ['anchor']);
+  return out;
+}
 export default {
   name: 'songs', order: 21, deps: ['level', 'player'], // after player (the press), before fx / hud (render)
   init(ctx) {
     const reg = ctx.registry;
-    S = null; refund = 0;
+    S = null; refund = 0; CTX = ctx;
     reg.set('songs.state', null);
     reg.on('player.breath', (b) => { if (b.why === 'song') refund = reg.get('player').tuning.breath.song; });
     reg.on('player.songStart', ({ t, song }) => {
@@ -115,13 +135,10 @@ function cast(ctx) {
     c.reach = nameReach(reg, stage);
     c.target = pick(reg, 'name', pos, c.reach);
     if (stage >= 3) c.targets = (reg.get('enemies') ?? []).filter((e) => e.unbindable && e !== c.target?.o && Math.hypot(e.pos.x - pos[0], e.pos.y - pos[1], e.pos.z - pos[2]) <= c.reach);
-    if (!c.target) { // a rune bound by its order answers with a refusal
-      const sw = (reg.get('level')?.targets?.switches ?? []).find((q) => q.m.far && !q.on && q.lock && Math.hypot(q.pos[0] - pos[0], q.pos[2] - pos[2]) <= c.reach);
-      if (sw) reg.set('song.reject', { t: c.t, id: sw.m.id, pos: sw.pos });
-    }
   } else if (song === 'anchor') c.target = pick(reg, 'anchor', pos);
   reg.set('song.cast', c); // level.js / trials.js / enemies.js resolve it
   if (c.hit) spend(ctx); // the song took: now it costs its breath
+  else if (!c.blocked) { const m = missedTarget(reg, pos); if (m) rejectFeedback(m, song, m.songs.includes(song)); } // U25: no silent target; its own song (out of reach, dust / binding / a slab not lowering yet) half-lights it, another song is refused
   reg.set('song.done', { t: c.t, song, id: c.hit ?? null, pos: c.at ?? null, stage });
   S = null; reg.set('songs.state', null);
 }

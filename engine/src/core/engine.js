@@ -113,6 +113,7 @@ export async function boot() {
     game.registry.set('settings', game.settings);
     if (opts.checkpoint) game.registry.set('checkpoint', opts.checkpoint);
     opts = { gifts: getSave().gifts, echoes: getSave().echoes, ...opts }; // R6: the save (core/save.js) unless the caller hands its own
+    if (params.test && params.get('gifts') && params.get('gifts') !== 'all') opts.gifts = params.get('gifts').split(','); // U25: ?test=1&gifts=dash,gust: exactly these held (tests only; ?gifts=all is settings.allGifts)
     if (opts.gifts) game.registry.set('gifts.known', opts.gifts); // hud.js: gifts received on earlier walks (level.js seeds flags)
     if (opts.echoes) game.registry.set('echoes.known', opts.echoes); // hud.js: echoes found on earlier walks (echo.js)
     if (params.test) installTestMode(params.seed, () => game.t);

@@ -24,14 +24,15 @@ import { ico, wordmark, island, shard, lock, knot, seal, stamp, echoArt, taleArt
 import * as meta from './meta.js'; // R10: challenges, achievements, loom, daily trial (menus)
 import { disarm as disarmDaily } from './daily.js';
 import { touchEnter } from './touch.js'; // phones: fullscreen + landscape on the first journey tap
+import { levelEarned } from './songs.js'; // U25: a completed level's song and NPC gifts count as earned (journal)
 
 const END_S = 1.5, SHOW_S = 4, HOLD_R_MS = 500, LOAD_MIN_MS = 1200, PLATE_MS = 2000, PAD_REPEAT = [0.38, 0.13]; // s results delay after the goal touch, s, ms, ms, ms, s first / next
 const TEXT_SIZE = { S: 1.1, M: 1.25, L: 1.5 }; // CSS zoom on the HUD text (M reads ~20 px hints at 1080p)
 let el, hideAt, ui, cur, sub;
-export let LANG = /^ru/i.test(new URLSearchParams(globalThis.location?.search ?? '').get('lang') ?? globalThis.navigator?.language ?? '') ? 'ru' : 'en';
+export let LANG = (/^(ru|pt)/i.exec(new URLSearchParams(globalThis.location?.search ?? '').get('lang') ?? globalThis.navigator?.language ?? '')?.[1] ?? 'en').toLowerCase(); // U25: pt* -> pt
 export const tr = (s) => (s == null || typeof s === 'string' ? s ?? '' : s[LANG] ?? s.en ?? '');
 function applyUi(s) { // language + text size, live
-  LANG = s.lang === 'ru' ? 'ru' : 'en';
+  LANG = ['ru', 'pt'].includes(s.lang) ? s.lang : 'en';
   document.documentElement.lang = LANG;
   const compact = innerHeight < 520 && (ui?.device === 'touch' || document.body.classList.contains('touch') || matchMedia('(pointer: coarse)').matches); // a phone held sideways: menus one step smaller
   document.documentElement.classList.toggle('compact', compact);
@@ -40,42 +41,42 @@ function applyUi(s) { // language + text size, live
 
 const fmtTime = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 const fmtCs = (s) => { const c = Math.floor(s * 100); return `${String(Math.floor(c / 6000)).padStart(2, '0')}:${String(Math.floor(c / 100) % 60).padStart(2, '0')}.${String(c % 100).padStart(2, '0')}`; };
-const L = (en, ru) => tr({ en, ru });
+const L = (en, ru, pt) => tr({ en, ru, pt });
 const SAVED = { 'sw.echoes': 'echoes', 'sw.gifts': 'gifts', 'sw.best': 'best', 'sw.progress': 'progress' }; // R6: these live in core/save.js (sw.save.v2)
 const store = { // saves are optional (private windows throw)
   get(k, d) { if (SAVED[k]) return structuredClone(getSave()[SAVED[k]] ?? d); try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
   set(k, v) { if (SAVED[k]) { updateSave((s) => { s[SAVED[k]] = v; }); return; } try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* not saved */ } },
 };
 const LEVELS = [
-  { id: 'l1', n: 'I', title: { en: 'Waking Stones', ru: 'Пробуждение камней' }, sub: { en: 'The Keepers\' sleeping quarry. The stones still know their names.', ru: 'Спящая каменоломня Хранителей. Камни ещё помнят свои имена.' }, bot: 65 },
-  { id: 'l2', n: 'II', title: { en: 'Wind Totems', ru: 'Тотемы ветра' }, sub: { en: 'Orren\'s workshop, where the winds were bound to totems.', ru: 'Мастерская Оррена, где ветры привязали к тотемам.' }, bot: 80 },
-  { id: 'l3', n: 'III', title: { en: 'Crown of Winds', ru: 'Корона ветров' }, sub: { en: 'The knot itself, at the top of the sky.', ru: 'Сам узел, на вершине неба.' }, bot: 110 },
+  { id: 'l1', n: 'I', title: { en: 'Waking Stones', ru: 'Пробуждение камней', pt: 'Pedras Despertas' }, sub: { en: 'The Keepers\' sleeping quarry. The stones still know their names.', ru: 'Спящая каменоломня Хранителей. Камни ещё помнят свои имена.', pt: 'A pedreira adormecida dos Zeladores. As pedras ainda sabem os seus nomes.' }, bot: 65 },
+  { id: 'l2', n: 'II', title: { en: 'Wind Totems', ru: 'Тотемы ветра', pt: 'Totens do Vento' }, sub: { en: 'Orren\'s workshop, where the winds were bound to totems.', ru: 'Мастерская Оррена, где ветры привязали к тотемам.', pt: 'A oficina de Orren, onde os ventos foram atados a totens.' }, bot: 80 },
+  { id: 'l3', n: 'III', title: { en: 'Crown of Winds', ru: 'Корона ветров', pt: 'Coroa dos Ventos' }, sub: { en: 'The knot itself, at the top of the sky.', ru: 'Сам узел, на вершине неба.', pt: 'O próprio nó, no topo do céu.' }, bot: 110 },
 ]; // bot = the playtest bot's time (s); target = bot - 10 %
 const SCENES = [ // journal replay order (level.json cutscenes)
-  { id: 'l1.intro', title: { en: 'The hollow stone', ru: 'Полый камень' } },
-  { id: 'l1.outro', title: { en: 'Names remembered', ru: 'Вспомненные имена' } },
-  { id: 'l2.arrive', title: { en: 'The wind road', ru: 'Дорога ветра' } },
-  { id: 'l2.outro', title: { en: 'Toward the Crown', ru: 'К Короне' } },
-  { id: 'l3.arrive', title: { en: 'On the Kestrel\'s wind', ru: 'На ветре Пустельги' } },
-  { id: 'l3.finale', title: { en: 'The knot loosens', ru: 'Узел развязан' } },
-  { id: 'l3.finale_bad', title: { en: 'The grey dawn', ru: 'Серый рассвет' } },
-  { id: 'l3.finale_true', title: { en: 'Orren, named', ru: 'Оррен, названный' } },
+  { id: 'l1.intro', title: { en: 'The hollow stone', ru: 'Полый камень', pt: 'A pedra oca' } },
+  { id: 'l1.outro', title: { en: 'Names remembered', ru: 'Вспомненные имена', pt: 'Nomes recordados' } },
+  { id: 'l2.arrive', title: { en: 'The wind road', ru: 'Дорога ветра', pt: 'A estrada do vento' } },
+  { id: 'l2.outro', title: { en: 'Toward the Crown', ru: 'К Короне', pt: 'Rumo à Coroa' } },
+  { id: 'l3.arrive', title: { en: 'On the Kestrel\'s wind', ru: 'На ветре Пустельги', pt: 'No vento do Peneireiro' } },
+  { id: 'l3.finale', title: { en: 'The knot loosens', ru: 'Узел развязан', pt: 'O nó afrouxa' } },
+  { id: 'l3.finale_bad', title: { en: 'The grey dawn', ru: 'Серый рассвет', pt: 'A aurora cinzenta' } },
+  { id: 'l3.finale_true', title: { en: 'Orren, named', ru: 'Оррен, названный', pt: 'Orren, nomeado' } },
 ];
 const QUESTS = [ // journal 'Requests': the NPC asks that give gifts (npc.js); done = the gift saved in 'sw.gifts'; n = flag prefix counted live
-  { lv: 'l1', gift: 'dash', n: 'npc.pebble.', of: 3, met: ['seen.t_call', 'npc.pebble.1', 'npc.pebble.2', 'npc.pebble.3'], text: { en: 'Kamen: sing to the three name-stones', ru: 'Камень: спой трём камням-именам' } },
-  { lv: 'l2', gift: 'windbreath', n: 'npc.sigh.', of: 1, text: { en: 'Sigh: wake the first totem', ru: 'Вздох: разбуди первый тотем' } },
-  { lv: 'l2', gift: 'airdash', n: 'npc.kestrel.', of: 2, text: { en: 'Kestrel: sing both cord anchors loose', ru: 'Пустельга: спой обоим якорям верёвок' } },
+  { lv: 'l1', gift: 'dash', n: 'npc.pebble.', of: 3, met: ['seen.t_call', 'npc.pebble.1', 'npc.pebble.2', 'npc.pebble.3'], text: { en: 'Kamen: sing to the three name-stones', ru: 'Камень: спой трём камням-именам', pt: 'Kamen: canta às três pedras dos nomes' } },
+  { lv: 'l2', gift: 'windbreath', n: 'npc.sigh.', of: 1, text: { en: 'Sigh: wake the first totem', ru: 'Вздох: разбуди первый тотем', pt: 'Suspiro: desperta o primeiro totem' } },
+  { lv: 'l2', gift: 'airdash', n: 'npc.kestrel.', of: 2, text: { en: 'Kestrel: sing both cord anchors loose', ru: 'Пустельга: спой обоим якорям верёвок', pt: 'Peneireiro: canta para soltar as duas âncoras das cordas' } },
 ];
 const ASKS2 = [ // R6 request stones (progress.js): sung, the asker's song grows (Song II); open once that level is reached
-  { lv: 'l1', id: 'kamen', text: { en: 'Kamen: find the name-stone he lost past the quarry', ru: 'Камень: найди потерянный камень-имя за каменоломней' } },
-  { lv: 'l2', id: 'sigh', text: { en: 'Sigh: sing back the breath she left on the far islet', ru: 'Вздох: верни песней дыхание, оставленное на дальнем островке' } },
+  { lv: 'l1', id: 'kamen', text: { en: 'Kamen: find the name-stone he lost past the quarry', ru: 'Камень: найди потерянный камень-имя за каменоломней', pt: 'Kamen: encontra a pedra do nome que ele perdeu depois da pedreira' } },
+  { lv: 'l2', id: 'sigh', text: { en: 'Sigh: sing back the breath she left on the far islet', ru: 'Вздох: верни песней дыхание, оставленное на дальнем островке', pt: 'Suspiro: devolve em canto o fôlego que ela deixou no ilhéu distante' } },
 ];
 const SONGS = [ // journal 'Songs': the gift songs held (R2; player.js casts them, level.js resolves them)
-  { id: 'gust', key: '1', text: { en: 'Gust (the stone with the carved wind): hold to gather it, let go: three swells, each blows further and harder; held too long, the wind tears. Clears dust, wakes still winds, shoves a Squall back. Caught as it gathers itself, the Squall hangs open; a second Gust then blows it off the island', ru: 'Порыв (камень с высеченным ветром): держи, чтобы набрать, и отпусти: три волны, каждая бьёт дальше и сильнее; передержишь — ветер рвётся. Сдувает пыль, будит застывший ветер, отбрасывает Шквал. Пойманный, пока копит силу, Шквал раскрывается; второй Порыв сдувает его с острова' } },
-  { id: 'name', key: '2', text: { en: 'Name (the stone with the carved ribbons): a tap is enough up close; held, it carries further, and at full swell it frees every opened Shard in reach. Wakes a far rune (one wrapped in a whirl waits for its elder), frees an opened Knot Shard, mends a cracked post from its far side', ru: 'Имя (камень с высеченными лентами): вблизи хватит короткой ноты; чем дольше держишь, тем дальше летит, а на полной волне освобождает все раскрытые Осколки вокруг. Будит дальнюю руну (обвитая вихрем ждёт старшую), освобождает раскрытый Осколок Узла, чинит треснувшую опору с дальней стороны' } },
-  { id: 'anchor', key: '3', text: { en: 'Anchor (the stone with the carved chains): the longer the swell, the longer it holds. Stills a crumbling slab, a bridge, a lift or a falling stone; chokes a Squall that drinks the air', ru: 'Якорь (камень с высеченными цепями): чем дольше волна, тем дольше держит. Останавливает осыпь, мост, подъёмник или падающий камень; душит Шквал, что тянет воздух' } },
+  { id: 'gust', key: '1', text: { en: 'Gust (the stone with the carved wind): hold to gather it, let go: three swells, each blows further and harder; held too long, the wind tears. Clears dust, wakes still winds, shoves a Squall back. Caught as it gathers itself, the Squall hangs open; a second Gust then blows it off the island', ru: 'Порыв (камень с высеченным ветром): держи, чтобы набрать, и отпусти: три волны, каждая бьёт дальше и сильнее; передержишь — ветер рвётся. Сдувает пыль, будит застывший ветер, отбрасывает Шквал. Пойманный, пока копит силу, Шквал раскрывается; второй Порыв сдувает его с острова', pt: 'Rajada (a pedra com o vento gravado): mantém para reunir, solta: três ondas, cada uma sopra mais longe e mais forte; se a seguras demais, o vento rasga-se. Limpa o pó, desperta ventos parados, empurra uma Borrasca. Apanhada enquanto se reúne, a Borrasca fica aberta; uma segunda Rajada sopra-a então para fora da ilha' } },
+  { id: 'name', key: '2', text: { en: 'Name (the stone with the carved ribbons): a tap is enough up close; held, it carries further, and at full swell it frees every opened Shard in reach. Wakes a far rune (one wrapped in a whirl waits for its elder), frees an opened Knot Shard, mends a cracked post from its far side', ru: 'Имя (камень с высеченными лентами): вблизи хватит короткой ноты; чем дольше держишь, тем дальше летит, а на полной волне освобождает все раскрытые Осколки вокруг. Будит дальнюю руну (обвитая вихрем ждёт старшую), освобождает раскрытый Осколок Узла, чинит треснувшую опору с дальней стороны', pt: 'Nome (a pedra com as fitas gravadas): um toque basta de perto; mantido, chega mais longe, e na onda plena liberta todos os Estilhaços abertos ao alcance. Desperta uma runa distante (a que está envolta num turbilhão espera pela sua mais velha), liberta um Estilhaço do Nó aberto, repara um poste rachado pelo lado de lá' } },
+  { id: 'anchor', key: '3', text: { en: 'Anchor (the stone with the carved chains): the longer the swell, the longer it holds. Stills a crumbling slab, a bridge, a lift or a falling stone; chokes a Squall that drinks the air', ru: 'Якорь (камень с высеченными цепями): чем дольше волна, тем дольше держит. Останавливает осыпь, мост, подъёмник или падающий камень; душит Шквал, что тянет воздух', pt: 'Âncora (a pedra com as correntes gravadas): quanto mais longa a onda, mais tempo dura. Imobiliza uma laje que se desfaz, uma ponte, um elevador ou uma pedra a cair; sufoca uma Borrasca que bebe o ar' } },
 ];
-const NEED_DASH = { gift: 'dash', text: { en: 'needs the dash', ru: 'нужен рывок' } }; // echoes past a dash gap: out of reach without Kamen's gift
+const NEED_DASH = { gift: 'dash', text: { en: 'needs the dash', ru: 'нужен рывок', pt: 'precisa do impulso' } }; // echoes past a dash gap: out of reach without Kamen's gift
 const NEEDS = { 'l1.echo_branch': NEED_DASH, 'l1.echo_shrine': NEED_DASH };
 const level = (id) => LEVELS.find((l) => l.id === id);
 const found = () => store.get('sw.echoes', []);
@@ -207,9 +208,9 @@ async function goTo(levelId, { checkpoint, outMs = 1000, inMs = 800, card = fals
     console.error('[hud] level load failed', e);
     ui.load.classList.remove('on');
     fade(false, 200);
-    setPanel('error', `<h1>${L('Could not load the level', 'Не удалось загрузить уровень')}</h1><p>${String(e?.message ?? e).replace(/[<&]/g, ' ')}</p>`, [
-      [L('Retry', 'Ещё раз'), () => { ui.busy = false; goTo(levelId, { checkpoint, outMs, inMs, card, reset }); }],
-      [L('Quit to title', 'Выйти в меню'), () => { ui.busy = false; quitToTitle(); }],
+    setPanel('error', `<h1>${L('Could not load the level', 'Не удалось загрузить уровень', 'Não foi possível carregar o nível')}</h1><p>${String(e?.message ?? e).replace(/[<&]/g, ' ')}</p>`, [
+      [L('Retry', 'Ещё раз', 'Tentar de novo'), () => { ui.busy = false; goTo(levelId, { checkpoint, outMs, inMs, card, reset }); }],
+      [L('Quit to title', 'Выйти в меню', 'Sair para o título'), () => { ui.busy = false; quitToTitle(); }],
     ]);
   } finally { ui.busy = false; }
 }
@@ -245,21 +246,21 @@ function openPause() {
 }
 function showPause() { // the live scene out of focus (body.hud-blur, setPanel) behind the page
   const cp = cur.reg.get('checkpoint');
-  setPanel('pause', `${wordmark(LANG, null, 'sm')}<h1>${L('Paused', 'Пауза')}</h1>`, [
-    [L('Resume', 'Продолжить'), resume, false, 'play'],
-    [L('Settings', 'Настройки'), () => showSettings(showPause), false, 'gear'],
-    [L('Journal', 'Журнал'), () => showJournal(showPause), false, 'book'],
-    [L('Scenes', 'Сцены'), () => showScenes(showPause), false, 'scene'],
-    [L('Restart level', 'Начать уровень заново'), () => restart(), false, 'loop'],
-    [L('Last checkpoint', 'С контрольной точки'), () => restart(cp), !cp, 'flag'],
-    [L('Quit to title', 'Выйти в меню'), quitToTitle, false, 'door'],
+  setPanel('pause', `${wordmark(LANG, null, 'sm')}<h1>${L('Paused', 'Пауза', 'Em pausa')}</h1>`, [
+    [L('Resume', 'Продолжить', 'Retomar'), resume, false, 'play'],
+    [L('Settings', 'Настройки', 'Definições'), () => showSettings(showPause), false, 'gear'],
+    [L('Journal', 'Журнал', 'Diário'), () => showJournal(showPause), false, 'book'],
+    [L('Scenes', 'Сцены', 'Cenas'), () => showScenes(showPause), false, 'scene'],
+    [L('Restart level', 'Начать уровень заново', 'Reiniciar nível'), () => restart(), false, 'loop'],
+    [L('Last checkpoint', 'С контрольной точки', 'Último marco'), () => restart(cp), !cp, 'flag'],
+    [L('Quit to title', 'Выйти в меню', 'Sair para o título'), quitToTitle, false, 'door'],
   ], null, resume);
 }
 function showScenes(back) { // the cutscene gallery: seen scenes replay (reloads that level, then the title); unseen = a locked tile, no title
   const saw = seen();
-  setPanel('scenes', `<h1>${L('Scenes', 'Сцены')} <small class="hud-note">${SCENES.filter((c) => saw.includes(c.id)).length}/${SCENES.length}</small></h1>`, [
+  setPanel('scenes', `<h1>${L('Scenes', 'Сцены', 'Cenas')} <small class="hud-note">${SCENES.filter((c) => saw.includes(c.id)).length}/${SCENES.length}</small></h1>`, [
     ...SCENES.map((c) => saw.includes(c.id) ? [tr(c.title), () => { const [lid, name] = c.id.split('.'); goTo(lid, { card: true, cut: name, then: quitToTitle }); }, false, 'scene', true] : ['? ? ?', null, true, 'scene', true]),
-    [L('Back', 'Назад'), back, false, 'back'],
+    [L('Back', 'Назад', 'Voltar'), back, false, 'back'],
   ], null, back);
 }
 function resume() { clearPanel(); cur.reg.set('paused', false); lockPointer(); }
@@ -273,17 +274,16 @@ function showTitle() {
   const prog = store.get('sw.progress', null), best = store.get('sw.best', {}), first = !ui.titled;
   ui.titled = true; // the wordmark is drawn in once per visit to the title (goTo resets it)
   setPanel('title', `${wordmark(LANG, first ? 'live' : 'loose')}<p class="hud-tag"><i>${getSave().ending.best === 'true' ? L('The mountain is awake. Orren keeps the winds now, untied, and the islands drift closer every dawn.', // R8: the title remembers the true ending
-    'Гора проснулась. Оррен теперь хранит ветры, не связывая их, и с каждым рассветом острова ближе.') : L('Long ago the Keepers sang a mountain into the sky. Its stones still sleep, and the wind still carries their names.',
-    'Давным-давно Хранители песней подняли гору в небо. Её камни всё ещё спят, а ветер всё ещё носит их имена.')}</i></p>`, [
-    ...(level(prog) ? [[`${L('Continue', 'Продолжить')} · ${level(prog).n}`, () => goTo(prog, { reset: true, card: true }), false, 'play']] : []),
-    [L('New journey', 'Новый путь'), () => (store.set('sw.gifts', []), updateSave((s) => { s.shortcuts = []; }), goTo('l1', { reset: true, card: true, cut: seen().includes('l1.intro') ? null : 'intro' })), false, 'sprout'], // a new journey earns the gifts again (echoes, seeds, wardrobe stay)
-    [L('Select level', 'Выбор уровня'), () => showSelect(showTitle), !Object.keys(best).length, 'map', true],
-    [L('Journal', 'Журнал'), () => showJournal(showTitle), false, 'book', true],
-    [L('Daily trial', 'Испытание дня'), () => meta.showDaily(metaUi(), showTitle, LEVELS), false, 'sun', true],
-    [L('Keeper\'s Loom', 'Стан Хранителей'), () => meta.showLoom(metaUi(), showTitle), false, 'loom', true],
-    [L('Scenes', 'Сцены'), () => showScenes(showTitle), false, 'scene', true],
-    [L('Settings', 'Настройки'), () => showSettings(showTitle), false, 'gear', true],
-    [L('Credits', 'Авторы'), () => showCredits(showTitle), false, 'quill', true],
+    'Гора проснулась. Оррен теперь хранит ветры, не связывая их, и с каждым рассветом острова ближе.') : L('Long ago the Keepers sang a mountain into the sky. Its stones still sleep, and the wind still carries their names.', 'Давным-давно Хранители песней подняли гору в небо. Её камни всё ещё спят, а ветер всё ещё носит их имена.', 'Outrora os Zeladores cantaram uma montanha até ao céu. As suas pedras ainda dormem, e o vento ainda leva os seus nomes.')}</i></p>`, [
+    ...(level(prog) ? [[`${L('Continue', 'Продолжить', 'Continuar')} · ${level(prog).n}`, () => goTo(prog, { reset: true, card: true }), false, 'play']] : []),
+    [L('New journey', 'Новый путь', 'Nova jornada'), () => (store.set('sw.gifts', []), updateSave((s) => { s.shortcuts = []; }), goTo('l1', { reset: true, card: true, cut: seen().includes('l1.intro') ? null : 'intro' })), false, 'sprout'], // a new journey earns the gifts again (echoes, seeds, wardrobe stay)
+    [L('Select level', 'Выбор уровня', 'Escolher nível'), () => showSelect(showTitle), !Object.keys(best).length, 'map', true],
+    [L('Journal', 'Журнал', 'Diário'), () => showJournal(showTitle), false, 'book', true],
+    [L('Daily trial', 'Испытание дня', 'Desafio diário'), () => meta.showDaily(metaUi(), showTitle, LEVELS), false, 'sun', true],
+    [L('Keeper\'s Loom', 'Стан Хранителей', 'Tear do Zelador'), () => meta.showLoom(metaUi(), showTitle), false, 'loom', true],
+    [L('Scenes', 'Сцены', 'Cenas'), () => showScenes(showTitle), false, 'scene', true],
+    [L('Settings', 'Настройки', 'Definições'), () => showSettings(showTitle), false, 'gear', true],
+    [L('Credits', 'Авторы', 'Créditos'), () => showCredits(showTitle), false, 'quill', true],
     SUPPORT(), // U24
   ]);
   for (const a of ui.panel.querySelectorAll('animate')) a.beginElementAt(2.2); // the knot loosens once the letters are inked
@@ -295,7 +295,7 @@ const MAP_SKY = '<svg viewBox="0 0 300 120" preserveAspectRatio="none" aria-hidd
 // as knots (undone = granted). Walked islands (a best time saved) can be entered; the rest stay in the haze. The Crown is dark until
 // the true ending (gold), grey after a lesser one; after any ending l3 reads 'Return to the Crown'.
 function showSelect(back) {
-  const best = store.get('sw.best', {}), sv = getSave(), have = found(), end = sv.ending.best, gifts = store.get('sw.gifts', []);
+  const best = store.get('sw.best', {}), sv = getSave(), have = found(), end = sv.ending.best, gifts = [...store.get('sw.gifts', []), ...Object.keys(best).filter((lv) => best[lv] != null).flatMap(levelEarned)]; // U25: a completed level's gifts count after a New journey too
   disarmDaily();
   const map = mk('div', 'hud-map'), cap = mk('div', 'hud-cap'), row = [];
   map.innerHTML = MAP_SKY;
@@ -304,16 +304,16 @@ function showSelect(back) {
     const marks = Object.keys(LINES).filter((k) => k.startsWith(`${l.id}.`)).map((k) => shard(have.includes(k))).join('') + LOCKS[l.id].map((k) => lock(sv.locks.includes(`${l.id}.${k}`))).join('')
       + [...ASKS2.filter((q) => q.lv === l.id).map((q) => sv.requests.includes(q.id)), ...QUESTS.filter((q) => q.lv === l.id).map((q) => gifts.includes(q.gift))].map(knot).join('');
     b.innerHTML = `${island(l.id, l.id === 'l3' ? end : null)}<span class="hud-marks">${open ? marks : ''}</span>`;
-    b.append(mk('span', null, open ? `${l.id === 'l3' && end ? L('Return to the Crown', 'Вернуться к Короне') : `${l.n} · ${tr(l.title)}`} · ${fmtCs(best[l.id])}` : l.n));
+    b.append(mk('span', null, open ? `${l.id === 'l3' && end ? L('Return to the Crown', 'Вернуться к Короне', 'Regressar à Coroa') : `${l.n} · ${tr(l.title)}`} · ${fmtCs(best[l.id])}` : l.n));
     b.disabled = !open;
     b.onclick = () => goTo(l.id, { reset: true, card: true, outMs: 400 });
-    b.addEventListener('focus', () => cap.replaceChildren(mk('b', null, `${l.n} · ${tr(l.title)}`), mk('p', 'hud-note', `${tr(l.sub)} ${L('Falls', 'Падения')}: ${sv.falls[l.id] ?? 0}.`), meta.challengeList(l.id, mk)));
+    b.addEventListener('focus', () => cap.replaceChildren(mk('b', null, `${l.n} · ${tr(l.title)}`), mk('p', 'hud-note', `${tr(l.sub)} ${L('Falls', 'Падения', 'Quedas')}: ${sv.falls[l.id] ?? 0}.`), meta.challengeList(l.id, mk)));
     if (open) row.push(b);
     map.append(b);
   }
   if (row[0]) row[0].dataset.first = '';
   gridNav([row]);
-  setPanel('select', `<h1>${L('Select level', 'Выбор уровня')}</h1>`, [[L('Back', 'Назад'), back, false, 'back']], [map, cap], back);
+  setPanel('select', `<h1>${L('Select level', 'Выбор уровня', 'Escolher nível')}</h1>`, [[L('Back', 'Назад', 'Voltar'), back, false, 'back']], [map, cap], back);
 }
 
 // The journal's pages: echoes (a drawing each, inked once found), the tale of Orren (illuminated panels), requests (knots, undone once
@@ -321,10 +321,10 @@ function showSelect(back) {
 let jTab = 'echoes';
 function showJournal(back, tab = jTab) {
   const have = new Set(found()), fromTitle = back === showTitle, saw = seen(), sv = getSave();
-  const flags = fromTitle ? {} : cur.reg.get('flags') ?? {}, gifts = new Set([...store.get('sw.gifts', []), ...Object.keys(flags).filter((f) => flags[f] && f.startsWith('gift.')).map((f) => f.slice(5))]);
+  const flags = fromTitle ? {} : cur.reg.get('flags') ?? {}, gifts = new Set([...store.get('sw.gifts', []), ...Object.keys(sv.best).filter((lv) => sv.best[lv] != null).flatMap(levelEarned), ...Object.keys(flags).filter((f) => flags[f] && f.startsWith('gift.')).map((f) => f.slice(5))]);
   const reached = LEVELS.findIndex((l) => l.id === (fromTitle ? store.get('sw.progress', 'l1') : cur.reg.get('level')?.data.id));
   const scenes = fromTitle ? SCENES.filter((s) => saw.includes(s.id)) : [];
-  const TABS = [['echoes', 'shard', L('Echoes', 'Эхо')], ['tale', 'scroll', L('Tale', 'Сказка')], ['asks', 'knot', L('Requests', 'Просьбы')], ['songs', 'note', L('Songs', 'Песни')], ['weave', 'weave', L('Weave', 'Узор')], ...(scenes.length ? [['scenes', 'scene', L('Scenes', 'Сцены')]] : [])];
+  const TABS = [['echoes', 'shard', L('Echoes', 'Эхо', 'Ecos')], ['tale', 'scroll', L('Tale', 'Сказка', 'Conto')], ['asks', 'knot', L('Requests', 'Просьбы', 'Pedidos')], ['songs', 'note', L('Songs', 'Песни', 'Canções')], ['weave', 'weave', L('Weave', 'Узор', 'Trama')], ...(scenes.length ? [['scenes', 'scene', L('Scenes', 'Сцены', 'Cenas')]] : [])];
   if (!TABS.some((t) => t[0] === tab)) tab = 'echoes';
   jTab = tab;
   const page = mk('div', 'hud-page'), cap = mk('p', 'hud-cap'), rows = [];
@@ -344,9 +344,9 @@ function showJournal(back, tab = jTab) {
       return [echoArt(k), have.has(k) ? `“${tr(LINES[k])}”` : need ? `… (${tr(NEEDS[k].text)})` : '…', have.has(k)];
     }));
   } else if (tab === 'tale') { // R6: the tale of Orren, in order; missing parts stay blank
-    cards(L('The tale of Orren', 'Сказка об Оррене'), 'five', Object.keys(RELIC_LINES).filter((k) => k.startsWith('tale.')).map((k, n) => [taleArt(n, sv.relics.includes(k)), sv.relics.includes(k) ? tr(RELIC_LINES[k]).replace(/^[IVX]+\.\s*/, '') : '…', sv.relics.includes(k), true]));
+    cards(L('The tale of Orren', 'Сказка об Оррене', 'O conto de Orren'), 'five', Object.keys(RELIC_LINES).filter((k) => k.startsWith('tale.')).map((k, n) => [taleArt(n, sv.relics.includes(k)), sv.relics.includes(k) ? tr(RELIC_LINES[k]).replace(/^[IVX]+\.\s*/, '') : '…', sv.relics.includes(k), true]));
   } else if (tab === 'songs') { // the gift songs held (R2); the mark is the shape on the song's targets and the cloak (songs.js GLYPH)
-    cards(L('Songs (1 breath when it takes)', 'Песни (1 дыхание, если удалась)'), 'five', SONGS.map((g) => [songArt(g.id), gifts.has(g.id) ? `${g.key} · ${tr(g.text)}` : '…', gifts.has(g.id)]));
+    cards(L('Songs (1 breath when it takes)', 'Песни (1 дыхание, если удалась)', 'Canções (1 fôlego quando pega)'), 'five', SONGS.map((g) => [songArt(g.id), gifts.has(g.id) ? `${g.key} · ${tr(g.text)}` : '…', gifts.has(g.id)]));
   } else if (tab === 'asks') { // open requests: asked in person (met), or the level reached
     const asks = QUESTS.filter((q) => { const lv = LEVELS.findIndex((l) => l.id === q.lv); return gifts.has(q.gift) || lv < reached || (lv === reached && (!q.met || q.met.some((f) => flags[f]))); });
     const asks2 = ASKS2.filter((q) => sv.requests.includes(q.id) || LEVELS.findIndex((l) => l.id === q.lv) <= reached), ul = mk('ul', 'hud-list');
@@ -356,7 +356,7 @@ function showJournal(back, tab = jTab) {
       const done = gifts.has(q.gift), n = Object.keys(flags).filter((f) => flags[f] && f.startsWith(q.n) && /^\d+$/.test(f.slice(q.n.length))).length;
       li(done, `${tr(q.text)}${done ? '' : n ? ` ${n}/${q.of}` : ''}`);
     }
-    page.append(mk('h2', null, L('Requests', 'Просьбы')), ul.children.length ? ul : mk('p', 'hud-note', L('No one has asked for anything yet.', 'Пока никто ни о чём не просил.')));
+    page.append(mk('h2', null, L('Requests', 'Просьбы', 'Pedidos')), ul.children.length ? ul : mk('p', 'hud-note', L('No one has asked for anything yet.', 'Пока никто ни о чём не просил.', 'Ninguém pediu nada ainda.')));
   } else if (tab === 'weave') { // R8: the mountain's memory (harmony) as the cloak's weave, never a number
     const w = mk('div', 'hud-weave'); w.append(weave()); page.append(w);
   } else {
@@ -370,10 +370,10 @@ function showJournal(back, tab = jTab) {
   }
   if (rows.length) { page.append(cap); gridNav(rows); }
   const again = () => showJournal(back);
-  setPanel('journal', `<h1>${L('Journal', 'Журнал')} <small class="hud-note">· ${L('Echoes', 'Эхо')} ${have.size}/${Object.keys(LINES).length}</small></h1>`, [
-    [L('Achievements', 'Достижения'), () => meta.showAchievements(metaUi(), again), false, 'badge', true],
-    [L('Keeper\'s Loom', 'Стан Хранителей'), () => meta.showLoom(metaUi(), again), false, 'loom', true],
-    [L('Back', 'Назад'), back, false, 'back'],
+  setPanel('journal', `<h1>${L('Journal', 'Журнал', 'Diário')} <small class="hud-note">· ${L('Echoes', 'Эхо', 'Ecos')} ${have.size}/${Object.keys(LINES).length}</small></h1>`, [
+    [L('Achievements', 'Достижения', 'Conquistas'), () => meta.showAchievements(metaUi(), again), false, 'badge', true],
+    [L('Keeper\'s Loom', 'Стан Хранителей', 'Tear do Zelador'), () => meta.showLoom(metaUi(), again), false, 'loom', true],
+    [L('Back', 'Назад', 'Voltar'), back, false, 'back'],
   ], [tabRow(TABS, tab, (id) => showJournal(back, id)), page], back);
   rows[0]?.find((b) => !b.classList.contains('no'))?.dispatchEvent(new Event('focus')); // the caption opens on the first found drawing
 }
@@ -400,17 +400,17 @@ function showResults(data) { // the level's stamp, the time, echoes as shards sl
   store.set('sw.progress', data.next ?? id);
   const s = game.settings, assist = cur.ctx.params.get('breath') === '0' || s.infiniteAirDash || s.allGifts || !s.breath || s.gameSpeed < 1;
   const target = (level(id)?.bot ?? 0) * 0.9, got = found().filter((k) => k.startsWith(`${id}.`)).length, slots = Object.keys(LINES).filter((k) => k.startsWith(`${id}.`)).length, fresh = cur.reg.get('meta.result')?.fresh ?? [];
-  const notes = [s.timer ? `${L('Target', 'Цель')} ${fmtCs(target)}${lv.t <= target ? ` · ${L('beaten', 'побита')}` : ''}` : null,
-    prev == null ? null : `${L('Delta', 'Разница')} ${lv.t <= prev ? '−' : '+'}${Math.abs(lv.t - prev).toFixed(2)}`, assist ? L('Assist on', 'Помощь вкл') : null, meta.resultLine()].filter(Boolean).join(' · ');
+  const notes = [s.timer ? `${L('Target', 'Цель', 'Meta')} ${fmtCs(target)}${lv.t <= target ? ` · ${L('beaten', 'побита', 'superado')}` : ''}` : null,
+    prev == null ? null : `${L('Delta', 'Разница', 'Diferença')} ${lv.t <= prev ? '−' : '+'}${Math.abs(lv.t - prev).toFixed(2)}`, assist ? L('Assist on', 'Помощь вкл', 'Ajuda ativa') : null, meta.resultLine()].filter(Boolean).join(' · ');
   setPanel('results', `${wordmark(LANG, null, 'sm')}<h1>${level(id)?.n ?? ''} · ${tr(level(id)?.title ?? data.title)}</h1>
-    <div class="hud-res">${stamp(level(id)?.n ?? '✓')}<div><div class="hud-time">${fmtCs(lv.t)}${isNew ? `<span class="new">${L('new', 'рекорд')}</span>` : ''}</div>
-      <small>${L('Best', 'Лучшее')} ${fmtCs(best[id])} &nbsp;·&nbsp; ${L('Falls', 'Падения')} ${lv.falls}</small></div></div>
-    <div class="hud-slots">${Array.from({ length: slots }, (_, i) => shard(i < got).replace('<svg', `<svg style="--i:${i}"`)).join('')}<span>${L('Echoes', 'Эхо')} ${got}/${slots}</span></div>
+    <div class="hud-res">${stamp(level(id)?.n ?? '✓')}<div><div class="hud-time">${fmtCs(lv.t)}${isNew ? `<span class="new">${L('new', 'рекорд', 'recorde')}</span>` : ''}</div>
+      <small>${L('Best', 'Лучшее', 'Melhor')} ${fmtCs(best[id])} &nbsp;·&nbsp; ${L('Falls', 'Падения', 'Quedas')} ${lv.falls}</small></div></div>
+    <div class="hud-slots">${Array.from({ length: slots }, (_, i) => shard(i < got).replace('<svg', `<svg style="--i:${i}"`)).join('')}<span>${L('Echoes', 'Эхо', 'Ecos')} ${got}/${slots}</span></div>
     <div class="hud-seals">${meta.challenges(id).map((c, i) => { const on = !!meta.meta.ch[`${id}.${c.id}`]; return `<div class="${on ? 'on' : ''}" style="--i:${i}">${seal(c.id, on, fresh.includes(c.id))}${tr(c.name).split(':')[0]}</div>`; }).join('')}</div>
     <p class="hud-note">${notes}</p>`, [
-    [L('Continue', 'Дальше'), () => onward(data), false, 'play'],
-    [L('Retry', 'Ещё раз'), () => goTo(id, { card: true, outMs: 500 }), false, 'loop', true],
-    [L('Select level', 'Выбор уровня'), () => showSelect(() => showResults(data)), false, 'map', true],
+    [L('Continue', 'Дальше', 'Continuar'), () => onward(data), false, 'play'],
+    [L('Retry', 'Ещё раз', 'Tentar de novo'), () => goTo(id, { card: true, outMs: 500 }), false, 'loop', true],
+    [L('Select level', 'Выбор уровня', 'Escolher nível'), () => showSelect(() => showResults(data)), false, 'map', true],
   ]);
 }
 async function onward(data) { // results -> outro cutscene -> next level (its arrival), or (l3) finale -> ending -> credits
@@ -452,32 +452,32 @@ function showSettings(back, tab = sTab) { // pages: game, assist, sound, picture
     c.oninput = () => { set(+c.value); apply(); fill(); };
     fill(); r.append(mk('span', null, label), c); form.append(r);
   };
-  ui.langLabel = L('Language', 'Язык');
+  ui.langLabel = L('Language', 'Язык', 'Idioma');
   if (tab === 'game') {
-    opt(ui.langLabel, [['ru', 'Русский'], ['en', 'English']], () => s.lang, (v) => { s.lang = v; });
-    opt(L('Text size', 'Размер текста'), [['S', 'S'], ['M', 'M'], ['L', 'L']], () => s.textSize, (v) => { s.textSize = v; });
-    opt(L('Timer', 'Таймер'), onOff, () => s.timer, (v) => { s.timer = v; });
+    opt(ui.langLabel, [['en', 'English'], ['ru', 'Русский'], ['pt', 'Português']], () => s.lang, (v) => { s.lang = v; });
+    opt(L('Text size', 'Размер текста', 'Tamanho do texto'), [['S', 'S'], ['M', 'M'], ['L', 'L']], () => s.textSize, (v) => { s.textSize = v; });
+    opt(L('Timer', 'Таймер', 'Cronómetro'), onOff, () => s.timer, (v) => { s.timer = v; });
   } else if (tab === 'assist') {
-    opt(L('Game speed', 'Скорость игры'), [[0.7, '70%'], [0.85, '85%'], [1, '100%']], () => s.gameSpeed, (v) => { s.gameSpeed = v; });
-    opt(L('Infinite air dash', 'Бесконечный рывок'), onOff, () => s.infiniteAirDash, (v) => { s.infiniteAirDash = v; });
-    opt(L('All gifts', 'Все дары'), onOff, () => s.allGifts, (v) => { s.allGifts = v; }); // applies from the next level start (level.js)
-    opt(L('Breath limit', 'Предел дыхания'), onOff, () => s.breath, (v) => { s.breath = v; });
-    opt(L('Reduce motion', 'Меньше движения'), onOff, () => s.reduceMotion, (v) => { s.reduceMotion = v; });
+    opt(L('Game speed', 'Скорость игры', 'Velocidade do jogo'), [[0.7, '70%'], [0.85, '85%'], [1, '100%']], () => s.gameSpeed, (v) => { s.gameSpeed = v; });
+    opt(L('Infinite air dash', 'Бесконечный рывок', 'Impulso aéreo infinito'), onOff, () => s.infiniteAirDash, (v) => { s.infiniteAirDash = v; });
+    opt(L('All gifts', 'Все дары', 'Todos os dons'), onOff, () => s.allGifts, (v) => { s.allGifts = v; }); // applies from the next level start (level.js)
+    opt(L('Breath limit', 'Предел дыхания', 'Limite de fôlego'), onOff, () => s.breath, (v) => { s.breath = v; });
+    opt(L('Reduce motion', 'Меньше движения', 'Reduzir movimento'), onOff, () => s.reduceMotion, (v) => { s.reduceMotion = v; });
   } else if (tab === 'sound') {
-    const VOL = { master: L('Master', 'Общая'), sfx: L('Effects', 'Эффекты'), music: L('Music', 'Музыка'), voice: L('Voices', 'Голоса'), ambience: L('Ambience', 'Окружение') };
+    const VOL = { master: L('Master', 'Общая', 'Geral'), sfx: L('Effects', 'Эффекты', 'Efeitos'), music: L('Music', 'Музыка', 'Música'), voice: L('Voices', 'Голоса', 'Vozes'), ambience: L('Ambience', 'Окружение', 'Ambiente') };
     for (const k of Object.keys(VOL)) range(VOL[k], 0, 100, 5, () => Math.round(s.volume[k] * 100), (v) => { s.volume[k] = v / 100; });
   } else if (tab === 'picture') {
-    opt(L('Camera', 'Камера'), [['assist', L('Assist', 'Помощь')], ['free', L('Free (mouse lock)', 'Свободная (захват мыши)')]], () => s.cameraMode, (v) => { s.cameraMode = v; });
-    opt(L('Camera follow', 'Доводка камеры'), [['off', L('Off', 'Выкл')], ['low', L('Low', 'Слабая')], ['normal', L('Normal', 'Обычная')]], () => s.camAssist, (v) => { s.camAssist = v; });
-    range(L('Sensitivity', 'Чувствительность'), 0.3, 3, 0.1, () => s.sensitivity, (v) => { s.sensitivity = v; });
-    opt(L('Invert Y', 'Инверсия Y'), onOff, () => s.invertY, (v) => { s.invertY = v; });
-    range(L('Field of view', 'Поле зрения'), 40, 90, 1, () => s.fov, (v) => { s.fov = v; });
-    opt(L('Graphics', 'Графика'), [['low', L('Low', 'Низкая')], ['medium', L('Medium', 'Средняя')], ['high', L('High', 'Высокая')]], () => s.quality, (v) => { s.quality = v; });
+    opt(L('Camera', 'Камера', 'Câmara'), [['assist', L('Assist', 'Помощь', 'Ajuda')], ['free', L('Free (mouse lock)', 'Свободная (захват мыши)', 'Livre (rato bloqueado)')]], () => s.cameraMode, (v) => { s.cameraMode = v; });
+    opt(L('Camera follow', 'Доводка камеры', 'Seguimento da câmara'), [['off', L('Off', 'Выкл', 'Desligado')], ['low', L('Low', 'Слабая', 'Baixo')], ['normal', L('Normal', 'Обычная', 'Normal')]], () => s.camAssist, (v) => { s.camAssist = v; });
+    range(L('Sensitivity', 'Чувствительность', 'Sensibilidade'), 0.3, 3, 0.1, () => s.sensitivity, (v) => { s.sensitivity = v; });
+    opt(L('Invert Y', 'Инверсия Y', 'Inverter Y'), onOff, () => s.invertY, (v) => { s.invertY = v; });
+    range(L('Field of view', 'Поле зрения', 'Campo de visão'), 40, 90, 1, () => s.fov, (v) => { s.fov = v; });
+    opt(L('Graphics', 'Графика', 'Gráficos'), [['low', L('Low', 'Низкая', 'Baixo')], ['medium', L('Medium', 'Средняя', 'Médio')], ['high', L('High', 'Высокая', 'Alto')]], () => s.quality, (v) => { s.quality = v; });
   } else {
     const touchOpts = () => {
-      opt(L('Touch controls', 'Сенсорное управление'), [['auto', L('Auto', 'Авто')], ['on', L('On', 'Вкл')], ['off', L('Off', 'Выкл')]], () => s.touchControls, (v) => { s.touchControls = v; });
-      opt(L('Button size', 'Размер кнопок'), [['S', 'S'], ['M', 'M'], ['L', 'L']], () => s.touchSize, (v) => { s.touchSize = v; });
-      opt(L('Left-handed (swap sides)', 'Для левши (поменять стороны)'), onOff, () => s.leftHanded, (v) => { s.leftHanded = v; });
+      opt(L('Touch controls', 'Сенсорное управление', 'Controlos táteis'), [['auto', L('Auto', 'Авто', 'Auto')], ['on', L('On', 'Вкл', 'Ligado')], ['off', L('Off', 'Выкл', 'Desligado')]], () => s.touchControls, (v) => { s.touchControls = v; });
+      opt(L('Button size', 'Размер кнопок', 'Tamanho dos botões'), [['S', 'S'], ['M', 'M'], ['L', 'L']], () => s.touchSize, (v) => { s.touchSize = v; });
+      opt(L('Left-handed (swap sides)', 'Для левши (поменять стороны)', 'Para canhotos (trocar lados)'), onOff, () => s.leftHanded, (v) => { s.leftHanded = v; });
     };
     const first = document.body.classList.contains('touch'); // desktop keeps the key list on top
     if (first) touchOpts();
@@ -487,43 +487,43 @@ function showSettings(back, tab = sTab) { // pages: game, assist, sound, picture
     if (!first) touchOpts();
   }
   const focusLang = ui.mode === 'settings' && document.activeElement?.cycle && tab === 'game' && document.activeElement.classList.contains('hud-opt'); // redraw after a language change keeps that row focused
-  const tabs = tabRow([['game', 'gear', L('Game', 'Игра')], ['assist', 'hand', L('Assist', 'Помощь')], ['sound', 'note', L('Sound', 'Звук')], ['picture', 'eye', L('Picture', 'Картинка')], ['keys', 'keys', L('Controls', 'Управление')]], tab, (id) => showSettings(back, id));
-  setPanel('settings', `<h1>${L('Settings', 'Настройки')}</h1>`, [[L('Back', 'Назад'), back, false, 'back']], [tabs, form], back);
+  const tabs = tabRow([['game', 'gear', L('Game', 'Игра', 'Jogo')], ['assist', 'hand', L('Assist', 'Помощь', 'Ajuda')], ['sound', 'note', L('Sound', 'Звук', 'Som')], ['picture', 'eye', L('Picture', 'Картинка', 'Imagem')], ['keys', 'keys', L('Controls', 'Управление', 'Controlos')]], tab, (id) => showSettings(back, id));
+  setPanel('settings', `<h1>${L('Settings', 'Настройки', 'Definições')}</h1>`, [[L('Back', 'Назад', 'Voltar'), back, false, 'back']], [tabs, form], back);
   if (focusLang) quietFocus(form.querySelector('.hud-opt'));
 }
 const keycaps = (s) => s.split(' / ').map((part) => part.split(' + ').map((k) => { const m = k.match(/^(.* )?([ABXY])$/); return m ? `${m[1] ?? ''}<kbd class="pad ${m[2]}">${m[2]}</kbd>` : `<kbd>${k}</kbd>`; }).join('+')).join(' ');
 function drawKeys() { // the controls page: a pose per action (it moves while focused) + the glyphs of the last-used device
   const pad = ui.device === 'pad', tch = ui.device === 'touch';
   const rows = tch ? [
-    ['move', L('Move', 'Идти'), L('Left thumb: stick', 'Левый палец: стик')],
-    ['run', L('Run', 'Бег'), L('Push the stick to its edge', 'Тяни стик до края')],
-    ['jump', L('Jump (hold: higher)', 'Прыжок (держи — выше)'), L('Big button', 'Большая кнопка')],
-    ['dash', L('Dash', 'Рывок'), L('Dash button', 'Кнопка рывка')],
-    ['sing', L('Sing to a rune (hold)', 'Спеть руне (держи)'), L('Sing button (hold)', 'Кнопка пения (держи)')],
-    ['strike', L('Strike with the staff', 'Удар посохом'), L('Strike button', 'Кнопка удара')],
-    ['gust', L('Song: Gust (hold: stronger)', 'Песня: Порыв (держи — сильнее)'), L('Song buttons', 'Кнопки песен')],
-    ['name', L('Song: Name (hold: stronger)', 'Песня: Имя (держи — сильнее)'), L('Song buttons', 'Кнопки песен')],
-    ['anchor', L('Song: Anchor (hold: stronger)', 'Песня: Якорь (держи — сильнее)'), L('Song buttons', 'Кнопки песен')],
-    ['look', L('Look', 'Обзор'), L('Drag the right side', 'Тяни справа')],
-    ['pause', L('Pause', 'Пауза'), L('Pause button', 'Кнопка паузы')],
-    ['skip', L('Skip a scene', 'Пропустить сцену'), L('Long press', 'Долгое нажатие')],
+    ['move', L('Move', 'Идти', 'Mover'), L('Left thumb: stick', 'Левый палец: стик', 'Polegar esquerdo: manípulo')],
+    ['run', L('Run', 'Бег', 'Correr'), L('Push the stick to its edge', 'Тяни стик до края', 'Empurra o manípulo até ao limite')],
+    ['jump', L('Jump (hold: higher)', 'Прыжок (держи — выше)', 'Saltar (mantém: mais alto)'), L('Big button', 'Большая кнопка', 'Botão grande')],
+    ['dash', L('Dash', 'Рывок', 'Impulso'), L('Dash button', 'Кнопка рывка', 'Botão de impulso')],
+    ['sing', L('Sing to a rune (hold)', 'Спеть руне (держи)', 'Cantar a uma runa (mantém)'), L('Sing button (hold)', 'Кнопка пения (держи)', 'Botão de canto (mantém)')],
+    ['strike', L('Strike with the staff', 'Удар посохом', 'Golpear com o cajado'), L('Strike button', 'Кнопка удара', 'Botão de golpe')],
+    ['gust', L('Song: Gust (hold: stronger)', 'Песня: Порыв (держи — сильнее)', 'Canção: Rajada (mantém: mais forte)'), L('Song buttons', 'Кнопки песен', 'Botões de canção')],
+    ['name', L('Song: Name (hold: stronger)', 'Песня: Имя (держи — сильнее)', 'Canção: Nome (mantém: mais forte)'), L('Song buttons', 'Кнопки песен', 'Botões de canção')],
+    ['anchor', L('Song: Anchor (hold: stronger)', 'Песня: Якорь (держи — сильнее)', 'Canção: Âncora (mantém: mais forte)'), L('Song buttons', 'Кнопки песен', 'Botões de canção')],
+    ['look', L('Look', 'Обзор', 'Olhar'), L('Drag the right side', 'Тяни справа', 'Arrasta o lado direito')],
+    ['pause', L('Pause', 'Пауза', 'Pausa'), L('Pause button', 'Кнопка паузы', 'Botão de pausa')],
+    ['skip', L('Skip a scene', 'Пропустить сцену', 'Passar uma cena'), L('Long press', 'Долгое нажатие', 'Premir longamente')],
   ] : [
-    ['move', L('Move', 'Идти'), pad ? L('Left stick', 'Левый стик') : L('WASD / arrows', 'WASD / стрелки')],
-    ['run', L('Run', 'Бег'), pad ? 'RB' : 'Shift'],
-    ['jump', L('Jump (hold: higher)', 'Прыжок (держи — выше)'), pad ? 'A' : L('Space', 'Пробел')],
-    ['dash', L('Dash', 'Рывок'), pad ? 'B' : L('Q / right click', 'Q / правый клик')],
-    ['sing', L('Sing to a rune (hold)', 'Спеть руне (держи)'), pad ? 'Y' : 'E'],
-    ['strike', L('Strike with the staff', 'Удар посохом'), pad ? 'X' : L('F / click', 'F / клик')],
-    ['gust', L('Song: Gust (hold: stronger)', 'Песня: Порыв (держи — сильнее)'), pad ? 'LB + X' : '1'],
-    ['name', L('Song: Name (hold: stronger)', 'Песня: Имя (держи — сильнее)'), pad ? 'LB + Y' : '2'],
-    ['anchor', L('Song: Anchor (hold: stronger)', 'Песня: Якорь (держи — сильнее)'), pad ? 'LB + B' : '3'],
-    ['look', L('Look', 'Обзор'), pad ? L('Right stick', 'Правый стик') : L('Drag / mouse', 'Тяни / мышь')],
-    ...(pad ? [] : [['zoom', L('Zoom', 'Приближение'), L('Wheel', 'Колесо')], ['restart', L('Restart', 'Заново'), L('Hold R', 'Держи R')]]),
-    ['pause', L('Pause', 'Пауза'), pad ? 'Start' : 'Esc / P'],
-    ['skip', L('Skip a scene', 'Пропустить сцену'), pad ? L('Hold A', 'Держи A') : L('Hold Esc / Space', 'Держи Esc / Пробел')],
+    ['move', L('Move', 'Идти', 'Mover'), pad ? L('Left stick', 'Левый стик', 'Manípulo esquerdo') : L('WASD / arrows', 'WASD / стрелки', 'WASD / setas')],
+    ['run', L('Run', 'Бег', 'Correr'), pad ? 'RB' : 'Shift'],
+    ['jump', L('Jump (hold: higher)', 'Прыжок (держи — выше)', 'Saltar (mantém: mais alto)'), pad ? 'A' : L('Space', 'Пробел', 'Espaço')],
+    ['dash', L('Dash', 'Рывок', 'Impulso'), pad ? 'B' : L('Q / right click', 'Q / правый клик', 'Q / clique direito')],
+    ['sing', L('Sing to a rune (hold)', 'Спеть руне (держи)', 'Cantar a uma runa (mantém)'), pad ? 'Y' : 'E'],
+    ['strike', L('Strike with the staff', 'Удар посохом', 'Golpear com o cajado'), pad ? 'X' : L('F / click', 'F / клик', 'F / clique')],
+    ['gust', L('Song: Gust (hold: stronger)', 'Песня: Порыв (держи — сильнее)', 'Canção: Rajada (mantém: mais forte)'), pad ? 'LB + X' : '1'],
+    ['name', L('Song: Name (hold: stronger)', 'Песня: Имя (держи — сильнее)', 'Canção: Nome (mantém: mais forte)'), pad ? 'LB + Y' : '2'],
+    ['anchor', L('Song: Anchor (hold: stronger)', 'Песня: Якорь (держи — сильнее)', 'Canção: Âncora (mantém: mais forte)'), pad ? 'LB + B' : '3'],
+    ['look', L('Look', 'Обзор', 'Olhar'), pad ? L('Right stick', 'Правый стик', 'Manípulo direito') : L('Drag / mouse', 'Тяни / мышь', 'Arrastar / rato')],
+    ...(pad ? [] : [['zoom', L('Zoom', 'Приближение', 'Zoom'), L('Wheel', 'Колесо', 'Roda')], ['restart', L('Restart', 'Заново', 'Reiniciar'), L('Hold R', 'Держи R', 'Mantém R')]]),
+    ['pause', L('Pause', 'Пауза', 'Pausa'), pad ? 'Start' : 'Esc / P'],
+    ['skip', L('Skip a scene', 'Пропустить сцену', 'Passar uma cena'), pad ? L('Hold A', 'Держи A', 'Mantém A') : L('Hold Esc / Space', 'Держи Esc / Пробел', 'Mantém Esc / Espaço')],
   ];
   const cards = rows.map(([art, a, k]) => { const b = mk('button'); b.innerHTML = `${pose(art)}<span></span><em>${keycaps(k)}</em>`; b.querySelector('span').textContent = a; return b; });
-  ui.keys.replaceChildren(mk('p', 'hud-note', tch ? L('Touch', 'Касания') : pad ? L('Gamepad', 'Геймпад') : L('Keyboard and mouse', 'Клавиатура и мышь')), ...cards);
+  ui.keys.replaceChildren(mk('p', 'hud-note', tch ? L('Touch', 'Касания', 'Toque') : pad ? L('Gamepad', 'Геймпад', 'Comando') : L('Keyboard and mouse', 'Клавиатура и мышь', 'Teclado e rato')), ...cards);
   gridNav(cards.reduce((r, b, i) => { (r[i >> 1] ??= []).push(b); return r; }, []));
 }
 function setDevice(d) { if (ui.device === d) return; ui.device = d; if (ui.mode === 'settings' && ui.keys?.isConnected) drawKeys(); }
@@ -532,43 +532,39 @@ function showEnd(kind = getSave().ending.last ?? 'middle') { // R8: three ending
   const { falls, time } = ui.stats, n = found().length, all = Object.keys(LINES).length;
   cur.reg.set('paused', true);
   const END = {
-    bad: [L('The knot is loosened, but the sky stays grey.', 'Узел ослаб, но небо осталось серым.'),
-      L('Orren let go, and no one remembered his name. The islands hang where they are, far apart, and the winds wander without a way home.',
-        'Оррен отпустил, и никто не вспомнил его имени. Острова висят, где висели, далеко друг от друга, и ветры бродят, не зная дороги домой.'),
-      L('The mountain remembers too little. Walk the islands again: their stones, their friends, the tale of the youngest Keeper.',
-        'Гора помнит слишком мало. Пройди острова ещё раз: их камни, их друзей, сказку о младшем Хранителе.')],
-    middle: [L('The knot is loosened.', 'Узел развязан.'),
-      L('Orren let go, and the islands did not fall. They drift a little closer every dawn, and remember each other by the wind between them.',
-        'Оррен отпустил, и острова не упали. С каждым рассветом они чуть ближе друг к другу и помнят друг друга по ветру между ними.'),
-      tales() < TALES ? L('Something of Orren is still missing: his tale is not whole.', 'Чего-то от Оррена всё ещё не хватает: его сказка не целая.') : null],
-    true: [L('Orren is named.', 'Оррен назван.'),
-      L('His whole tale was known, so his name could be sung: the last cord came loose by itself. The youngest Keeper stands on the Crown again, and the mountain wakes.',
-        'Вся его сказка была известна, и его имя смогли спеть: последняя верёвка развязалась сама. Младший Хранитель снова стоит на Короне, и гора просыпается.'),
-      L('Kamen, Sigh and Kestrel sing the dawn in.', 'Камень, Вздох и Пустельга поют рассвет.')],
+    bad: [L('The knot is loosened, but the sky stays grey.', 'Узел ослаб, но небо осталось серым.', 'O nó está solto, mas o céu continua cinzento.'),
+      L('Orren let go, and no one remembered his name. The islands hang where they are, far apart, and the winds wander without a way home.', 'Оррен отпустил, и никто не вспомнил его имени. Острова висят, где висели, далеко друг от друга, и ветры бродят, не зная дороги домой.', 'Orren largou, e ninguém se lembrou do seu nome. As ilhas ficam onde estão, longe umas das outras, e os ventos vagueiam sem caminho de volta.'),
+      L('The mountain remembers too little. Walk the islands again: their stones, their friends, the tale of the youngest Keeper.', 'Гора помнит слишком мало. Пройди острова ещё раз: их камни, их друзей, сказку о младшем Хранителе.', 'A montanha recorda pouco demais. Percorre as ilhas outra vez: as suas pedras, os seus amigos, o conto do mais novo dos Zeladores.')],
+    middle: [L('The knot is loosened.', 'Узел развязан.', 'O nó está solto.'),
+      L('Orren let go, and the islands did not fall. They drift a little closer every dawn, and remember each other by the wind between them.', 'Оррен отпустил, и острова не упали. С каждым рассветом они чуть ближе друг к другу и помнят друг друга по ветру между ними.', 'Orren largou, e as ilhas não caíram. Aproximam-se um pouco mais a cada aurora, e recordam-se umas das outras pelo vento que passa entre elas.'),
+      tales() < TALES ? L('Something of Orren is still missing: his tale is not whole.', 'Чего-то от Оррена всё ещё не хватает: его сказка не целая.', 'Falta ainda algo de Orren: o seu conto não está inteiro.') : null],
+    true: [L('Orren is named.', 'Оррен назван.', 'Orren foi nomeado.'),
+      L('His whole tale was known, so his name could be sung: the last cord came loose by itself. The youngest Keeper stands on the Crown again, and the mountain wakes.', 'Вся его сказка была известна, и его имя смогли спеть: последняя верёвка развязалась сама. Младший Хранитель снова стоит на Короне, и гора просыпается.', 'O seu conto inteiro era conhecido, por isso o seu nome pôde ser cantado: a última corda soltou-se sozinha. O mais novo dos Zeladores volta a estar na Coroa, e a montanha desperta.'),
+      L('Kamen, Sigh and Kestrel sing the dawn in.', 'Камень, Вздох и Пустельга поют рассвет.', 'Kamen, Suspiro e Peneireiro cantam a aurora.')],
   }[kind] ?? [];
   setPanel('end', `<div class="hud-end">${island('l3', kind)}</div><h1>${END[0]}</h1>
     <p>${END[1]}</p>
     ${END[2] ? `<p><i>${END[2]}</i></p>` : ''}
-    <p class="hud-note">${L('Echoes', 'Эхо')} ${n}/${all} &nbsp;·&nbsp; ${falls} ${L(falls === 1 ? 'fall' : 'falls', 'падений')} &nbsp;·&nbsp; ${fmtTime(time)}</p>`,
-  [[L('Credits', 'Авторы'), () => showCredits(quitToTitle), false, 'quill'], [L('Journal', 'Журнал'), () => showJournal(() => showEnd(kind)), false, 'book']]);
+    <p class="hud-note">${L('Echoes', 'Эхо', 'Ecos')} ${n}/${all} &nbsp;·&nbsp; ${falls} ${L(falls === 1 ? 'fall' : 'falls', 'падений')} &nbsp;·&nbsp; ${fmtTime(time)}</p>`,
+  [[L('Credits', 'Авторы', 'Créditos'), () => showCredits(quitToTitle), false, 'quill'], [L('Journal', 'Журнал', 'Diário'), () => showJournal(() => showEnd(kind)), false, 'book']]);
 }
-const SUPPORT = () => [L('Support the game', 'Поддержать игру'), () => window.open('https://rinekri.itch.io/unknot', '_blank', 'noopener'), false, 'hand', true]; // U24: title + credits only
+const SUPPORT = () => [L('Support the game', 'Поддержать игру', 'Apoiar o jogo'), () => window.open('https://rinekri.itch.io/unknot', '_blank', 'noopener'), false, 'hand', true]; // U24: title + credits only
 function showCredits(back) { // a slow roll; Back (or the end of the roll after the finale) returns
   const roll = mk('div', 'hud-roll'), inner = mk('div');
   const sec = (h, ...lines) => { inner.append(mk('h2', null, h)); for (const l of lines) inner.append(mk('p', null, l)); };
   inner.insertAdjacentHTML('beforeend', wordmark(LANG, 'loose'));
-  inner.append(mk('p', null, L('A walk across the islands of a sleeping mountain.', 'Прогулка по островам спящей горы.')));
-  sec(L('Made by', 'Сделано'), L('One wanderer, a laptop and a lot of wind.', 'Одним странником, ноутбуком и большим количеством ветра.'),
-    L('Made with AI assistance: parts of the art and the code were produced with generative tools.', 'Создано с помощью ИИ: часть графики и кода сделана генеративными инструментами.'));
-  sec(L('Story', 'История'), L('The Keepers, Kamen, Sigh, Kestrel and Orren', 'Хранители, Камень, Вздох, Пустельга и Оррен'));
-  sec(L('Built with', 'Инструменты'), 'three.js · Vite · Blender · WebAudio');
-  sec(L('Textures', 'Текстуры'), 'ambientCG — Rock030 (CC0)');
-  sec(L('Sound', 'Звук'), L('Synthesised in the browser: every voice is babble, every word is a subtitle.', 'Синтезирован в браузере: каждый голос — лепет, каждое слово — субтитр.'));
-  sec(L('Thank you for walking', 'Спасибо, что прошли путь'), L('The islands drift a little closer every dawn.', 'С каждым рассветом острова чуть ближе.'));
-  inner.append(mk('p', null, L('If the walk was worth it, you can support the game: rinekri.itch.io/unknot', 'Если путь того стоил, игру можно поддержать: rinekri.itch.io/unknot'))); // U24, the button below opens it
+  inner.append(mk('p', null, L('A walk across the islands of a sleeping mountain.', 'Прогулка по островам спящей горы.', 'Um passeio pelas ilhas de uma montanha adormecida.')));
+  sec(L('Made by', 'Сделано', 'Feito por'), L('One wanderer, a laptop and a lot of wind.', 'Одним странником, ноутбуком и большим количеством ветра.', 'Um caminhante, um portátil e muito vento.'),
+    L('Made with AI assistance: parts of the art and the code were produced with generative tools.', 'Создано с помощью ИИ: часть графики и кода сделана генеративными инструментами.', 'Feito com ajuda de IA: partes da arte e do código foram produzidas com ferramentas generativas.'));
+  sec(L('Story', 'История', 'História'), L('The Keepers, Kamen, Sigh, Kestrel and Orren', 'Хранители, Камень, Вздох, Пустельга и Оррен', 'Os Zeladores, Kamen, Suspiro, Peneireiro e Orren'));
+  sec(L('Built with', 'Инструменты', 'Construído com'), 'three.js · Vite · Blender · WebAudio');
+  sec(L('Textures', 'Текстуры', 'Texturas'), 'ambientCG — Rock030 (CC0)');
+  sec(L('Sound', 'Звук', 'Som'), L('Synthesised in the browser: every voice is babble, every word is a subtitle.', 'Синтезирован в браузере: каждый голос — лепет, каждое слово — субтитр.', 'Sintetizado no navegador: cada voz é murmúrio, cada palavra é uma legenda.'));
+  sec(L('Thank you for walking', 'Спасибо, что прошли путь', 'Obrigado por caminhares'), L('The islands drift a little closer every dawn.', 'С каждым рассветом острова чуть ближе.', 'As ilhas aproximam-se um pouco mais a cada aurora.'));
+  inner.append(mk('p', null, L('If the walk was worth it, you can support the game: rinekri.itch.io/unknot', 'Если путь того стоил, игру можно поддержать: rinekri.itch.io/unknot', 'Se o passeio valeu a pena, podes apoiar o jogo: rinekri.itch.io/unknot'))); // U24, the button below opens it
   roll.append(inner);
   inner.addEventListener('animationend', () => { if (ui.panel?.contains(roll)) back(); });
-  setPanel('credits', `<h1>${L('Credits', 'Авторы')}</h1>`, [[L('Back', 'Назад'), back, false, 'back', true], SUPPORT()], roll, back);
+  setPanel('credits', `<h1>${L('Credits', 'Авторы', 'Créditos')}</h1>`, [[L('Back', 'Назад', 'Voltar'), back, false, 'back', true], SUPPORT()], roll, back);
 }
 
 // ---- input for menus: keyboard + gamepad (own poll, works while the sim is paused) ----

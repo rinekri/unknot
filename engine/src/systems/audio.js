@@ -170,6 +170,8 @@ const SYNTH = {
   hit_warden: (t, out) => { tone(t, 0.18, 'sine', 110, 48, 0.7, out); burst(t, 0.3, 'bandpass', 2400, 700, 1.6, 0.45, out); burst(t + 0.02, 0.08, 'highpass', 4200, 3000, 0.8, 0.2, out); tone(t + 0.05, 0.22, 'sawtooth', 92, 70, 0.1, out); },
   hit_boss: (t, out) => { [55, 82.4, 110, 130.8].forEach((f, i) => tone(t, 0.9, i ? 'triangle' : 'sine', f, f * 0.97, 0.3 / (i + 1), out)); burst(t, 0.3, 'lowpass', 900, 150, 0.7, 0.5, out); },
   counter: (t, out) => { tone(t, 0.1, 'sine', 180, 60, 0.6, out); burst(t, 0.1, 'highpass', 5000, 2500, 0.8, 0.35, out); [1318, 1976, 2637].forEach((f, i) => tone(t + 0.02 * i, 0.7, 'sine', f, f, 0.08, out)); },
+  clash: (t, out) => { for (const f of [185, 262, 277]) tone(t, 0.6, 'sawtooth', f, f * 0.97, 0.07, out); burst(t, 0.12, 'bandpass', 900, 400, 1.5, 0.15, out); }, // U25 reject: a dissonant chord (tritone + minor second)
+  half: (t, out) => { tone(t, 0.9, 'sine', 196, 196, 0.14, out); tone(t + 0.05, 0.7, 'sine', 294, 262, 0.08, out); }, // U25 right song, unmet condition: half a chord that sags
   dull: (t, out) => { tone(t, 0.35, 'triangle', 147, 139, 0.22, out); tone(t, 0.35, 'triangle', 156, 147, 0.2, out); burst(t, 0.08, 'lowpass', 500, 200, 0.7, 0.25, out); },
   stun: (t, out) => { const o = actx.createOscillator(), l = actx.createOscillator(), lg = actx.createGain(), g = actx.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(660, t); o.frequency.exponentialRampToValueAtTime(440, t + 2.6); l.frequency.setValueAtTime(7, t); l.frequency.linearRampToValueAtTime(2.5, t + 2.6); lg.gain.value = 40; l.connect(lg).connect(o.frequency); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.06, t + 0.1); g.gain.linearRampToValueAtTime(0, t + 2.8); o.connect(g).connect(out); o.start(t); l.start(t); o.stop(t + 2.9); l.stop(t + 2.9); },
   shatter: (t, out) => { burst(t, 0.5, 'highpass', 6000, 1800, 0.8, 0.5, out); burst(t, 0.7, 'lowpass', 1600, 200, 0.8, 0.5, out); for (let i = 0; i < 7; i++) tone(t + 0.03 * i + pitch() * 0.02, 0.25, 'triangle', 2200 + pitch() * 2400, 1800, 0.05, out); tone(t, 1.1, 'sawtooth', 196, 185, 0.07, out); tone(t, 1.1, 'sawtooth', 277, 262, 0.07, out); },
@@ -490,7 +492,7 @@ export default {
     let cast = null; // Phase S: each stage reached rings a step up the song's own chord; the release is louder and longer with the stage
     reg.on('song.stage', ({ song: s, stage }) => { if (!actx) return; const out = actx.createGain(), f = hz(SONG_NOTE[s] + [0, 7, 12, 19][stage]); out.connect(buses.sfx); tone(actx.currentTime, 0.5, 'sine', f, f, 0.1, out); tone(actx.currentTime, 0.3, 'triangle', f * 2, f * 2, 0.04, out); });
     reg.on('song.cast', (c) => { cast = c; if (actx) singOff(); });
-    reg.on('song.reject', () => { play('dull', 0, 0.9); play('disperse', 0, 0.4); });
+    reg.on('song.reject', ({ motif, half }) => { if (half) return play('half', 0, 0.8); play('dull', 0, 0.9); play(motif ? 'clash' : 'disperse', 0, motif ? 0.7 : 0.4); }); // U25: wrong song = dissonant chord
     reg.on('rune.unlock', ({ from }) => { play('disperse', from ? 0.7 : 0, 0.8); play('pickup', from ? 0.75 : 0.05, 0.6); }); // the thread arrives, the whirl blows away // a rune still bound by its order
     for (const k of ['flinch', 'hit']) reg.on(`enemy.${k}`, ({ kind }) => play(`hit_${kind === 'squall' || kind === 'minion' ? 'squall' : kind === 'boss' ? 'boss' : 'warden'}`, 0, 0.9));
     reg.on('enemy.counter', () => { play('counter'); play('stun', 0.1); });

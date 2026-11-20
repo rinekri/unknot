@@ -5,7 +5,7 @@
 // Usage: const R = makeR6(K, { world, collider, level, salt }); R.nameLock(...); R.dashLock(...); R.shortcut(...); R.finish();
 import * as THREE from 'three';
 import { PROP_BOX, RUNE, NAME, MAX_FRAC, r2, r2v, facing, dashReach, dash2Reach } from './kit.mjs';
-import { NAME_R, NAME_R2, GUST_X2, LOCK_GUST } from '../../src/systems/songs.js';
+import { NAME_R, NAME_R2, GUST_X2, LOCK_GUST, GUST_REACH } from '../../src/systems/songs.js';
 
 const SING_R = 3, SING_DY = 2.5; // level.js: a rune is sung within 3 m (2D) and 2.5 m of height
 const GUST = LOCK_GUST, GUST2 = GUST * GUST_X2; // lock runes hear the uncharged reach whatever the charge stage (level.js, songs.js pick)
@@ -94,6 +94,27 @@ export function makeR6(K, { world, collider, level, salt }) {
       K.blocked.push({ from: from.id, to: s.id, lock: 'airdash', dist: +gap.toFixed(2), rise: dy, needs: 'airdash (two bursts)', frac: +(gap / dash2Reach(dy)).toFixed(2) });
       return { islet: s, rewards: pickups(s, th, rewards) };
     },
+    // U25 Anchor lock: a row of crumble slabs off a's rim along th, gap m to a reward islet (beyond two dashes); each slab drops at a
+    // touch (delay), the Anchor holds the whole row (level.js group freeze) for the run across. Returns { islet, stand, rewards, mechanisms }.
+    anchorLock({ id, from, th, gap, R = 3, delay = 0.05, rewards = [] }) {
+      const s = islet(`${id}_isl`, from, th, gap, R), isletFree = nearest(s.x, s.z, [s.id]) - s.R;
+      if (isletFree < dash2Reach(0) + 0.3) lockOut(id, `islet ${isletFree.toFixed(2)} m off: two dashes reach it`);
+      const [px, pz] = rimPt(from, th), ux = Math.cos(th), uz = Math.sin(th), n = Math.max(2, Math.ceil((gap + 1.2) / PIECE)), L = (gap + 1.2) / n;
+      const pcs = Array.from({ length: n }, (_, i) => { const d = -0.6 + L * (i + 0.5), cx = px + ux * d, cz = pz + uz * d; return { name: `mech_${id}_${i}`, x: cx, z0: cz - L / 2, z1: cz + L / 2, w: 1.7, top: from.y + 0.03, rotY: Math.atan2(ux, uz) }; });
+      K.pieces(world, collider, pcs, 0.5, 80 + islets.length * 5);
+      K.blocked.push({ from: from.id, to: s.id, lock: 'anchor', gap: +isletFree.toFixed(2), needs: `Anchor (holds the ${id} crumble row, ${delay} s at a touch)` });
+      return { islet: s, stand: standAt(from, th, 0.6).map(r2), rewards: pickups(s, th, rewards), mechanisms: pcs.map((p, i) => ({ id: `${id}_${i}`, kind: 'crumble', node: p.name, delay, respawn: 3, group: id })) };
+    },
+    // U25 gate rune (main path): a far rune on a floating stone off a's rim, out of the sing radius, within Name (dusty: and the
+    // charged Gust, songs.js GUST_REACH[3]) of the rim spot facing it; its flag opens the way. Returns { rune, stand, mechanism }.
+    gateRune({ id, from, th, out, side = 0, up = 2.4, dust = false, targets = [], after }) {
+      const rune = floatRune(id, from, th, out, side, up), free = nearest(rune.pos[0], rune.pos[2]);
+      const stand = standAt(from, Math.atan2(rune.pos[2] - from.z, rune.pos[0] - from.x), 0.5), d = Math.hypot(rune.pos[0] - stand[0], rune.pos[2] - stand[1]);
+      if (free <= SING_R + 0.3) lockOut(id, `gate rune ${free.toFixed(2)} m from a rim: sung without Name`);
+      if (d > NAME_R - 0.25) lockOut(id, `Name (${NAME_R}) short from the stand spot (${d.toFixed(2)})`);
+      if (dust && d > GUST_REACH[3] - 0.3) lockOut(id, `the charged Gust (${GUST_REACH[3]}) short from the stand spot (${d.toFixed(2)})`);
+      return { rune, stand: stand.map(r2), mechanism: { id, kind: 'switch', node: id, pos: r2v(rune.pos), r: 2.0, targets, once: true, far: true, ...(dust && { dust: true }), ...(after && { after }) } };
+    },
     // a plain stepping stone (a way back down from a lock islet)
     stone(id, x, z, y, R = 1.6) { const s = K.island(id, x, z, y, R, { depth: R * 1.4 }); islets.push(s); return s; },
     // a stone (NAME mesh) on an islet, sung awake: a request answered (progress.js reads m.request)
@@ -126,7 +147,7 @@ export function makeR6(K, { world, collider, level, salt }) {
     // meshes + colliders for the islets (walkable) and the rune stones (out of reach: no collider); props join level.props with a
     // collision box each (colliderBase already ran)
     finish() {
-      K.islandMeshes(world, [...islets, ...floats]);
+      K.islandMeshes(world, [...islets, ...floats], [], level.route); // middle-distance islets: off every island and route view
       for (const s of islets) for (const [i, g] of K.topAndWall(s).entries()) collider.add(K.mesh(i ? `r6_wall_${s.id}` : `r6_top_${s.id}`, g));
       for (const p of props) {
         const b = PROP_BOX[p.mesh ? `${p.glb}#${p.mesh}` : p.glb] ?? [0.6, 1, 0.6], k = p.scale ?? 1;

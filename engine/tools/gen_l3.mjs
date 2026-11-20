@@ -11,7 +11,7 @@
 //   6. Orren's Remnant (npc.js): debris rings turn round the arch; three runes inside the pillar ring each unwind one ring
 //      and play a line. The goal opens once the third talk's last line ends (goal.after npc.orren.free, set by its `end`).
 // Writes ../assets/levels/l3/{level.json,world.glb,collider.glb,placement.json}. Usage: node tools/gen_l3.mjs   (npm run gen-l3)
-import { makeKit, THREE, TUNING, jumpReach, RUNE, PILLAR, TREE, ARCH, STAIRS, SHRINE, RUBBLE, KNOT, r2, r2v, poly, facing } from './lib/kit.mjs';
+import { makeKit, THREE, TUNING, jumpReach, dash2Reach, RUNE, PILLAR, TREE, ARCH, STAIRS, SHRINE, RUBBLE, KNOT, r2, r2v, poly, facing } from './lib/kit.mjs';
 import { makeR6 } from './lib/r6.mjs';
 
 const SEED = 3301;
@@ -20,7 +20,7 @@ const { rr, isl, island, chain, rimGap, rimFar, rimNear } = K;
 const rimE = (a) => a.x + a.rim(0), rimW = (a) => a.x - a.rim(Math.PI);
 
 // ---------- layout ----------
-const TAIL = 4, LIFT = 40, CYCLE = [3.5, 0.5, 1.5], HOLD = 14, HOLD2 = 14, CRD = 0.5; // tailwind m/s, updraft m/s^2, crown updraft cycle, bridge hold s, crumble delay s
+const TAIL = 4, LIFT = 40, CYCLE = [3.5, 0.5, 1.5], HOLD = 14, HOLD2 = 24, CRD = 0.5, CRW = 0.05; // U25: crW crumbles under a step (0.05 s): only the Anchor's hold crosses; the stairs wait out the slab // tailwind m/s, updraft m/s^2, crown updraft cycle, bridge hold s, crumble delay s
 const CR = { gap: 1.6, len: 3.0 };
 isl.start = island('start', 0, 0, 0, 9);
 chain('d1', isl.start, 2.6, 35, -1.2, 3.1);
@@ -33,7 +33,11 @@ const V = isl.V, BRIDGE_GAP = 9.5;
 chain('nook', V, 2.0, 30, -1.0, 2.2); // below the bridge foot, beside it
 chain('W', V, BRIDGE_GAP, 0, 0, 6);
 const W = isl.W, NCR = 3, DGAP = 5.0;
-chain('X', W, NCR * (CR.len + CR.gap) + DGAP, 0, 0, 6);
+// U25: past the crumble row an islet (wx), then a hung slab over 11 m (past two bursts' reach): the Anchor's second gate (slabS)
+const SBGAP = 11.0;
+K.own(806, () => chain('wx', W, NCR * (CR.len + CR.gap) + DGAP, 0, 0, 2.4));
+const WX = isl.wx;
+chain('X', WX, SBGAP, 0, 0, 6);
 const X = isl.X, WGAP = 4.6;
 chain('Y', X, WGAP, 0, 0, 7);
 const Y = isl.Y;
@@ -59,7 +63,7 @@ if (FLEN < 2.6 || FLEN > 3.6) throw new Error(`fast crumble pads ${NF} x ${FLEN.
 // crown: five cycling updrafts spiralling up from CB, then two hops to the crown terrace (+25)
 const crownT = K.tower('k', CB, [0, 90, 180, 270, 0].map((deg) => ({ deg, rise: 5, R: 4.5, cycle: CYCLE })));
 chain('g1', isl.k5, 2.6, 0, 1, 2.6);
-chain('crown', isl.g1, 2.6, 0, 1, 8);
+chain('crown', isl.g1, 2.6 + 12.4, 0, 1, 8); // U25: 12.4 m further out: room for the crown's slab and its islet gk
 const G = isl.crown, I = isl, K5 = isl.k5;
 // crumble spiral d2 -> d4: d3 and g1 are placed (their seed draws and everything chained after them stay), then dropped
 const spiral = (() => {
@@ -85,14 +89,10 @@ hops('hv', V, 801, 4); hops('hz', Z, 802); hops('hk', K5, 803); // hv: the gust 
 K.own(804, () => chain('far', W, 2.0, -30, 3.5, 1.4));
 const Far = I.far, spotW = [W.x - 0.5, rimFar(W) - 1.1];
 if (Math.hypot(Far.x - spotW[0], Far.z - spotW[1]) > 5.8) throw new Error('R2: the far rune is out of the Name song reach from W rim');
-// R5 hung slab (trials.js) on its own seeded stream: a 6.5 m gap east of the start, a slab on chains above it. Walk up and it creaks
-// and lowers through the gap; Anchor it as its top passes the walkway and it holds a moment: walk across. The ledge (sl) is a dead
-// end with a way back by two hops. The sky beyond: an air Gust's recoil.
-const SLGAP = 6.5;
-K.own(805, () => {
-  chain('sl', I.start, SLGAP, 90, 0, 4.5); chain('sh1', I.sl, 2.8, 200, 0.2, 1.6);
-  const b1 = I.sh1, st = I.start; chain('sh2', b1, 2.8, Math.atan2(st.x - b1.x, st.z - b1.z) * 180 / Math.PI, 0.2, (Math.hypot(st.x - b1.x, st.z - b1.z) - st.R - b1.R - 5.6) / 2);
-});
+// R5 hung slab (trials.js): walk up and it creaks and lowers through the gap; Anchor it as its top passes the walkway and it holds a moment.
+// U25: the slab left the start (its ledge too): it hangs past W (wx -> X) and on the crown (slabK), both on the way.
+// U25: the Anchor's song-shrine (taught here) on two side islands east of W, two hops off its rim; the stone faces back at the crumble row
+K.own(808, () => { chain('a1', W, 2.8, 45, 0.4, 2.6); chain('AS', I.a1, 3.2, 60, 0.3, 4.4); }); // U25: north-east of W: in the play camera's frame from the crumble row's spot (kit songGates)
 const stacked = Object.values(I).flatMap((a) => Object.values(I).filter((b) => b.y - a.y >= 4).map((b) => [a.id, b.id])); // tower steps stand over lower islands
 K.noOverlap([['V', 'nook'], ['y1', 'sa'], ['W', 'far'], ...stacked]); // far: 3.5 m above W, out of reach (R2 Name rune)
 
@@ -108,8 +108,14 @@ const crumbleRow = (prefix, a, n, len, k0) => Array.from({ length: n }, (_, i) =
 });
 const crW = crumbleRow('crumble', W, NCR, CR.len, 0);
 // timed stair bridge k5 -> crown (runeK): rises 2 m in 7 even steps; down again HOLD2 s after it settles (the walk back from its rune)
-const NB2 = 6, s2z0 = rimFar(K5) - 0.7, s2z1 = rimNear(G) + 0.7, SL2 = (s2z1 - s2z0 + OV * (NB2 - 1)) / NB2;
-const stairs = Array.from({ length: NB2 }, (_, i) => ({ name: `mech_stairs_${i}`, x: K5.x, z0: s2z0 + i * (SL2 - OV), z1: s2z0 + i * (SL2 - OV) + SL2, w: 1.9, top: K5.y + ((G.y - K5.y) * (i + 1)) / (NB2 + 1), rotY: 0 }));
+// U25 crown triple gate: runeK (Gust: its boulder) raises the lower flight, a hung slab (Anchor) spans 11 m to the islet gk, a corded
+// rune off gk (Name) raises the upper flight to the crown. Rises stay 2/7 m a step.
+const NB2 = 6, SF = 3, SSL = 1.4, s2z0 = rimFar(K5) - 0.7, KBGAP = 11.0, stTop = (i) => K5.y + ((G.y - K5.y) * (i + 1)) / (NB2 + 1);
+const flight = (z0, z1, i0, n) => { const L = (z1 - z0 + OV * (n - 1)) / n; return Array.from({ length: n }, (_, i) => ({ name: `mech_stairs_${i0 + i}`, x: K5.x, z0: z0 + i * (L - OV), z1: z0 + i * (L - OV) + L, w: 1.9, top: stTop(i0 + i), rotY: 0 })); };
+const fl1 = flight(s2z0, s2z0 + SF * (SSL - OV) + OV, 0, SF);
+K.own(809, () => { isl.gk = island('gk', K5.x, 0, stTop(SF - 1), 2.4); isl.gk.z = fl1.at(-1).z1 + KBGAP + isl.gk.rim(-Math.PI / 2); });
+const GK = isl.gk, fl2 = flight(rimFar(GK) - 0.7, rimNear(G) + 0.7, SF, NB2 - SF), stairs = [...fl1, ...fl2];
+if (fl2[0].z1 - fl2[0].z0 < 1.1 || KBGAP < dash2Reach(0) + 1) throw new Error('U25: crown flights / slab gap do not fit');
 const crF = crumbleRow('crumblef', FA, NF, FLEN, 2);
 const lift = { name: 'mech_lift', x: Z.x, z0: rimFar(Z) - 0.4, z1: rimNear(SA) + 0.1, w: 2.4, top: Z.y, rotY: 0 };
 const liftC = [lift.x, (lift.z0 + lift.z1) / 2];
@@ -129,7 +135,16 @@ const ring = Array.from({ length: 7 }, (_, k) => { // broken ring of pillars rou
   return { id: `crown_${k}`, glb: PILLAR, pos: [goalPos[0] + Math.cos(a) * r, G.y, goalPos[2] + Math.sin(a) * r], rotY: rr(-3, 3), scale: rr(0.95, 1.4) };
 });
 ring[0].pos = [goalPos[0] + Math.cos(0.45) * 6.2, G.y, goalPos[2] + Math.sin(0.45) * 6.2]; // between crown_1 and crown_2: clear of Orren's plinth (> 3 m)
+// U25 the Anchor's song-shrine (l2's sideShrine): the stone on AS's far side, facing back; the detour there and back off W's north-east rim, in frame from spotW (kit songGates)
+const SHRINE_K = 1.9, toward = (a, b, inset) => { const an = Math.atan2(b.z - a.z, b.x - a.x), r = a.rim(an) - inset; return [a.x + Math.cos(an) * r, a.y, a.z + Math.sin(an) * r]; };
+const shA = (() => {
+  const hop = I.a1, home = I.AS, d = Math.hypot(home.x - hop.x, home.z - hop.z), u = [(home.x - hop.x) / d, (home.z - hop.z) / d], spot = [home.x - u[0] * 0.3, home.z - u[1] * 0.3];
+  const stone = { id: 'song_anchor', glb: PILLAR, pos: [home.x + u[0] * 1.8, home.y, home.z + u[1] * 1.8], rotY: Math.atan2(-u[0], -u[1]), scale: SHRINE_K };
+  const out = toward(W, hop, 1.2), inn = toward(home, hop, 1.3), hopAt = [hop.x, hop.y, hop.z];
+  return { stone, spot, cp: [home.x - u[0] * 1.6, home.y, home.z - u[1] * 1.6], route: [out, hopAt, inn, [spot[0], home.y, spot[1]], inn, hopAt, out] };
+})();
 const props = [
+  shA.stone,
   { id: 'pillar_s1', glb: PILLAR, pos: [-4.8, 0, -5.2], rotY: 0.4, scale: 1.2 },
   { id: 'pillar_s2', glb: PILLAR, pos: [4.6, 0, 1.5], rotY: 1.2, scale: 0.9 },
   runeV, seqA, seqB, runeK, runeN,
@@ -142,9 +157,9 @@ const props = [
 ];
 
 const SPAWN = [0, 0, -5];
-const spotK = [runeK.pos[0] + 1.5, runeK.pos[2]], spotV = [runeV.pos[0] + 1.5, runeV.pos[2]], spotA = [seqA.pos[0] + 1.5, seqA.pos[2]], spotB = [I.hz2.x, I.hz2.z - 0.1], spotDam = [X.x, damZ - 1.4];
+const gustK = [runeK.pos[0] + 2.8, runeK.pos[2]], spotK = [runeK.pos[0] + 1.5, runeK.pos[2]], spotV = [runeV.pos[0] + 1.5, runeV.pos[2]], spotA = [seqA.pos[0] + 1.5, seqA.pos[2]], spotB = [I.hz2.x, I.hz2.z - 0.1], spotDam = [X.x, damZ - 1.4];
 const at = (k) => [I[k].x, I[k].y, I[k].z];
-const outBack = (p, spot, h, mid = []) => { const out = [at(`${p}1`), ...mid, at(`${p}3`), at(`${p}4`), [spot[0], h.y, spot[1]]]; return [...out, ...out.slice(0, -1).reverse()]; }; // a detour, there and back
+const outBack = (p, spot, h, mid = [], last = []) => { const out = [at(`${p}1`), ...mid, at(`${p}3`), at(`${p}4`), ...last, [spot[0], h.y, spot[1]]]; return [...out, ...out.slice(0, -1).reverse()]; }; // a detour, there and back
 const mid = (p) => [p.x, p.top, (p.z0 + p.z1) / 2];
 // updraft climb (kit.tower step): walk to the near-rim updraft, ride it, step onto the upper island
 const climb = ({ lo, hi, deg, near }) => {
@@ -155,12 +170,12 @@ const climb = ({ lo, hi, deg, near }) => {
 let route = [
   SPAWN, [-1, 0, 4], at('d1'), at('d2'), ...spiral.map(mid), at('d4'), at('d5'),
   [V.x, V.y, rimNear(V) + 1.5], [V.x - 3, V.y, V.z], ...outBack('hv', spotV, I.hvH, [at('hv2')]), [V.x - 2, V.y, V.z + 1], [V.x, V.y, rimFar(V) - 1.1],
-  ...bridge.map(mid), [W.x, W.y, rimNear(W) + 1.5], [W.x, W.y, rimFar(W) - 1.1], ...crW.map(mid),
-  [X.x, X.y, rimNear(X) + 1.5], [spotDam[0], X.y, spotDam[1]], [X.x, X.y, rimFar(X) - 1.1],
+  ...bridge.map(mid), [W.x, W.y, rimNear(W) + 1.5], [W.x + 1.5, W.y, W.z], ...shA.route, [W.x, W.y, rimFar(W) - 1.1], ...crW.map(mid),
+  [WX.x, WX.y, WX.z], [WX.x, WX.y, rimFar(WX) - 1.2], [X.x, X.y, rimNear(X) + 1.5], [spotDam[0], X.y, spotDam[1]], [X.x, X.y, rimFar(X) - 1.1],
   [Y.x, Y.y, rimNear(Y) + 1.5], ...climb(upY), [Z.x - 3, Z.y, Z.z], ...outBack('hz', spotA, I.hzH, [[spotB[0], I.hz2.y, spotB[1]]]),
   [Z.x + 2, Z.y, Z.z], [rimE(Z) - 1.1, Z.y, Z.z], [rimW(FA) + 1.1, FA.y, FA.z], [FA.x, FA.y, FA.z], [FA.x, FA.y, rimFar(FA) - 1.1], ...crF.map(mid),
   [FB.x, FB.y, rimNear(FB) + 1.2], ...climb(upF), [rimW(FU) + 1.1, FU.y, FU.z], [rimE(CB) - 1.5, CB.y, CB.z],
-  ...crownT.flatMap(climb), [K5.x - 2.5, K5.y, K5.z], ...outBack('hk', spotK, I.hkH, [at('hk2')]), [K5.x, K5.y, K5.z], [K5.x, K5.y, rimFar(K5) - 1.1], ...stairs.map(mid), [G.x, G.y, rimNear(G) + 1.5], goalPos,
+  ...crownT.flatMap(climb), [K5.x - 2.5, K5.y, K5.z], ...outBack('hk', spotK, I.hkH, [at('hk2')], [[gustK[0], I.hkH.y, gustK[1]]]), [K5.x, K5.y, K5.z], [K5.x, K5.y, rimFar(K5) - 1.1], ...fl1.map(mid), [GK.x, GK.y, rimNear(GK) + 1.2], [GK.x, GK.y, GK.z], ...fl2.map(mid), [G.x, G.y, rimNear(G) + 1.5], goalPos,
 ].map((w) => [r2(w[0]), r2(w[1]), r2(w[2]), 0]);
 
 // decor: clear of the route, wind boxes, strike spots, the lift and the goal ring
@@ -202,10 +217,10 @@ route.splice(-1, 0, ...orrenVisit.map((o) => [r2(o.spot[0]), G.y, r2(o.spot[1]),
 // R3 Knot Shards (enemies.js): a Warden patrolling Y across the way, a Squall over CB (the climb's foot), and the Knot Warden on
 // the crown's west half (Orren's posts sit east) with its three Squalls for phase 1. Name motifs tighten: 2 notes -> 4.
 const ENEMIES = [
-  { id: 'wdY', kind: 'warden', pos: r2v([Y.x, Y.y, Y.z + 1]), path: [[Y.x - 3, Y.z + 1], [Y.x + 3, Y.z + 1]].map((q) => q.map(r2)), motif: 'SLS' },
+  { id: 'wdY', kind: 'warden', bars: 'upY', mandatory: true, pos: r2v([Y.x, Y.y, Y.z + 1]), path: [[Y.x - 3, Y.z + 1], [Y.x + 3, Y.z + 1]].map((q) => q.map(r2)), motif: 'SLS' }, // U25 bars: its updraft wakes only when it is unbound; mandatory: on the way, blows never shatter it (enemies.js), only the Name frees it
   { id: 'sqCB', kind: 'squall', variant: 'pull', pos: r2v([CB.x + 2, CB.y, CB.z - 1.8]), aggro: 4.5, motif: 'LSL' }, // l3's pull squall, on the hub's arrival side: its drag brings the hero in, its throw lands him mid-hub (north, in up_k1's box, it threw him up the crown past both shards)
   { id: 'thCB', kind: 'squall', variant: 'thief', pos: r2v([CB.x - 2.5, CB.y, CB.z - 1.5]), r: 6.5, motif: 'SSL', behind: 'sqCB' }, // with the Squall: one shoves while the other takes the breath for the Gust
-  { id: 'gdV', kind: 'warden', guard: 'runeV', pos: r2v([I.hvH.x - 0.6, I.hvH.y, I.hvH.z + 1.7]), path: [[r2(I.hvH.x - 0.6), r2(I.hvH.z + 1.7)], [r2(I.hvH.x - 0.6), r2(I.hvH.z + 1.7)]], motif: 'LSS', ties: [r2v([runeV.pos[0], runeV.pos[1] + 0.9, runeV.pos[2]])] }, // a rune guard on the bridge rune's islet (4 m: its shove is short)
+  { id: 'gdV', kind: 'warden', guard: 'runeV', mandatory: true, pos: r2v([I.hvH.x - 0.6, I.hvH.y, I.hvH.z + 1.7]), path: [[r2(I.hvH.x - 0.6), r2(I.hvH.z + 1.7)], [r2(I.hvH.x - 0.6), r2(I.hvH.z + 1.7)]], motif: 'LSS', ties: [r2v([runeV.pos[0], runeV.pos[1] + 0.9, runeV.pos[2]])] }, // a rune guard on the bridge rune's islet (4 m: its shove is short); U25 mandatory: runeV is on the way, Name only
   { id: 'kw', kind: 'boss', pos: r2v([G.x - 3.5, G.y, G.z + 2]), r: 5.5, minions: ['kw1', 'kw2', 'kw3'], motifs: ['SL', 'LSL', 'SLSL'], ties: orren.map((o) => r2v([o.pos[0], o.pos[1] + 0.9, o.pos[2]])) }, // wakes once the hero is past the stair head
   ...[[-5, 0.5], [-2, 4.5], [-3.5, 4]].map(([dx, dz], i) => ({ id: `kw${i + 1}`, kind: 'squall', boss: 'kw', pos: r2v([G.x + dx, G.y, G.z + dz]), r: 8, aggro: 8, motif: 'SL' })),
 ];
@@ -229,7 +244,7 @@ const knotMechs = binds.flatMap(({ o, p }) => [ // rope: 0.5 s slide to the foot
 // ---------- world.glb + collider.glb ----------
 const world = new THREE.Scene();
 const play = Object.values(I);
-const rocks = K.islandMeshes(world, play);
+const rocks = K.islandMeshes(world, play, [], route);
 // The way in: the wind road from Orren's workshop (l2, far below behind the back rim) climbs past the Kestrel's updraft (always on)
 // and sets the hero down on the spawn.
 const SH = facing(SPAWN, at('d1')), HB = SH + Math.PI, bX = Math.sin(HB), bZ = Math.cos(HB), rimB = isl.start.rim(Math.PI / 2 - HB);
@@ -238,7 +253,7 @@ const HAND_D = 1.6; // m: the arrive hand-off point behind the spawn (see the ar
 const inAt = (d, up, k = 0) => [SPAWN[0] + bX * d + bZ * k, SPAWN[1] + up, SPAWN[2] + bZ * d - bX * k]; // the way in: d m behind the spawn on its heading, up m, k m to the left
 const upA = [bX * (rimB + 2), bZ * (rimB + 2)];
 const wArrive = { min: [upA[0] - 1.5, -14, upA[1] - 1.5], max: [upA[0] + 1.5, 2.5, upA[1] + 1.5] };
-K.distantRing(world, new THREE.Vector3(CB.x / 2, 0, CB.z / 2), { n: 18, arch: 0.8, drift: { to: [goalPos[0], goalPos[2]], n: 4 }, clear: [[prevIsl.x, prevIsl.z, prevIsl.R * 1.8]] }); // finale: the 4 nearest drift in (world.js)
+K.distantRing(world, new THREE.Vector3(CB.x / 2, 0, CB.z / 2), { n: 18, arch: 0.8, route, drift: { to: [goalPos[0], goalPos[2]], n: 4 }, clear: [[prevIsl.x, prevIsl.z, prevIsl.R * 1.8]] }); // finale: the 4 nearest drift in (world.js)
 const farDecor = K.farIsland(world, { name: 'l2', kind: 'totems', ...prevIsl });
 const falls = K.waterfalls(world, play, rocks, 4, route);
 const inst = K.scatter(world, play, rocks, (x, z) => props.every((p) => Math.hypot(x - p.pos[0], z - p.pos[2]) > 0.55) && decor.every((p) => Math.hypot(x - p.pos[0], z - p.pos[2]) > 0.8 * p.scale) && Math.hypot(x - goalPos[0], z - goalPos[2]) > 1.6);
@@ -253,7 +268,7 @@ const dam = K.wall(world, collider, { name: 'mech_dam', x: X.x, y: X.y, z: damZ,
 K.markers(world, SPAWN, goalPos);
 
 // ---------- feasibility ----------
-K.gapChain([['sl', 'sh1'], ['sh1', 'sh2'], ['sh2', 'start'], ['start', 'd1'], ['d1', 'd2'], ['d4', 'd5'], ['d5', 'V'], ['V', 'nook'], ['nook', 'V'], ['sa', 'sb'], ['sb', 'CB'],
+K.gapChain([['W', 'a1'], ['a1', 'AS'], ['start', 'd1'], ['d1', 'd2'], ['d4', 'd5'], ['d5', 'V'], ['V', 'nook'], ['nook', 'V'], ['sa', 'sb'], ['sb', 'CB'],
   ...[['V', 'hv'], ['y1', 'hz'], ['k5', 'hk']].flatMap(([a, p]) => [[a, `${p}1`], [`${p}1`, `${p}2`], [`${p}2`, `${p}3`], [`${p}3`, `${p}4`], [`${p}4`, `${p}H`]])]);
 { // spiral: pad ends along their tangents
   const ends = spiral.map((p) => [-1, 1].map((k) => [p.x - Math.sin(p.t) * k * p.len / 2, p.z0 + p.len / 2 + Math.cos(p.t) * k * p.len / 2]));
@@ -263,13 +278,15 @@ K.gapChain([['sl', 'sh1'], ['sh1', 'sh2'], ['sh2', 'start'], ['start', 'd1'], ['
   K.gap(spiral.at(-1).name, 'd4', rimPt(I.d4, ends.at(-1)[1]), I.d4.y - spiral.at(-1).top);
 }
 K.dashGap('y1', 'fa', rimGap(Z, FA), 0);
-K.step('k5', stairs[0].name, stairs[0].top - K5.y, rimFar(K5) - stairs[0].z0);
-for (let i = 1; i < NB2; i++) K.step(stairs[i - 1].name, stairs[i].name, stairs[i].top - stairs[i - 1].top, stairs[i - 1].z1 - stairs[i].z0);
-K.step(stairs[NB2 - 1].name, 'crown', G.y - stairs[NB2 - 1].top, stairs[NB2 - 1].z1 - rimNear(G));
+for (const [a, fl, b] of [[K5, fl1, null], [GK, fl2, G]]) { // U25: two flights; the slab gap between them is blocked below
+  K.step(a.id, fl[0].name, fl[0].top - a.y, rimFar(a) - fl[0].z0);
+  for (let i = 1; i < fl.length; i++) K.step(fl[i - 1].name, fl[i].name, fl[i].top - fl[i - 1].top, fl[i - 1].z1 - fl[i].z0);
+  if (b) K.step(fl.at(-1).name, b.id, b.y - fl.at(-1).top, fl.at(-1).z1 - rimNear(b));
+}
 K.step('V', bridge[0].name, bridge[0].top - V.y, rimFar(V) - bridge[0].z0);
 for (let i = 1; i < NB; i++) K.step(bridge[i - 1].name, bridge[i].name, bridge[i].top - bridge[i - 1].top, bridge[i - 1].z1 - bridge[i].z0);
 K.step(bridge[NB - 1].name, 'W', W.y - bridge[NB - 1].top, bridge[NB - 1].z1 - rimNear(W));
-for (const [row, a, b, dash] of [[crW, W, X, true], [crF, FA, FB, true]]) {
+for (const [row, a, b, dash] of [[crW, W, WX, true], [crF, FA, FB, true]]) {
   K.gap(a.id, row[0].name, row[0].z0 - rimFar(a), row[0].top - a.y);
   for (let i = 1; i < row.length; i++) K.gap(row[i - 1].name, row[i].name, row[i].z0 - row[i - 1].z1, row[i].top - row[i - 1].top);
   (dash ? K.dashGap : K.gap)(row.at(-1).name, b.id, rimNear(b) - row.at(-1).z1, b.y - row.at(-1).top);
@@ -282,17 +299,21 @@ for (const t of [upY, upF, ...crownT]) if (t.box.max[1] - 0.5 < t.hi.y - TUNING.
 if (LIFT <= TUNING.gravity || CYCLE[0] < 5 / 5 + 0.6) throw new Error('crown updraft too weak or too short');
 if (rimGap(V, W) <= jumpReach(0) || LIFTUP <= TUNING.jumpHeight) throw new Error('bridge / lift is not a puzzle');
 K.blocked.push({ from: 'V', to: 'W', dist: r2(rimGap(V, W)), reach: K.reach(0), needs: `raised.bridge (runeV, hold ${HOLD} s)` });
-K.blocked.push({ from: 'X', to: 'Y', wall: dam.size, needs: 'broken.dam (strike or dash); frees wind.tail + wind.upY' });
-K.blocked.push({ from: 'Y', to: 'y1', rise: 4, needs: 'wind.upY (after the dam)' });
+K.blocked.push({ from: 'X', to: 'Y', wall: dam.size, needs: 'broken.dam (strike or dash); frees wind.tail' });
+K.blocked.push({ from: 'Y', to: 'y1', rise: 4, needs: 'wind.upY (enemy.wdY.free: Name, U25)' });
 K.blocked.push({ from: 'y1', to: 'sa', rise: LIFTUP, needs: 'switch.seqB (lift; runes A then B hidden west of Z) - safe lane' });
 K.blocked.push({ from: 'fb', to: 'fu1', rise: FRISE, needs: 'wind.upF (switch.seqB) - fast lane' });
-K.blocked.push({ from: 'k5', to: 'crown', dist: r2(rimGap(K5, G)), rise: r2(G.y - K5.y), needs: `raised.stairs (runeK, hold ${HOLD2} s)` });
+K.blocked.push({ from: 'k5', to: 'crown', dist: r2(rimGap(K5, G)), rise: r2(G.y - K5.y), needs: `raised.stairs (runeK, dust: Gust first; hold ${HOLD2} s)` });
+K.blocked.push({ from: fl1.at(-1).name, to: 'gk', dist: r2(rimNear(GK) - fl1.at(-1).z1), reach: r2(dash2Reach(0)), needs: 'slabK held (Anchor)' }); // U25
+K.blocked.push({ from: 'gk', to: 'crown', rise: r2(G.y - GK.y), needs: 'raised.stairs2 (crownGate: Name)' }); // U25
+K.blocked.push({ from: 'wx', to: 'X', dist: r2(rimGap(WX, X)), reach: r2(dash2Reach(0)), needs: 'slabS held (Anchor)' }); // U25
+K.blocked.push({ from: 'W', to: 'wx', needs: 'crW held (Anchor: crumbles in 0.05 s)' }); // U25
 for (const t of crownT) K.blocked.push({ from: t.lo.id, to: t.hi.id, rise: 5, needs: `wind.up_${t.hi.id} (cycle ${CYCLE.join('/')})` });
 
 // ---------- level.json ----------
 K.checkRoute(route, [...bridge, ...crW, ...crF, lift, ...spiral, ...stairs], props.concat(decor));
 const box = (b) => ({ kind: 'box', min: r2v(b.min), max: r2v(b.max) });
-const WIND_CAIRNS = ['c_V', 'c_Z', 'c_fa', 'c_CB']; // checkpoints with a wind spring (level.js swirl, player.js refill); plain ones keep the breath you came with (kit breath budget)
+const WIND_CAIRNS = ['c_V', 'c_W', 'c_AS', 'c_wx', 'c_Z', 'c_fa', 'c_CB', 'c_k5', 'c_gk']; // U25: the Anchor gates // checkpoints with a wind spring (level.js swirl, player.js refill); plain ones keep the breath you came with (kit breath budget)
 const cp = (id, p, look) => ({ id, pos: r2v(p), r: 2.2, heading: facing(p, look), ...(WIND_CAIRNS.includes(id) && { wind: true }) });
 const finMark = r2v([goalPos[0] - 0.5, goalPos[1], goalPos[2] - 1.5]), finMark2 = r2v([goalPos[0] - 0.5, goalPos[1], goalPos[2] - 1.15]), finHead = r2(Math.atan2(-0.35, 1)); // the hero in the finale
 const level = {
@@ -306,25 +327,27 @@ const level = {
     light: { color: '#fff0d4', i: 1.85, y: 9 }, breeze: 1 },
   falls,
   sky: K.skyCastles({ x: CB.x / 2, z: CB.z / 2 }, [['assets/sky/castle1.png', 10, 370, 57, 202], ['assets/sky/castle2.png', -70, 340, 31, 150], ['assets/sky/castle2.png', 120, 360, 41, 172]]),
-  props: [...props.filter((p) => p.glb !== PILLAR), ...knotProps].map((p) => ({ ...p, pos: p.pos.map(r2), rotY: +p.rotY.toFixed(4), ...(p.scale ? { scale: +p.scale.toFixed(2) } : {}) })),
+  props: [...props.filter((p) => p.glb !== PILLAR || p.id.startsWith('song_')), ...knotProps].map((p) => ({ ...p, pos: p.pos.map(r2), rotY: +p.rotY.toFixed(4), ...(p.scale ? { scale: +p.scale.toFixed(2) } : {}) })),
   mechanisms: [
     { id: 'runeV', kind: 'switch', node: 'runeV', pos: runeV.pos.map(r2), r: 2.2, targets: ['bridge'], once: true, hidden: true, dust: true, after: 'enemy.gdV.open', // R2: dust hides it and its vein: the Gust [1] blows it clear
       vein: [[V.x, V.y, rimFar(V) - 0.8], [V.x - 2, V.y, V.z + 1], ...['hv1', 'hv2', 'hv3', 'hv4', 'hvH'].map(at), runeV.pos].map(r2v) },
     { id: 'bridge', kind: 'bridge', nodes: bridge.map((p) => p.name), offset: [0, -7, 0], dur: 2.0, stagger: 0.4, hold: HOLD },
-    ...crW.map((p, i) => ({ id: `crumble${i}`, kind: 'crumble', node: p.name, delay: CRD, respawn: 3, group: 'crW' })), // the Anchor [3] holds the row
+    ...crW.map((p, i) => ({ id: `crumble${i}`, kind: 'crumble', node: p.name, delay: CRW, respawn: 3, group: 'crW' })), // the Anchor [3] holds the row (U25: nothing else does)
+    { id: 'song_anchor', kind: 'switch', node: 'song_anchor', pos: shA.stone.pos.map(r2), r: 2.2, targets: [], once: true, gift: 'anchor' }, // U25: the Anchor's song-shrine (level.js)
     { id: 'runeN', kind: 'switch', node: 'runeN', pos: runeN.pos.map(r2), r: 2.0, targets: [], once: true, far: true }, // out of reach: the Name song wakes it (and its breath)
-    { id: 'dam', kind: 'breakable', ...dam, targets: ['tail', 'upY'] },
+    { id: 'dam', kind: 'breakable', ...dam, targets: ['tail'] },
     { id: 'tail', kind: 'wind', area: box(wTail), force: [0, 0, TAIL], active: false },
-    { id: 'upY', kind: 'wind', area: box(upY.box), force: [0, LIFT, 0], active: false },
+    { id: 'upY', kind: 'wind', area: box(upY.box), force: [0, LIFT, 0], active: false, after: 'enemy.wdY.free' }, // U25: wdY unbound (Name), not shattered
     { id: 'seqA', kind: 'switch', node: 'seqA', pos: seqA.pos.map(r2), r: 2.2, targets: [], once: true, seq: 'fork', order: 1, hidden: true,
       vein: [[FA.x, FA.y, FA.z], [rimE(Z) - 0.8, Z.y, Z.z], [Z.x, Z.y, Z.z + 0.6], ...['hz1', 'hz2', 'hz3', 'hz4', 'hzH'].map(at), seqA.pos].map(r2v) },
     { id: 'seqB', kind: 'switch', node: 'seqB', pos: seqB.pos.map(r2), r: 2.2, targets: ['lift', 'upF'], once: true, seq: 'fork', order: 2, hidden: true, // one song, both lanes
       vein: [[liftC[0], Z.y, liftC[1] - 0.6], [Z.x - 1, Z.y, Z.z], at('hz1'), [I.hz2.x - 0.5, I.hz2.y, I.hz2.z], seqB.pos].map(r2v) },
     { id: 'lift', kind: 'platform', node: lift.name, path: [[0, 0, 0], [0, LIFTUP, 0]], mode: 'ride', period: 5, idle: true }, // U14: on demand (level.js rideStep): 2.5 s up, home 2 s after the hero leaves
     ...spiral.map((p, i) => ({ id: `spiral${i}`, kind: 'crumble', node: p.name, delay: CRD, respawn: 3 })),
-    { id: 'runeK', kind: 'switch', node: 'runeK', pos: runeK.pos.map(r2), r: 2.2, targets: ['stairs'], once: true, hidden: true,
+    { id: 'runeK', kind: 'switch', node: 'runeK', pos: runeK.pos.map(r2), r: 2.2, targets: ['stairs'], once: true, hidden: true, dust: true, // U25: a Gust boulder before its face
       vein: [[K5.x, K5.y, rimFar(K5) - 0.8], [K5.x - 1.5, K5.y, K5.z], ...['hk1', 'hk2', 'hk3', 'hk4', 'hkH'].map(at), runeK.pos].map(r2v) },
-    { id: 'stairs', kind: 'bridge', nodes: stairs.map((p) => p.name), offset: [0, -7, 0], dur: 1.0, stagger: 0.25, hold: HOLD2 },
+    { id: 'stairs', kind: 'bridge', nodes: fl1.map((p) => p.name), offset: [0, -7, 0], dur: 1.0, stagger: 0.25, hold: HOLD2 },
+    { id: 'stairs2', kind: 'bridge', nodes: fl2.map((p) => p.name), offset: [0, -7, 0], dur: 1.0, stagger: 0.25, hold: HOLD2 }, // U25: crownGate's flight
     ...crF.map((p, i) => ({ id: `crumblef${i}`, kind: 'crumble', node: p.name, delay: CRD, respawn: 3 })),
     { id: 'upF', kind: 'wind', area: box(upF.box), force: [0, LIFT, 0], active: false },
     ...crownT.map((t) => ({ id: `up_${t.hi.id}`, kind: 'wind', area: box(t.box), force: [0, LIFT, 0], cycle: CYCLE })),
@@ -339,7 +362,7 @@ const level = {
     { id: 't_dam', shape: { kind: 'poly', pts: poly(X.x - 5, rimNear(X) - 1, X.x + 5, X.z) }, teaches: 'dam', ifFlag: null, once: true },
     { id: 't_fork', shape: { kind: 'poly', pts: poly(Z.x - 6, Z.z - 6, Z.x + 6, Z.z) }, teaches: 'fork', ifFlag: null, once: true },
     { id: 't_shrine', shape: { kind: 'poly', pts: poly(shrine.pos[0] - 3.5, shrine.pos[2] - 3.5, shrine.pos[0] + 3.5, shrine.pos[2] + 3.5) }, ifFlag: 'switch.shrine', once: true,
-      hint: { en: 'The last shrine reads: "Let the islands drift. What is remembered is never lost."', ru: 'На последнем святилище: «Пусть острова дрейфуют. Что помнят, то не потеряно».' } },
+      hint: { en: 'The last shrine reads: "Let the islands drift. What is remembered is never lost."', ru: 'На последнем святилище: «Пусть острова дрейфуют. Что помнят, то не потеряно».', pt: 'O último santuário diz: "Deixem as ilhas à deriva. O que é recordado nunca se perde."' } },
     { id: 't_stairs', shape: { kind: 'poly', pts: poly(K5.x - 4, K5.z - 3, K5.x + 4, K5.z + 3) }, teaches: null, ifFlag: null, once: true },
     { id: 't_crown', shape: { kind: 'poly', pts: poly(CB.x - 6, CB.z - 6, CB.x + 6, CB.z + 1) }, teaches: null, ifFlag: null, once: true },
   ],
@@ -348,6 +371,8 @@ const level = {
     cp('c_V', [V.x - 3, V.y, V.z], runeV.pos), // R2: on the route point where the Gust [1] clears runeV's vein
     cp('c_hv', [I.hvH.x + 1.5, I.hvH.y, I.hvH.z - 1.4], runeV.pos), // U21: clear of runeV's boulder and its rest spots // the hidden rune's island: the detour gets its own leg
     cp('c_W', [W.x, W.y, W.z], mid(crW[0])),
+    cp('c_AS', shA.cp, shA.stone.pos), // U25: the Anchor shrine's island
+    cp('c_wx', [WX.x, WX.y, WX.z], [X.x, X.y, X.z]), // U25: before the slab
     cp('c_X', [X.x, X.y, X.z - 1], [X.x, 0, damZ]),
     cp('c_Z', [Z.x, Z.y, Z.z], at('fa')),
     cp('c_hz', [I.hzH.x, I.hzH.y, I.hzH.z], at('hz4')), // the far hidden rune's island: the detour gets its own leg
@@ -358,10 +383,11 @@ const level = {
     cp('c_k2', at('k2'), at('k3')),
     cp('c_k4', at('k4'), at('k5')),
     cp('c_k5', [K5.x + 1, K5.y, K5.z], runeK.pos),
+    cp('c_gk', [GK.x, GK.y, GK.z], [G.x, G.y, G.z]), // U25: between the slab and the corded rune
     cp('c_G', [G.x, G.y, rimNear(G) + 2.5], goalPos),
   ],
   route,
-  enemies: [ // R3 Knot Shards (enemies.js): a Squall at the fork, a Warden on k4's terrace, the Knot Warden on the crown (all songs held: startGifts)
+  enemies: [ // R3 Knot Shards (enemies.js): a Squall at the fork, a Warden on k4's terrace, the Knot Warden on the crown (Gust and Name carried, Anchor from its shrine before W)
     ...ENEMIES,
   ],
   actions: [
@@ -371,9 +397,11 @@ const level = {
     { at: [V.x - 3, V.z].map(r2), y: V.y, r: 0.6, do: 'song', song: 'gust', face: [V.x - 7, V.z].map(r2) }, // at the cairn: blow the dust off runeV's vein
     { at: [I.hvH.x + 1, I.hvH.z - 1.8].map(r2), y: I.hvH.y, r: 4.6, do: 'fight', enemy: 'gdV' }, // the rune guard (U23): bait its shove, strike it as it recovers, Name it as it reels: only then is its rune free
     { at: spotV.map(r2), r: 0.6, do: 'sing', switch: 'runeV', until: 'switch.runeV' },
-    { at: spotW.map(r2), y: W.y, r: 0.6, do: 'song', song: 'anchor', face: [crW[1].x, (crW[1].z0 + crW[1].z1) / 2].map(r2), profiles: ['mid', 'best'] }, // hold the crumble row...
+    { at: shA.spot.map(r2), r: 0.6, do: 'sing', switch: 'song_anchor', until: 'switch.song_anchor' }, // U25: the Anchor's shrine, off W's east rim
+    { at: spotW.map(r2), y: W.y, r: 0.6, do: 'song', song: 'anchor', hold: 1.6, face: [crW[1].x, (crW[1].z0 + crW[1].z1) / 2].map(r2) }, // U25: every profile // hold the crumble row...
     { at: spotW.map(r2), y: W.y, r: 0.6, do: 'song', song: 'name', face: [Far.x, Far.z].map(r2), profiles: ['best'] }, // ...best: and Name the far rune (breath)
     { at: [crW.at(-1).x, (crW.at(-1).z0 + crW.at(-1).z1) / 2].map(r2), r: 1.4, do: 'dash', air: true },
+    { at: [WX.x, rimFar(WX) - 1.2].map(r2), y: WX.y, r: 0.6, do: 'song', song: 'anchor', slab: 'slabS', face: [X.x, X.z].map(r2) }, // U25: hold the slab as it passes the walkway
     { at: [X.x - 1.5, rimNear(X) + 1.5].map(r2), y: X.y, r: 0.5, do: 'wait', until: 'echo.echo_dash', home: 3 }, // echo detour
     { at: spotDam.map(r2), r: 0.6, do: 'strike', switch: 'dam', until: 'broken.dam' },
     { at: [Y.x - 9, Y.z].map(r2), r: 1, do: 'go', drop: true, profiles: ['worst'] }, // worst: wanders off Y's west rim (respawn at c_X)
@@ -387,10 +415,12 @@ const level = {
     { at: [r2(rimW(FU) + 0.6), r2(FU.z)], r: 0.8, do: 'dash', air: 2 },
     { at: [CB.x, CB.z].map(r2), y: CB.y, r: 5.5, do: 'fight', enemy: 'sqCB' }, // R3: Gust the Squall on its telegraph, Name it (from range: its updraft does not take us yet)
     { at: [CB.x, CB.z].map(r2), y: CB.y, r: 5.5, do: 'fight', enemy: 'thCB' }, // then the thief: strike it, Name it, up on its updraft
+    { at: gustK.map(r2), y: r2(I.hkH.y), r: 0.6, do: 'song', song: 'gust', face: [runeK.pos[0], runeK.pos[2]].map(r2) }, // U25: blow the boulder off runeK
     { at: spotK.map(r2), y: r2(I.hkH.y), r: 0.6, do: 'sing', switch: 'runeK', until: 'switch.runeK' },
     { at: [G.x - 1.5, G.z - 1].map(r2), y: G.y, r: 1.5, do: 'fight', enemy: 'kw' }, // R3: the Knot Warden before Orren (waves, ram, rings)
     ...['orren1', 'orren3', 'orren2'].map((id) => orren.find((o) => o.id === id)).map((o) => ({ at: o.spot.map(r2), r: 0.6, do: 'sing', switch: o.id, until: `switch.${o.id}`, home: 9 })), // R3: from the boss arena (west), the near post first, round Orren
     { at: [shrine.pos[0] + 1.2, shrine.pos[2]].map(r2), y: G.y, r: 0.5, do: 'wait', until: 'echo.echo_shrine', home: 7 }, // echo detour (Orren talks meanwhile)
+    { at: orren.find((o) => o.id === 'orren2').spot.map(r2), r: 0.6, do: 'go' }, // U25: back out the way it came (the arch's plinth sits between the echo spot and the goal)
   ],
   echoSlots: [
     { id: 'echo_branch', pos: r2v([FU.x + 0.8, FU.y, FU.z + 1]), note: 'fast lane top (crumble + updraft + dash)' },
@@ -398,43 +428,44 @@ const level = {
     { id: 'echo_dash', pos: r2v([X.x - 1.5, X.y, rimNear(X) + 1.5]), note: 'landing of the crumble air dash' },
     { id: 'echo_shrine', pos: r2v([shrine.pos[0] + 1.2, G.y, shrine.pos[2]]), note: 'by the crown shrine' },
   ],
-  startGifts: ['dash', 'windbreath', 'airdash', 'gust', 'name', 'anchor'], // all earlier gifts (l1 Kamen, l2 Sigh and Kestrel) and songs (their shrines on l1 and l2)
+  carried: ['dash', 'windbreath', 'airdash', 'gust', 'name'], // U25: earned before (l1 Kamen and Gust, l2 Sigh, Kestrel and Name); Anchor is taught here; kit-only
+  gifts: [{ id: 'anchor', at: r2v([shA.spot[0], I.AS.y, shA.spot[1]]), shrine: 'song_anchor', via: ['a1', 'AS'] }], // U25 kit giftOrder / breathBudget
   npcSlots: [{ id: 'orren', pos: r2v([arch.pos[0], G.y, arch.pos[2] - 1.2]), note: "Orren's arch on the crown terrace (route: g1 -> crown)" }],
   npcs: [
     { id: 'narrator', kind: 'voice', voice: 'whisper', talk: [
       { id: 'n_orren', lines: [
-        { en: 'Rings of stone turn round the arch. Three runes hold them, and gold threads tie the runes to a stone Warden.', ru: 'Кольца камня вращаются вокруг арки. Их держат три руны, а золотые нити тянутся от рун к каменному Стражу.' },
+        { en: 'Rings of stone turn round the arch. Three runes hold them, and gold threads tie the runes to a stone Warden.', ru: 'Кольца камня вращаются вокруг арки. Их держат три руны, а золотые нити тянутся от рун к каменному Стражу.', pt: 'Anéis de pedra giram em torno do arco. Três runas seguram-nos, e fios dourados atam as runas a um Guardião de pedra.' },
       ] },
     ] },
-    { id: 'orren', kind: 'orren', name: { en: "Orren's Remnant", ru: 'Остаток Оррена' }, voice: 'orren', pos: r2v([arch.pos[0], G.y + 1.4, arch.pos[2]]),
+    { id: 'orren', kind: 'orren', name: { en: "Orren's Remnant", ru: 'Остаток Оррена', pt: "Resto de Orren" }, voice: 'orren', pos: r2v([arch.pos[0], G.y + 1.4, arch.pos[2]]),
       center: r2v([arch.pos[0], G.y + 1.4, arch.pos[2]]), rotY: +arch.rotY.toFixed(3), switches: orren.map((o) => o.id), lure: true, bark: { talk: 'n_orren', r: 8 }, talk: [
       { id: 'orren_kw1', on: 'enemy.kw.p1', lines: [
-        { en: 'My Warden wakes. Three winds feed him: see the threads.', ru: 'Мой Страж проснулся. Три ветра питают его: видишь нити.' },
-        { en: 'Still each wind as it rears to strike.', ru: 'Усмири каждый ветер, когда он встаёт на дыбы.' },
+        { en: 'My Warden wakes. Three winds feed him: see the threads.', ru: 'Мой Страж проснулся. Три ветра питают его: видишь нити.', pt: 'O meu Guardião desperta. Três ventos alimentam-no: vê os fios.' },
+        { en: 'Still each wind as it rears to strike.', ru: 'Усмири каждый ветер, когда он встаёт на дыбы.', pt: 'Acalma cada vento quando se ergue para atacar.' },
       ] },
       { id: 'orren_kww', on: 'enemy.kw.window', lines: [
-        { en: 'His cords hang loose. Say his name before they tighten.', ru: 'Его путы ослабли. Назови его имя, пока они не затянулись.' },
+        { en: 'His cords hang loose. Say his name before they tighten.', ru: 'Его путы ослабли. Назови его имя, пока они не затянулись.', pt: 'As suas cordas pendem soltas. Diz o nome dele antes que apertem.' },
       ] },
       { id: 'orren_kw2', on: 'enemy.kw.p2', lines: [
-        { en: 'Now he comes himself. Step aside, then strike: three blows shake him.', ru: 'Теперь он идёт сам. Отступи и бей: три удара пошатнут его.' },
+        { en: 'Now he comes himself. Step aside, then strike: three blows shake him.', ru: 'Теперь он идёт сам. Отступи и бей: три удара пошатнут его.', pt: 'Agora vem ele próprio. Desvia-te, depois golpeia: três golpes abalam-no.' },
       ] },
       { id: 'orren_kw3', on: 'enemy.kw.p3', lines: [
-        { en: 'He beats the ground. Leap each ring, and name him when he tires.', ru: 'Он бьёт землю. Перепрыгни каждое кольцо и назови его, когда он устанет.' },
+        { en: 'He beats the ground. Leap each ring, and name him when he tires.', ru: 'Он бьёт землю. Перепрыгни каждое кольцо и назови его, когда он устанет.', pt: 'Bate no chão. Salta cada anel, e nomeia-o quando se cansar.' },
       ] },
       { id: 'orren_tied', on: 'enemy.kw.tied', lines: [
-        { en: 'My runes are tied to the Warden. Unbind him first.', ru: 'Мои руны привязаны к Стражу. Сначала развяжи его.' },
+        { en: 'My runes are tied to the Warden. Unbind him first.', ru: 'Мои руны привязаны к Стражу. Сначала развяжи его.', pt: 'As minhas runas estão atadas ao Guardião. Liberta-o primeiro.' },
       ] },
       { id: 'orren_1', on: 'npc.orren.1', lines: [
-        { en: 'Who loosens my knot? I tied it so the sky would hold together.', ru: 'Кто ослабляет мой узел? Я завязал его, чтобы небо держалось.' },
-        { en: 'I was a Keeper. I am what is left of one.', ru: 'Я был Хранителем. Я то, что от него осталось.' },
+        { en: 'Who loosens my knot? I tied it so the sky would hold together.', ru: 'Кто ослабляет мой узел? Я завязал его, чтобы небо держалось.', pt: 'Quem afrouxa o meu nó? Atei-o para que o céu se mantivesse inteiro.' },
+        { en: 'I was a Keeper. I am what is left of one.', ru: 'Я был Хранителем. Я то, что от него осталось.', pt: 'Fui um Zelador. Sou o que resta de um.' },
       ] },
       { id: 'orren_2', on: 'npc.orren.2', lines: [
-        { en: 'The stone, the wisp, the bird. I bound them all, out of fear of forgetting.', ru: 'Камень, вихрь, птица. Я связал их всех, боясь забыть.' },
-        { en: 'But a knot does not remember. It only holds.', ru: 'Но узел не помнит. Он только держит.' },
+        { en: 'The stone, the wisp, the bird. I bound them all, out of fear of forgetting.', ru: 'Камень, вихрь, птица. Я связал их всех, боясь забыть.', pt: 'A pedra, o suspiro, a ave. Atei-os a todos, por medo de esquecer.' },
+        { en: 'But a knot does not remember. It only holds.', ru: 'Но узел не помнит. Он только держит.', pt: 'Mas um nó não recorda. Só segura.' },
       ] },
       { id: 'orren_3', on: 'npc.orren.3', end: ['npc.orren.free'], lines: [
-        { en: 'Ah. So this is what letting go feels like.', ru: 'А. Вот каково это, отпустить.' },
-        { en: 'Remembering is waking, little wind. Go on. The arch is open.', ru: 'Вспомнить значит проснуться, маленький ветер. Иди. Арка открыта.' },
+        { en: 'Ah. So this is what letting go feels like.', ru: 'А. Вот каково это, отпустить.', pt: 'Ah. Então é isto que se sente ao largar.' },
+        { en: 'Remembering is waking, little wind. Go on. The arch is open.', ru: 'Вспомнить значит проснуться, маленький ветер. Иди. Арка открыта.', pt: 'Recordar é acordar, pequeno vento. Segue. O arco está aberto.' },
       ] },
     ] },
   ],
@@ -464,7 +495,7 @@ const level = {
         { at: 5.8, play: 1 }, { at: 7, play: 1 }, // the play camera's own pose on him (cutscene.js playPose): no jump at the hand-off
       ],
       lines: [
-        { at: 0.8, dur: 5, text: { en: 'The Crown of Winds. Orren\'s knot is tied here, at the top.', ru: 'Корона Ветров. Узел Оррена завязан здесь, на вершине.' } },
+        { at: 0.8, dur: 5, text: { en: 'The Crown of Winds. Orren\'s knot is tied here, at the top.', ru: 'Корона Ветров. Узел Оррена завязан здесь, на вершине.', pt: 'A Coroa dos Ventos. O nó de Orren está atado aqui, no topo.' } },
       ],
       events: [
         { at: 0, duck: { db: -6, seconds: 7 } },
@@ -495,10 +526,10 @@ const level = {
         { at: 25, pos: [2.6, 26.2, 193], look: [3.1, 26.9, 206] }, // ~5.5 m behind the hero (mark) at eye height, west of Orren's pillars, the sun just above the head, inside the letterbox
       ],
       lines: [
-        { at: 1, dur: 5, text: { en: 'The song reaches the knot, and it loosens.', ru: 'Песня касается узла, и узел слабеет.' } },
-        { at: 6.5, dur: 5.5, text: { en: 'Every wind Orren held goes home at once.', ru: 'Все ветры, что держал Оррен, разом летят домой.' } },
-        { at: 12.6, dur: 5.6, text: { en: 'The sun climbs over the Crown for the first time in an age.', ru: 'Впервые за века солнце встаёт над Короной.' } },
-        { at: 18.8, dur: 5.8, text: { en: 'And the islands, unbound, drift toward each other again.', ru: 'А острова, освобождённые, снова плывут друг к другу.' } },
+        { at: 1, dur: 5, text: { en: 'The song reaches the knot, and it loosens.', ru: 'Песня касается узла, и узел слабеет.', pt: 'A canção chega ao nó, e ele afrouxa.' } },
+        { at: 6.5, dur: 5.5, text: { en: 'Every wind Orren held goes home at once.', ru: 'Все ветры, что держал Оррен, разом летят домой.', pt: 'Todos os ventos que Orren prendia voltam a casa de uma vez.' } },
+        { at: 12.6, dur: 5.6, text: { en: 'The sun climbs over the Crown for the first time in an age.', ru: 'Впервые за века солнце встаёт над Короной.', pt: 'O sol sobe sobre a Coroa pela primeira vez em eras.' } },
+        { at: 18.8, dur: 5.8, text: { en: 'And the islands, unbound, drift toward each other again.', ru: 'А острова, освобождённые, снова плывут друг к другу.', pt: 'E as ilhas, soltas, voltam a aproximar-se umas das outras.' } },
       ],
       events: [
         { at: 0, duck: { db: -10, seconds: 25 } },
@@ -523,19 +554,13 @@ const level = {
 
 // ---------- R5: the hung slab (layout above), R4: wardens / squalls shattered by worst ----------
 {
-  const st = I.start, sl = I.sl, x0 = rimE(st), x1 = rimW(sl), len = x1 - x0 + 1.2, cx = r2((x0 + x1) / 2), z = r2(st.z);
-  level.trials = [...(level.trials ?? []), { id: 'slabS', kind: 'slab', pos: [cx, r2(st.y + 3), z], size: [r2(len), 0.5, 2.2], stop: r2(st.y), near: [r2(x0 - 1.6), z], r: 2, v: 1.2, drop: 4.5, hold: 4 }];
-  const spot = [r2(x0 - 1.4), z];
-  level.actions.splice(1, 0, // best, first thing: Anchor the slab, cross, an air Gust on the ledge, back by the hops
-    { at: spot, r: 0.8, do: 'go', home: 30, profiles: ['best'] },
-    { at: spot, r: 1, do: 'song', song: 'anchor', slab: 'slabS', face: [cx, z], home: 30, profiles: ['best'] },
-    { at: [r2(sl.x + 2.5), z], r: 0.8, do: 'go', home: 30, profiles: ['best'] },
-    { at: [r2(sl.x + 2.5), z], r: 1, do: 'airsong', song: 'gust', face: [r2(sl.x + 9), z], charge: 0.3, home: 30, profiles: ['best'] }, // gust at the sky: the recoil throws the hero back in
-    ...[I.sh1, I.sh2, { x: st.x + st.rim(-0.6) - 2, z: st.z - 3 }].map((h) => ({ at: [h.x, h.z].map(r2), r: 0.8, do: 'go', home: 30, profiles: ['best'] })),
-    // R4 wasted anchor: worst holds the slab and never steps on; it strains, its chains snap, it is gone for good (the ledge is optional)
-    { at: spot, r: 0.8, do: 'go', home: 30, profiles: ['worst'] },
-    { at: spot, r: 1, do: 'song', song: 'anchor', slab: 'slabS', face: [cx, z], home: 30, profiles: ['worst'] });
-  for (const id of ['wdY', 'sqCB']) { // worst strikes the stunned shard to pieces instead of Naming it
+  // U25: both slabs on the way (wx -> X past the crumble row, gk's slab on the crown): every profile holds them; worst's wasted hold left with the start ledge
+  const slab = (id, a, z0, z1, near) => ({ id, kind: 'slab', pos: [r2(a.x), r2(a.y + 3), r2((z0 + z1) / 2)], size: [2.2, 0.5, r2(z1 - z0 + 1.2)], stop: r2(a.y), near: near.map(r2), r: 2, v: 1.2, drop: 4.5, hold: 4 });
+  const nearK = [K5.x, (fl1.at(-1).z0 + fl1.at(-1).z1) / 2];
+  level.trials = [...(level.trials ?? []), slab('slabS', WX, rimFar(WX), rimNear(X), [WX.x, rimFar(WX) - 1.2]), slab('slabK', { x: K5.x, y: fl1.at(-1).top }, fl1.at(-1).z1, rimNear(GK), nearK)];
+  const k = level.actions.findIndex((a) => a.do === 'sing' && a.switch === 'runeK');
+  level.actions.splice(k + 1, 0, { at: nearK.map(r2), y: r2(fl1.at(-1).top), r: 0.6, do: 'song', song: 'anchor', slab: 'slabK', face: [GK.x, GK.z].map(r2) });
+  for (const id of ['sqCB']) { // worst strikes the stunned shard to pieces instead of Naming it (U25: not wdY: it bars the way, blows only hold it down)
     const i = level.actions.findIndex((x) => x.do === 'fight' && x.enemy === id);
     level.actions.splice(i, 1, { ...level.actions[i], profiles: ['mid', 'best'] }, { ...level.actions[i], shatter: true, profiles: ['worst'] });
   }
@@ -560,7 +585,11 @@ K.own(1603, () => {
   const R = makeR6(K, { world, collider, level, salt: 1603 }), OTH = 0;
   const lo = R.nameLock({ id: 'lockO', from: G, th: OTH, out: 7, side: 2.5, up: 1.5, gap: 10.6, kind: 'name2', rewards: [{ id: 'echo_far' }, { id: 'tale5', relic: 'tale.5' }, { id: 'thread_l3', relic: 'thread.l3' }] });
   const kb = R.requestStone('kamen_brother', lo.islet, OTH + Math.PI / 2, 'kamen.brother'); // Kamen's request (l1): his brother's name, cut out here
-  const sc = R.shortcut({ lower: K5, upper: G, at: [K5.x - 2.8, rimNear(G) + 1.5], targets: ['stairs'] });
+  const sc = R.shortcut({ lower: K5, upper: G, at: [K5.x - 2.8, rimNear(G) + 1.5], targets: ['stairs', 'stairs2'] });
+  const cg = R.gateRune({ id: 'crownGate', from: GK, th: Math.PI, out: 3.6, side: 0, up: 2.4, targets: ['stairs2'] }); // U25: the crown's corded rune (Name) off gk's west rim
+  level.mechanisms.push(cg.mechanism);
+  const gi = level.actions.findIndex((a) => a.slab === 'slabK');
+  level.actions.splice(gi + 1, 0, { at: cg.stand, r: 0.5, do: 'go' }, { at: cg.stand, r: 0.6, do: 'song', song: 'name', face: [cg.rune.pos[0], cg.rune.pos[2]].map(r2) }, { at: cg.stand, r: 0.8, do: 'wait', until: 'raised.stairs2' });
   R.finish();
   level.mechanisms.push(...lo.mechanisms, kb.mechanism, ...sc.mechanisms);
   level.echoSlots.push(...lo.rewards.map(({ relic, ...e }) => ({ ...e, ...(relic && { relic }), note: 'R6 lock reward' })));
@@ -592,21 +621,21 @@ K.own(1603, () => {
 // do not drift closer (no fx 'finale'), Orren fades unanswered.
 // true: every name spoken and his whole tale known: the sun climbs, Orren is named back into a Keeper, the three friends answer.
 {
-  const F = level.cutscenes.finale, line = (at, dur, en, ru) => ({ at, dur, text: { en, ru } });
+  const F = level.cutscenes.finale, line = (at, dur, en, ru, pt) => ({ at, dur, text: { en, ru, pt } });
   // the bad ending: one wind road only, and it frays
   level.cutscenes.finale_bad = { ...F, dur: 21, ribbon: [{ ...F.ribbon[0], fade: [8, 13] }], keys: F.keys.map((k) => (k.at === 19 ? { ...k, at: 16.5 } : k.at === 25 ? { ...k, at: 21 } : k)), // ends close behind the hero: the totem
     lines: [
-      line(1, 5, 'The song reaches the knot. It loosens, slowly, unwillingly.', 'Песня касается узла. Он слабеет медленно, нехотя.'),
-      line(6.5, 5.5, 'The winds go home, but many have forgotten the way.', 'Ветры летят домой, но многие забыли дорогу.'),
-      line(12.6, 6.5, 'Orren fades without a word. No one here remembers his name.', 'Оррен тает без слова. Здесь никто не помнит его имени.'),
+      line(1, 5, 'The song reaches the knot. It loosens, slowly, unwillingly.', 'Песня касается узла. Он слабеет медленно, нехотя.', 'A canção chega ao nó. Ele afrouxa, devagar, a contragosto.'),
+      line(6.5, 5.5, 'The winds go home, but many have forgotten the way.', 'Ветры летят домой, но многие забыли дорогу.', 'Os ventos voltam a casa, mas muitos esqueceram o caminho.'),
+      line(12.6, 6.5, 'Orren fades without a word. No one here remembers his name.', 'Оррен тает без слова. Здесь никто не помнит его имени.', 'Orren desvanece sem uma palavra. Ninguém aqui se lembra do seu nome.'),
     ],
     events: [...F.events.filter((e) => !e.sun && !e.fx && e.cue !== 'birds').map((e) => (e.duck ? { ...e, duck: { ...e.duck, seconds: 21 } } : e)), { at: 6, sun: [0, 0.2, 12] }, { at: 1.5, fx: 'grey' }].sort((a, b) => a.at - b.at) };
   level.cutscenes.finale_true = { ...F, dur: 31, keys: [...F.keys, { at: 31, pos: [2.6, 27.4, 188], look: [3.1, 30, 206] }],
     lines: [
       ...F.lines,
-      line(25, 5.6, 'Orren, youngest of the Keepers. Named, he lets go of the last cord: himself.', 'Оррен, младший из Хранителей. Названный по имени, он отпускает последнюю верёвку: себя.'),
+      line(25, 5.6, 'Orren, youngest of the Keepers. Named, he lets go of the last cord: himself.', 'Оррен, младший из Хранителей. Названный по имени, он отпускает последнюю верёвку: себя.', 'Orren, o mais novo dos Guardiões. Nomeado, solta a última corda: ele próprio.'),
     ],
     events: [...F.events.map((e) => (e.duck ? { ...e, duck: { ...e.duck, seconds: 31 } } : e)), { at: 24.6, cue: 'rune' }, { at: 25.2, cue: 'birds', gain: 1 }] };
 }
 
-await K.write({ world, collider, inst, level, decor: [...decor.filter((d) => d !== arch && d.glb !== KNOT), ...farDecor, ...props.filter((p) => p.glb === PILLAR).map((p) => ({ ...p, scale: p.scale ?? 1 }))] }); // pillars: decor (one draw), collider via props
+await K.write({ world, collider, inst, level, gates: [{ song: 'anchor', edges: [['W', 'wx'], ['wx', 'X'], ['mech_stairs_2', 'gk']], nodes: ['mech_crumble_0', 'mech_crumble_1', 'mech_crumble_2'] }, { song: 'gust', edges: [['k5', 'crown']], nodes: ['mech_stairs_0', 'mech_stairs_1', 'mech_stairs_2'] }, { song: 'name', edges: [['gk', 'crown'], ['k5', 'crown']], nodes: ['mech_stairs_3', 'mech_stairs_4', 'mech_stairs_5'] }, { song: 'name', edges: [['Y', 'y1']] }], decor: [...decor.filter((d) => d !== arch && d.glb !== KNOT), ...farDecor, ...props.filter((p) => p.glb === PILLAR && !p.id.startsWith('song_')).map((p) => ({ ...p, scale: p.scale ?? 1 }))] }); // pillars: decor (one draw), collider via props

@@ -111,8 +111,8 @@ async function renderMap(browser, id, L, B) {
   await page.close();
   return r;
 }
-async function runBot(browser, id, profile) { // route (pos every 0.25 s) + log; mid also keeps a play-camera frame every second
-  const thumbs = profile === 'mid', page = await openGame(browser, `level=${id}&profile=${profile}&bot=1&timeout=${TIMEOUT}${thumbs ? '&cam=play' : ''}`);
+async function runBot(browser, id, profile) { // route (pos every 0.25 s) + log; mid also keeps a play-camera frame every second; U25: holds only the songs carried from earlier levels
+  const thumbs = profile === 'mid', page = await openGame(browser, `level=${id}&profile=${profile}&bot=1&timeout=${TIMEOUT}${thumbs ? '&cam=play' : ''}${levels[id].carried ? `&gifts=${levels[id].carried.join(',')}` : ''}`);
   const pts = [], frames = []; let st;
   for (let i = 0; ; i++) {
     st = await page.evaluate(async (shot) => {
@@ -373,7 +373,7 @@ function overlay(id, L, D, B) {
   for (const t of L.trials ?? []) {
     const p = xz(t.pos);
     if (t.kind === 'pillar') { o.push(G('mech', `столб ${t.id}: ${t.repair ? 'уже сломан — Имя у дальнего конца настила чинит' : 'удар/Порыв валит его, настил падает (R4: broken.' + t.id + ')'}`, `<line class="deck" x1="${t.deck.a[0]}" y1="${t.deck.a[2]}" x2="${t.deck.b[0]}" y2="${t.deck.b[2]}" stroke-width="${t.deck.w}"/><circle class="pillar" cx="${p[0]}" cy="${p[1]}" r="0.8"/>${lab(p[0], p[1], t.id, 'c-brk')}`)); if (!t.repair) o.push(G('risk', `R4: не бей столб ${t.id} — настил рухнет (−1 гармония)`, `<text class="glyph bad" x="${p[0] - 1.6}" y="${p[1] - 0.5}">!</text>`)); }
-    else if (t.kind === 'slab') { o.push(G('mech', `плита ${t.id}: опускается, когда герой в ${t.r} м от ${JSON.stringify(t.near)}; Якорь держит ${t.hold} с; Якорь впустую — цепи рвутся (R4)`, `<rect class="slab" x="${f2(p[0] - t.size[0] / 2)}" y="${f2(p[1] - t.size[2] / 2)}" width="${t.size[0]}" height="${t.size[2]}"/>${lab(p[0], p[1], t.id, 'c-brk')}`)); o.push(G('risk', `R4: плита ${t.id} — Якорь мимо рвёт цепи`, `<text class="glyph bad" x="${p[0] - 1.6}" y="${p[1] - 0.5}">!</text>`)); }
+    else if (t.kind === 'slab') { o.push(G('mech', `плита ${t.id}: опускается, когда герой в ${t.r} м от ${JSON.stringify(t.near)}; Якорь держит ${t.hold} с; Якорь впустую — цепи рвутся, плита падает и через 2.5 с висит снова (R4)`, `<rect class="slab" x="${f2(p[0] - t.size[0] / 2)}" y="${f2(p[1] - t.size[2] / 2)}" width="${t.size[0]}" height="${t.size[2]}"/>${lab(p[0], p[1], t.id, 'c-brk')}`)); o.push(G('risk', `R4: плита ${t.id} — Якорь мимо рвёт цепи`, `<text class="glyph bad" x="${p[0] - 1.6}" y="${p[1] - 0.5}">!</text>`)); }
     else o.push(G('mech', `${t.kind} ${t.id}${t.kind === 'bell' ? ': прыжок сверху звонит' : ''}`, `<circle class="pillar" cx="${p[0]}" cy="${p[1]}" r="0.7"/>${lab(p[0], p[1], t.id, 'c-brk')}`));
   }
   // locks (R6): switches + the dash lock from feasibility
@@ -532,7 +532,7 @@ ${LAYERS.map(([k]) => `<input type="checkbox" class="tg tg-${k}" id="${id}-tg-${
  масштаб <input type="range" min="3" max="16" step="0.5" value="7" oninput="this.closest('section').querySelector('.map svg').setAttribute('width',this.value*${B[2] - B[0]})"> <a href="${id}.png">${id}.png</a></div>
 <div class="cols"><div class="map">${mapSvg(id, B, ov.svg, `width="${W}"`)}</div><div class="txt">
 <h2>${id.toUpperCase()} — ${esc(L.title)}</h2>
-<p>Старт ${pos3(L.spawn.pos)} → цель ${pos3(L.goal.pos)}${L.goal.after ? ` (открывается после ${code(L.goal.after)})` : ''}. Падение ниже y = ${L.killY}. Дары на старте: ${(L.startGifts ?? []).map((g) => GIFT[g] ?? g).join(', ') || 'нет'}. Наведи курсор на любой знак карты — всплывёт описание; номера шагов кликабельны.</p>
+<p>Старт ${pos3(L.spawn.pos)} → цель ${pos3(L.goal.pos)}${L.goal.after ? ` (открывается после ${code(L.goal.after)})` : ''}. Падение ниже y = ${L.killY}. Дары с прошлых уровней: ${(L.carried ?? []).map((g) => GIFT[g] ?? g).join(', ') || 'нет'}. Наведи курсор на любой знак карты — всплывёт описание; номера шагов кликабельны.</p>
 ${runsHtml(D)}${officialHtml(id)}
 <h3>Шаги (номера = кружки на карте)</h3>${stepsHtml(id, L, D)}
 <h3>Бои</h3>${enemies.length ? enemies.map((e) => fightCard(L, id, e, L.enemies)).join('') : '<p class="dim">врагов нет</p>'}
@@ -570,7 +570,7 @@ ${tbl(['настройка', 'значения', 'что делает'], [['Ка
 <h2>Песни и дары</h2>
 ${tbl(['стадия', 'держать', 'Порыв: дальность, м', 'Имя: множитель радиуса', 'Якорь: держит, с'], [['касание', `< ${st[0]} с`, ...[0].flatMap(() => [stage(K.GUST_REACH)[0], stage(K.NAME_X)[0], stage(K.ANCHOR_HOLD)[0]])], ...[1, 2, 3].map((i) => [`волна ${i}`, `≥ ${st[i - 1]} с`, stage(K.GUST_REACH)[i], stage(K.NAME_X)[i], stage(K.ANCHOR_HOLD)[i]]), ['<span class="bad">передержал</span>', `> ${K.OVER} с`, 'песня срывается, дыхание потрачено', '', '']])}
 <p>Имя: базовый радиус ${K.NAME_R} м (Имя II — ${K.NAME_R2} м); на полной волне развязывает всех оглушённых вокруг. Якорь: радиус ${K.ANCHOR_R} м. Порыв II: дальность ×${K.GUST_X2}. В воздухе песню можно держать не дольше ${K.AIR_MAX} с. Руны поются отдельно: <kbd>E</kbd>, радиус ${K.SING_R} м; удар посоха достаёт на ${K.STRIKE_R} м.</p>
-${tbl(['уровень', 'дар / песня', 'где', 'от кого'], LEVELS.flatMap((id) => [...(levels[id].startGifts ?? []).map((g) => [id, GIFT[g] ?? g, 'на старте', '—']), ...(levels[id].gifts ?? []).map((g) => [id, GIFT[g.id] ?? g.id, pos3(g.at), g.npc ? `NPC ${g.npc}` : `святилище ${g.shrine}`]), ...(levels[id].npcs ?? []).flatMap((n) => (n.talk ?? []).flatMap((t) => (t.set ?? []).filter((f) => f.startsWith('gift.') && !(levels[id].gifts ?? []).some((g) => `gift.${g.id}` === f)).map((f) => [id, GIFT[f.slice(5)] ?? f, pos3(n.pos), `NPC ${n.id} (реплика ${t.id})`])))]))}
+${tbl(['уровень', 'дар / песня', 'где', 'от кого'], LEVELS.flatMap((id) => [...(levels[id].carried ?? []).map((g) => [id, GIFT[g] ?? g, 'с прошлого уровня', '—']), ...(levels[id].gifts ?? []).map((g) => [id, GIFT[g.id] ?? g.id, pos3(g.at), g.npc ? `NPC ${g.npc}` : `святилище ${g.shrine}`]), ...(levels[id].npcs ?? []).flatMap((n) => (n.talk ?? []).flatMap((t) => (t.set ?? []).filter((f) => f.startsWith('gift.') && !(levels[id].gifts ?? []).some((g) => `gift.${g.id}` === f)).map((f) => [id, GIFT[f.slice(5)] ?? f, pos3(n.pos), `NPC ${n.id} (реплика ${t.id})`])))]))}
 <h3>Где какая песня нужна</h3>${tbl(['уровень', 'шаг', 'песня', 'цель'], [...songUse, ...lockUse])}
 <h2>Концовки</h2>
 <p>Гармония = эхо + выполненные просьбы + сказания − сломанное (R4) − 1 за каждые 3 падения на уровне (берётся лучший забег). Максимум = ${K.ECHOES} эхо + 2 просьбы + ${K.TALES} сказаний.</p>

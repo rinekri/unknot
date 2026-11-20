@@ -16,9 +16,9 @@ export const DEFAULTS = {
   textSize: 'M', // S / M / L: menus, subtitles, hints, cards (hud.js --ts)
   touchControls: 'auto', touchSize: 'M', leftHanded: false, // touch.js: auto = shown once a touch happens / on a coarse pointer; button size S / M / L; swap sides
 };
-// first-run defaults from the browser: reduced motion from the OS, language from navigator (ru* -> ru, else en)
+// first-run defaults from the browser: reduced motion from the OS, language from navigator (ru* -> ru, pt* -> pt, else en)
 const sysReduce = () => { try { return !!globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches; } catch { return false; } };
-const sysLang = () => (/^ru/i.test(globalThis.navigator?.language ?? '') ? 'ru' : 'en');
+const sysLang = () => (/^(ru|pt)/i.exec(globalThis.navigator?.language ?? '')?.[1].toLowerCase() ?? 'en');
 // phones / tablets start on medium (pixel ratio cap 1.5, scatter 0.75)
 const sysCoarse = () => { try { return !!globalThis.matchMedia?.('(pointer: coarse)').matches; } catch { return false; } };
 const SPEEDS = [0.7, 0.85, 1];
@@ -34,20 +34,20 @@ export function normalize(s = {}) {
     sensitivity: clamp(s.sensitivity, 0.3, 3, d.sensitivity), invertY: !!s.invertY, fov: clamp(s.fov, 40, 90, d.fov),
     quality, ...QUALITY[quality],
     reduceMotion: s.reduceMotion == null ? sysReduce() : !!s.reduceMotion, infiniteAirDash: !!s.infiniteAirDash, allGifts: !!s.allGifts, timer: !!s.timer,
-    breath: s.breath !== false, textSize: ['S', 'M', 'L'].includes(s.textSize) ? s.textSize : d.textSize, lang: s.lang === 'ru' || s.lang === 'en' ? s.lang : sysLang(),
+    breath: s.breath !== false, textSize: ['S', 'M', 'L'].includes(s.textSize) ? s.textSize : d.textSize, lang: ['en', 'ru', 'pt'].includes(s.lang) ? s.lang : sysLang(),
     touchControls: ['auto', 'on', 'off'].includes(s.touchControls) ? s.touchControls : d.touchControls, touchSize: ['S', 'M', 'L'].includes(s.touchSize) ? s.touchSize : d.touchSize, leftHanded: !!s.leftHanded,
     gameSpeed: SPEEDS.reduce((a, b) => (Math.abs(b - speed) < Math.abs(a - speed) ? b : a)), // snap to 70/85/100%
   };
 }
-// URL overrides: ?reduceMotion=1, ?speed=0.7|0.85|1, ?airdash=inf, ?lang=ru|en. Returns the fields to merge; engine.js never saves
+// URL overrides: ?reduceMotion=1, ?speed=0.7|0.85|1, ?airdash=inf, ?lang=ru|en|pt. Returns the fields to merge; engine.js never saves
 // them (a key keeps its stored value until the player changes it in the menu).
 export function urlOverrides(get) {
   const o = {};
   if (get('reduceMotion') != null) o.reduceMotion = get('reduceMotion') === '1';
   if (get('speed') != null) o.gameSpeed = +get('speed');
   if (get('airdash') != null) o.infiniteAirDash = get('airdash') === 'inf';
-  if (get('gifts') != null) o.allGifts = get('gifts') === 'all';
-  if (get('lang') != null) o.lang = get('lang');
+  if (get('gifts') === 'all') o.allGifts = true; // U25: a ?gifts=a,b list (tests, engine.js) leaves the setting alone
+  if (get('lang') != null) o.lang = /^(ru|pt)/i.exec(get('lang'))?.[1].toLowerCase() ?? 'en'; // U25: pt-PT -> pt, as hud.js LANG
   return o;
 }
 export function loadSettings() {

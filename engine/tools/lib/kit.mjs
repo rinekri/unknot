@@ -9,6 +9,9 @@ import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { TUNING, jumpReach, dashReach, dash2Reach } from '../../src/systems/player.js';
 import { mulberry32 } from '../../src/core/rng.js';
+import { NAME_R, NAME_R2 } from '../../src/systems/songs.js';
+const SING_R = 3; // level.js: a rune is sung within 3 m
+const SHRINE_SEE = 30, CAM = { fov: 50, arm: 6, pitch: 0.27, focusY: 1.4 }, YAWS = [0, 15, -15, 30, -30, 45, -45]; // U25 songGates: m; camera.js ARM / PITCH / FOCUS_Y, settings fov; deg off facing the gate
 
 globalThis.FileReader ??= class { readAsArrayBuffer(b) { b.arrayBuffer().then((r) => { this.result = r; this.onloadend(); }); } };
 
@@ -103,6 +106,29 @@ export function makeKit(seed, out) {
   const rimToward = (a, b) => a.rim(Math.atan2(b.z - a.z, b.x - a.x));
   const rimGap = (a, b) => Math.hypot(b.x - a.x, b.z - a.z) - rimToward(a, b) - rimToward(b, a);
   const isl = {};
+  // Route views: from each route point (camera 7 m back, 3.5 m up) toward the next play island the route reaches. viewBlock(x, y, z, r)
+  // = the angular radius (deg) of a background sphere where it overlaps such a view's target island, else 0. Decor bigger than
+  // VIEW_DEG there swallows the way on (a giant islet right behind or in front of the next island).
+  const VIEW_DEG = 6;
+  function routeViews(route) {
+    const play = Object.values(isl), on = (p) => play.find((q) => Math.hypot(p[0] - q.x, p[2] - q.z) < q.R * 1.15), out = [];
+    for (let i = 0; i < route.length - 1; i++) {
+      const a = on(route[i]); let j = i + 1, b; while (j < route.length && ((b = on(route[j])) === a || !b)) j++;
+      if (!a || !b || a === b) continue;
+      const dl = Math.hypot(b.x - route[i][0], b.z - route[i][2]) || 1;
+      out.push({ cam: new THREE.Vector3(route[i][0] - ((b.x - route[i][0]) / dl) * 7, route[i][1] + 3.5, route[i][2] - ((b.z - route[i][2]) / dl) * 7), b });
+    }
+    return out;
+  }
+  function viewBlock(views, x, y, z, r) {
+    let worst = 0;
+    for (const { cam, b } of views) {
+      const o = new THREE.Vector3(x - cam.x, y - cam.y, z - cam.z), on = o.length(), t = new THREE.Vector3(b.x - cam.x, b.y - 1 - cam.y, b.z - cam.z), tn = t.length();
+      const oa = on <= r ? Math.PI / 2 : Math.asin(r / on), sep = o.angleTo(t);
+      if (sep < oa + Math.atan(b.R / tn)) worst = Math.max(worst, (oa * 180) / Math.PI);
+    }
+    return worst;
+  }
   const chain = (id, from, gap, deg, dy, R, opt) => { // place island `gap` m rim-to-rim from `from`, heading `deg` (0 = +Z, 90 = +X)
     const ux = Math.sin(deg * D2R), uz = Math.cos(deg * D2R), t = island(id, 0, 0, from.y + dy, R, opt);
     let s = from.R + gap + R;
@@ -269,11 +295,12 @@ export function makeKit(seed, out) {
   const mat = (name) => Object.assign(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, metalness: 0 }), { name });
   const mesh = (name, geo, m) => Object.assign(new THREE.Mesh(geo, m), { name });
   const grassM = mat('grass'), rockM = mat('rock'), stoneM = mat('stone');
-  function islandMeshes(world, play, avoid = []) { // avoid [[x, z, r]]: no middle-distance islet there // grass caps + rock undersides (with hanging chunks and debris); returns rocks (ivy points)
+  function islandMeshes(world, play, avoid = [], route = []) { // avoid [[x, z, r]]: no middle-distance islet there // grass caps + rock undersides (with hanging chunks and debris); returns rocks (ivy points)
     const rocks = play.map((s, i) => own(3000 + i, () => rockGeo(s))); // own stream each: a new look never shifts the rest
     // Depth layers (own stream, no collider, same two meshes): boulders hanging low beside the big islands, and a middle distance of
     // islets in ones, pairs and triplets, 22 m or more from any island of the route (out of every reach) and off its corridors.
     const caps = [], more = [];
+    const views = routeViews(route);
     own(3999, () => {
       const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
       const seg = (q, a, b) => { const dx = b.x - a.x, dz = b.z - a.z, t = THREE.MathUtils.clamp(((q.x - a.x) * dx + (q.z - a.z) * dz) / (dx * dx + dz * dz || 1), 0, 1); return Math.hypot(q.x - a.x - dx * t, q.z - a.z - dz * t); };
@@ -288,7 +315,7 @@ export function makeKit(seed, out) {
         const group = [island(`mid${k}`, o.x + Math.cos(th) * d, o.z + Math.sin(th) * d, o.y + rr(-20, 9), R, { depth: R * rr(1.2, 1.8) })];
         for (let j = 1; j < n; j++) { const t = rr(0, 6.28), r = R * rr(0.3, 0.6), dd = R + r + rr(1, 4); group.push(island(`mid${k}_${j}`, group[0].x + Math.cos(t) * dd, group[0].z + Math.sin(t) * dd, group[0].y + rr(-R * 0.7, R * 0.4), r)); }
         const geos = group.flatMap((q) => { const r = rockGeo(q, 22); caps.push(nonIdx(capGeo(q, 22, 3))); return [r.geo, ...r.hang, ...debris(q, 2)]; }); // draws kept when it is dropped
-        if (group.every((q) => play.every((p) => flat(q, p) - p.R - q.R > 22) && !avoid.some(([x, z, r]) => Math.hypot(q.x - x, q.z - z) < r + q.R))) more.push(...geos); else caps.length -= n;
+        if (group.every((q) => [...play, ...Object.values(isl)].every((p) => flat(q, p) - p.R - q.R > 22) && !avoid.some(([x, z, r]) => Math.hypot(q.x - x, q.z - z) < r + q.R) && viewBlock(views, q.x, q.y - q.depth / 2, q.z, Math.hypot(q.R, q.depth / 2)) <= VIEW_DEG)) more.push(...geos); else caps.length -= n; // out of every route view too
       }
     });
     world.add(mesh('islands__grass', mergeGeometries([...play.map((s) => nonIdx(capGeo(s))), ...caps]), grassM));
@@ -321,8 +348,12 @@ export function makeKit(seed, out) {
     if (!broken) out.push(box(span + w * 1.6, w * 0.9, w * 1.2, ox, s.y - 0.3 + h, oz, ry));
     return out;
   }
+  const HAZE_CLEAR = 90, islReg = isl; // islReg: distantRing's own `isl` shadows the registry
   function distantRing(world, CEN, opt = {}) {
     own(101, () => {
+      // play footprint [x, z, r]: the islands in the registry (far* are never registered) and the route points
+      const play = [...Object.values(islReg).map((q) => [q.x, q.z, q.R * (1 + RIM)]), ...(opt.route ?? []).map((p) => [p[0], p[2], 0])];
+      let moved = 0, minGap = Infinity, maxView = 0, maxPush = 0; const views = routeViews(opt.route ?? []);
       const far = [], isl = [], n = opt.n ?? 13, archP = opt.arch ?? 0.5, m = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler();
       for (let k = 0; k < n; k++) {
         const a = (k / n) * Math.PI * 2 + rr(-0.15, 0.15), d = rr(125, 210), R = rr(6, 18);
@@ -339,8 +370,21 @@ export function makeKit(seed, out) {
         bake(geos, opt.dark ?? '#a9a3b3', opt.light ?? '#d8d3dc');
         tint(geos, s.y);
         if (opt.clear?.some(([x, z, r]) => Math.hypot(s.x - x, s.z - z) < r + R)) continue; // a neighbour island stands there (farIsland); draws kept
-        isl.push({ x: s.x, y: s.y, z: s.z, geos: geos.map((g) => g.applyMatrix4(m)) });
+        geos.forEach((g) => g.applyMatrix4(m));
+        // haze clearance: push the island out from CEN (no draws) until its reach (farthest vertex, satellites included) is
+        // HAZE_CLEAR m off every play island's rim and route point
+        let reach = 0; for (const g of geos) { const p = g.attributes.position; for (let i = 0; i < p.count; i++) reach = Math.max(reach, Math.hypot(p.getX(i) - s.x, p.getZ(i) - s.z)); }
+        const gapAt = (x, z) => Math.min(...play.map(([px, pz, pr]) => Math.hypot(x - px, z - pz) - pr)) - reach;
+        const ux = (s.x - CEN.x) / Math.hypot(s.x - CEN.x, s.z - CEN.z), uz = (s.z - CEN.z) / Math.hypot(s.x - CEN.x, s.z - CEN.z);
+        let push = 0; while (gapAt(s.x + ux * push, s.z + uz * push) < HAZE_CLEAR || viewBlock(views, s.x + ux * push, s.y, s.z + uz * push, reach) > VIEW_DEG) push += 2; // and small wherever it sits behind the way on
+        if (push) { moved++; geos.forEach((g) => g.translate(ux * push, 0, uz * push)); s.x += ux * push; s.z += uz * push; }
+        minGap = Math.min(minGap, gapAt(s.x, s.z)); maxView = Math.max(maxView, viewBlock(views, s.x, s.y, s.z, reach)); maxPush = Math.max(maxPush, push);
+        isl.push({ x: s.x, y: s.y, z: s.z, reach, geos });
       }
+      if (maxView > VIEW_DEG) throw new Error(`distantRing: a haze island fills ${maxView.toFixed(1)} deg of a route view (max ${VIEW_DEG})`);
+      if (minGap < HAZE_CLEAR) throw new Error(`distantRing: a haze island is ${minGap.toFixed(1)} m from play (wants ${HAZE_CLEAR})`);
+      if (process.env.HAZE_DUMP) console.log('HAZE_DUMP ' + JSON.stringify({ play: Object.values(islReg).map((q) => ({ id: q.id, x: q.x, y: q.y, z: q.z, R: q.R })), haze: isl.map((q) => ({ x: q.x, y: q.y, z: q.z, reach: q.reach })) })); // tools: per-island haze check
+      console.log(`distantRing: ${moved} of ${isl.length} haze islands pushed out (max ${maxPush} m), min gap to play ${minGap.toFixed(1)} m, max view ${maxView.toFixed(1)} deg`);
       // opt.drift {to: [x, z], n}: the n islands nearest `to` become their own meshes 'distant__drift<i>' (origin = island top centre),
       // moved by world.js in the l3 finale; the rest stay one merged mesh
       const drift = opt.drift ? [...isl].sort((a, b) => Math.hypot(a.x - opt.drift.to[0], a.z - opt.drift.to[1]) - Math.hypot(b.x - opt.drift.to[0], b.z - opt.drift.to[1])).slice(0, opt.drift.n) : [];
@@ -639,7 +683,7 @@ export function makeKit(seed, out) {
   };
 
   // Breath budget (player.js TUNING.breath): walk level.route from the spawn at full breath. The max at each route point is
-  // breath.max + 1 per gift held there (startGifts from the spawn, the others from their route point; a gift fills the breath;
+  // breath.max + 1 per gift held there (carried from the spawn, the others from their route point; a gift fills the breath;
   // echoes are not counted). A plain checkpoint refills nothing and respawn restores the breath it was reached with, so the walk
   // sets breath 0 there (worst arrival: no softlock). A refill point (wind cairn: checkpoint {wind: true}, any gift; after gift.windbreath also a wind box or within breath.near of a
   // rune/totem) fills it; between route points the bot jogs, so breath regens at breath.regen per s of jog time until gift.dash, then not at all. Each jump gap costs its sprint run-up (BOT_RUNUP m at run
@@ -648,10 +692,10 @@ export function makeKit(seed, out) {
   // A dash beat short of breath throws. R2 songs: each level.actions {do:'song'} costs breath.song at the route point nearest its spot
   // (walked once per bot profile: actions without `profiles` are required, the others count for their profiles); a song short of
   // breath throws (it would fizzle). A Name song within breath.nearFar of a far rune fills it (after gift.windbreath). giftOrder: a song action before its gift throws.
-  // Gifts (npc.js): level.startGifts are held from the spawn; level.gifts = [{id, at}] are given at the route point nearest `at`.
+  // Gifts (npc.js): level.carried (U25: earned on an earlier level, kit-only, never granted at runtime) are held from the spawn; level.gifts = [{id, at}] are given at the route point nearest `at`.
   const BOT_RUNUP = 2.5; // m, = bot.js RUNUP
   const routeIdx = (route, x, z) => route.reduce((bi, p, i) => (Math.hypot(p[0] - x, p[2] - z) < Math.hypot(route[bi][0] - x, route[bi][2] - z) ? i : bi), 0);
-  const giftIdx = (level, id) => { const g = level.gifts?.find((x) => x.id === id); return level.startGifts?.includes(id) ? -1 : g ? routeIdx(level.route, g.at[0], g.at[2]) : Infinity; };
+  const giftIdx = (level, id) => { const g = level.gifts?.find((x) => x.id === id); return level.carried?.includes(id) ? -1 : g ? routeIdx(level.route, g.at[0], g.at[2]) : Infinity; };
   function breathBudget(level) {
     const B = TUNING.breath, runUp = (BOT_RUNUP / TUNING.run) * B.run, route = level.route ?? [], mech = level.mechanisms ?? [], wb = giftIdx(level, 'windbreath'), di = giftIdx(level, 'dash');
     const gi = ['dash', 'windbreath', 'airdash'].map((id) => giftIdx(level, id)), maxAt = (i) => Math.min(B.cap, B.max + gi.filter((g) => g <= i).length);
@@ -879,7 +923,89 @@ export function makeKit(seed, out) {
       if (Math.hypot(Math.max(lx, 0), Math.max(lz, 0)) < 0.45) throw new Error(`spawn point ${c.id} stands in ${q.id} (move the checkpoint: a respawn there is walled in)`);
     }
   }
-  async function write({ world, collider, inst, level, decor = [] }) {
+  // U25 song gates (gates = [{song, edges: [[a, b]], nodes: [piece names]}], from the generator; not written to level.json):
+  // - the crossings the kit validated (gaps, steps, wind / dash gaps, plain blocked crossings) reach the goal island from the spawn's;
+  // - each gate edge is a blocked crossing the route walks, and with a gate's edges and nodes cut the goal is out of reach (no way round);
+  // - each song of a level shrine has a gate, its shrine comes first on the route and stands in the eye line from the gate's near end;
+  // - each rune has a route point or bot spot in reach (sing 3 m, far: Name, name2: Name II) and a song the player can hold there
+  //   (carried, a level gift, or a revisit lock: a later level's song); every string object has en, ru and pt.
+  function songGates(level, collider, gates) {
+    const base = (n) => n.replace(/@.*$/, ''), at = (n) => isl[n] ?? pieceAt[n] ?? (n === 'goal' ? { x: level.goal.pos[0], z: level.goal.pos[2] } : null), route = level.route ?? [];
+    const near = (p) => Object.values(isl).reduce((b, q) => (Math.hypot(p[0] - q.x, p[2] - q.z) - q.R < Math.hypot(p[0] - b.x, p[2] - b.z) - b.R ? q : b)).id;
+    const E = [...gaps, ...steps, ...windGaps, ...dashGaps, ...blocked.filter((b) => !b.lock)].map((g) => [base(g.from), base(g.to)]);
+    const start = near(level.spawn.pos), goal = E.some((e) => e.includes('goal')) ? 'goal' : near(level.goal.pos);
+    const reaches = (g) => {
+      const cut = (a, b) => g && (g.edges.some(([p, q]) => (p === a && q === b) || (p === b && q === a)) || (g.nodes ?? []).some((n) => a === n || b === n)); // U25: exact node names (a prefix hid bypasses)
+      const adj = {}; for (const [a, b] of E) if (!cut(a, b)) { (adj[a] ??= []).push(b); (adj[b] ??= []).push(a); }
+      const prev = { [start]: null }, st = [start]; while (st.length) { const c = st.pop(); for (const n of adj[c] ?? []) if (!(n in prev)) { prev[n] = c; st.push(n); } }
+      if (!(goal in prev)) return null;
+      const p = []; for (let n = goal; n; n = prev[n]) p.unshift(n); return p.join('>');
+    };
+    if (!reaches(null)) throw new Error(`song gates: the validated crossings do not reach ${goal} from ${start} (a crossing is missing from gaps / steps / blocked)`);
+    const ri = (n) => { const q = at(n); return q && route.findIndex((p) => Math.hypot(p[0] - q.x, p[2] - q.z) < (q.R ?? 1.5) + 1.5); };
+    collider.updateMatrixWorld(true);
+    const ray = new THREE.Raycaster(), a = new THREE.Vector3(), b = new THREE.Vector3(), out = [];
+    for (const g of gates) {
+      for (const [p, q] of g.edges) {
+        if (!blocked.some((x) => !x.lock && ((base(x.from) === p && base(x.to) === q) || (base(x.from) === q && base(x.to) === p)))) throw new Error(`song gate ${g.song} ${p}->${q}: not a blocked crossing`);
+        if (!(ri(p) >= 0) || !(ri(q) >= 0)) throw new Error(`song gate ${g.song} ${p}->${q}: off the main route`);
+      }
+      for (const n of g.nodes ?? []) if (!E.some((e) => e.includes(n))) throw new Error(`song gate ${g.song}: node ${n} is not on any validated crossing`);
+      const by = reaches(g); if (by) throw new Error(`song gate ${g.song} (${g.edges.map((e) => e.join('->')).join(', ')}): the goal is reachable without ${g.song}: ${by}`);
+      const foe = (x) => (level.enemies ?? []).find((e) => e.id === x.enemy); // U25: a demo fight (l2 sqQ: the Name binds it) is the song's first use too
+      const sh = (level.gifts ?? []).find((x) => x.id === g.song && x.shrine), gi = giftIdx(level, g.song), use = (level.actions ?? []).find((x) => (!x.profiles || x.profiles.includes('mid')) && ((x.do === 'song' && x.song === g.song) || (x.do === 'fight' && (foe(x)?.demo?.song === g.song || (g.song === 'name' && foe(x)?.mandatory))))); // U25: a mandatory Warden's fight (l3 wdY) is a Name use
+      if (!use) throw new Error(`song gate ${g.song}: no main-path bot action sings it`);
+      const first = routeIdx(route, use.at[0], use.at[1]);
+      if (gi === Infinity) throw new Error(`song gate ${g.song}: the song is neither carried nor given in the level`);
+      if (!sh) { out.push(`${g.song} carried`); continue; }
+      if (gi > first) throw new Error(`song gate ${g.song}: its shrine (route[${gi}]) comes after the gate (route[${first}])`);
+      // U25: the shrine is within SHRINE_SEE m of the first use's sing spot and in the play camera's frame there (camera.js: ARM m
+      // behind and PITCH up from the hero's head FOCUS_Y, fov 50, 16:9), facing the gate (use.face, a fight's enemy) or turned up to
+      // 45 deg off it (YAWS, swept explicitly) with the gate still on screen, its foot, waist or top on screen with no collider between the lens and it
+      const y0 = use.y ?? route[first][1], tgt = use.face ?? foe(use)?.pos.filter((_, i) => i !== 1) ?? [route[Math.min(first + 1, route.length - 1)][0], route[Math.min(first + 1, route.length - 1)][2]];
+      const yaw0 = Math.atan2(tgt[0] - use.at[0], tgt[1] - use.at[1]), L = Math.hypot(sh.at[0] - use.at[0], sh.at[2] - use.at[1]);
+      if (L > SHRINE_SEE) throw new Error(`song gate ${g.song}: shrine ${sh.shrine} is ${L.toFixed(1)} m from its first use at route[${first}] (${use.at}), over ${SHRINE_SEE} m`);
+      const cam = new THREE.PerspectiveCamera(CAM.fov, 16 / 9, 0.1, 500), f = new THREE.Vector3(use.at[0], y0 + CAM.focusY, use.at[1]);
+      let seen = null, why = '';
+      for (const dy of YAWS) {
+        const yaw = yaw0 + (dy * Math.PI) / 180;
+        cam.position.set(f.x - Math.sin(yaw) * Math.cos(CAM.pitch) * CAM.arm, f.y + Math.sin(CAM.pitch) * CAM.arm, f.z - Math.cos(yaw) * Math.cos(CAM.pitch) * CAM.arm);
+        cam.lookAt(f); cam.updateMatrixWorld(true);
+        const gp = new THREE.Vector3(tgt[0], y0 + 1, tgt[1]).project(cam);
+        if (Math.abs(gp.x) > 0.95 || Math.abs(gp.y) > 0.95) { why = `the gate off frame at yaw ${dy}`; continue; } // the gate and its shrine in one frame
+        for (const up of [1.5, 3, 5]) {
+          b.set(sh.at[0], sh.at[1] + up, sh.at[2]); const ndc = b.clone().project(cam);
+          if (Math.abs(ndc.x) > 0.95 || Math.abs(ndc.y) > 0.95 || ndc.z > 1) { why = `off frame (ndc ${ndc.x.toFixed(2)}, ${ndc.y.toFixed(2)})`; continue; }
+          a.copy(cam.position); const d = a.distanceTo(b); ray.set(a, b.clone().sub(a).normalize()); ray.far = d - 1.5;
+          const hit = ray.intersectObject(collider, true)[0]; if (hit) { why = `lens line blocked by ${hit.object.name} at ${hit.distance.toFixed(1)} m`; continue; }
+          seen = dy; break;
+        }
+        if (seen !== null) break;
+      }
+      if (seen === null) throw new Error(`song gate ${g.song}: shrine ${sh.shrine} not in the play camera's frame from its first use at route[${first}] facing the gate +-45 deg (${L.toFixed(1)} m, last: ${why})`);
+      out.push(`${g.song} ${g.edges.map((e) => e.join('>')).join(',')} shrine ${L.toFixed(0)} m in frame at yaw ${seen >= 0 ? '+' : ''}${seen} deg`);
+    }
+    for (const sh of (level.gifts ?? []).filter((x) => x.shrine)) if (!gates.some((g) => g.song === sh.id)) throw new Error(`song gates: shrine ${sh.shrine} (${sh.id}) has no gate`);
+    const has = new Set([...(level.carried ?? []), ...(level.gifts ?? []).map((g) => g.id)]), locks = new Set(blocked.filter((x) => x.lock).map((x) => base(x.to).replace(/_isl$/, '')));
+    for (const m of (level.mechanisms ?? []).filter((x) => x.kind === 'switch')) {
+      const song = m.dust ? 'gust' : m.far ? 'name' : null, r = m.far ? (/O|lockO/.test(m.id) && !level.carried ? NAME_R2 : NAME_R) + 2 : SING_R + 1.5;
+      const spots = [...route.map((p) => [p[0], p[2]]), ...(level.actions ?? []).map((x) => x.at)];
+      if (!spots.some((s) => s && Math.hypot(s[0] - m.pos[0], s[1] - m.pos[2]) <= r)) throw new Error(`rune ${m.id}: no route point or bot spot within ${r.toFixed(1)} m`);
+      const revisit = m.menhir || [...locks].some((l) => m.id.startsWith(l)); // the l1 menhir: a revisit secret
+      if (song && !has.has(song) && !revisit) throw new Error(`rune ${m.id}: wants ${song}, which this level neither carries nor gives`);
+    }
+    const bad = []; const walk = (o, k) => { if (Array.isArray(o)) o.forEach((x, i) => walk(x, `${k}[${i}]`)); else if (o && typeof o === 'object') { if (typeof o.en === 'string' && !(typeof o.ru === 'string' && typeof o.pt === 'string')) bad.push(`${k}: ${o.en.slice(0, 40)}`); for (const [j, v] of Object.entries(o)) walk(v, `${k}.${j}`); } };
+    walk(level, 'level');
+    const src = new URL('../../src/systems/', import.meta.url), Q = String.raw`'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|\x60(?:[^\x60\\]|\\.)*\x60`;
+    for (const f of fs.readdirSync(src)) {
+      const t = fs.readFileSync(new URL(f, src), 'utf8');
+      for (const m of t.matchAll(new RegExp(String.raw`\ben:\s*(${Q})\s*,\s*ru:\s*(${Q})(?!\s*,\s*pt:)`, 'g'))) bad.push(`${f}: ${m[1].slice(0, 40)}`);
+      for (const m of t.matchAll(new RegExp(String.raw`\bL\(\s*(${Q})\s*,\s*(${Q})\s*\)`, 'g'))) if (/[а-яё]/i.test(m[2])) bad.push(`${f}: L(${m[1].slice(0, 40)})`);
+    }
+    if (bad.length) throw new Error(`strings without pt (${bad.length}): ${bad.slice(0, 5).join(' | ')}`);
+    console.log(`U25 gates: ${out.join('; ')}`);
+  }
+  async function write({ world, collider, inst, level, decor = [], gates = [] }) {
     cutPaths(level, decor);
     spawnClear(level, decor);
     for (const d of decor) if (!d.far && INTERACTIVE.includes(d.glb)) throw new Error(`decor ${d.id} uses interactive ${d.glb}: decor takes MENHIR/STUMP/KNOT/...`);
@@ -890,6 +1016,7 @@ export function makeKit(seed, out) {
     enemyOrder(level);
     hiddenSwitches(level);
     motifPairs(level, collider);
+    songGates(level, collider, gates);
     const glb = async (scene, file) => fs.writeFileSync(new URL(file, out), Buffer.from(await new GLTFExporter().parseAsync(scene, { binary: true })));
     await glb(world, 'world.glb');
     await glb(collider, 'collider.glb');

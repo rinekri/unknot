@@ -347,7 +347,7 @@ export default {
       reg.set('talk.line', null);
       reg.set('cut.active', true);
       document.body.classList.add('cut');
-      box.querySelector('.cut-skip span').textContent = tr({ en: 'hold to skip', ru: 'держи, чтобы пропустить' });
+      box.querySelector('.cut-skip span').textContent = tr({ en: 'hold to skip', ru: 'держи, чтобы пропустить', pt: 'mantém para passar' });
       camAt(C, 0, camPos, camLook); prevPos.copy(camPos); prevLook.copy(camLook);
     };
     reg.on('cut.play', (name) => start(name));

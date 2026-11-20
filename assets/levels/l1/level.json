@@ -742,6 +742,46 @@
    "once": false,
    "far": true,
    "menhir": true
+  },
+  {
+   "id": "lockC_0",
+   "kind": "crumble",
+   "node": "mech_lockC_0",
+   "delay": 0.05,
+   "respawn": 3,
+   "group": "lockC"
+  },
+  {
+   "id": "lockC_1",
+   "kind": "crumble",
+   "node": "mech_lockC_1",
+   "delay": 0.05,
+   "respawn": 3,
+   "group": "lockC"
+  },
+  {
+   "id": "lockC_2",
+   "kind": "crumble",
+   "node": "mech_lockC_2",
+   "delay": 0.05,
+   "respawn": 3,
+   "group": "lockC"
+  },
+  {
+   "id": "lockC_3",
+   "kind": "crumble",
+   "node": "mech_lockC_3",
+   "delay": 0.05,
+   "respawn": 3,
+   "group": "lockC"
+  },
+  {
+   "id": "lockC_4",
+   "kind": "crumble",
+   "node": "mech_lockC_4",
+   "delay": 0.05,
+   "respawn": 3,
+   "group": "lockC"
   }
  ],
  "triggers": [
@@ -1015,7 +1055,8 @@
    "once": true,
    "hint": {
     "en": "Carved under the sunrise: \"We woke first, so that we could wake the others.\"",
-    "ru": "Вырезано под восходом: «Мы проснулись первыми, чтобы будить других»."
+    "ru": "Вырезано под восходом: «Мы проснулись первыми, чтобы будить других».",
+    "pt": "Gravado sob o nascente: \"Despertámos primeiro, para podermos despertar os outros.\""
    }
   },
   {
@@ -1557,6 +1598,12 @@
    -25.28,
    6.3,
    189,
+   0
+  ],
+  [
+   -27.58,
+   6.3,
+   190.8,
    0
   ],
   [
@@ -2464,6 +2511,117 @@
    "air": true
   },
   {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    12.4,
+    152.44
+   ],
+   "r": 0.6,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    14.24,
+    152.44
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    14.24,
+    152.44
+   ],
+   "r": 0.6,
+   "do": "song",
+   "song": "anchor",
+   "face": [
+    14.54,
+    152.44
+   ],
+   "hold": 1.6
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    33.69,
+    152.44
+   ],
+   "r": 0.6,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    33.69,
+    152.44
+   ],
+   "r": 0.4,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    32.04,
+    152.44
+   ],
+   "r": 0.5,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    32.04,
+    152.44
+   ],
+   "r": 0.6,
+   "do": "song",
+   "song": "anchor",
+   "face": [
+    14.24,
+    152.44
+   ],
+   "hold": 1.6
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    14.24,
+    152.44
+   ],
+   "r": 0.6,
+   "do": "go"
+  },
+  {
+   "profiles": [
+    "revisit"
+   ],
+   "at": [
+    12.4,
+    152.44
+   ],
+   "r": 0.6,
+   "do": "go"
+  },
+  {
    "at": [
     11.23,
     166.93
@@ -2567,8 +2725,8 @@
   },
   {
    "at": [
-    -25.28,
-    189
+    -27.58,
+    190.8
    ],
    "y": 6.3,
    "r": 0.6,
@@ -2878,6 +3036,15 @@
    ],
    "relic": "thread.l1",
    "note": "R6 lock reward"
+  },
+  {
+   "id": "echo_hold",
+   "pos": [
+    33.69,
+    1.4,
+    152.44
+   ],
+   "note": "R6 lock reward (Anchor)"
   }
  ],
  "gifts": [
@@ -2922,7 +3089,8 @@
    "kind": "golem",
    "name": {
     "en": "Kamen",
-    "ru": "Камень"
+    "ru": "Камень",
+    "pt": "Kamen"
    },
    "voice": "golem",
    "node": "mech_golem",
@@ -2950,7 +3118,8 @@
      "lines": [
       {
        "en": "...my names... carved on three stones, near... sing to them... and I will remember...",
-       "ru": "...мои имена... вырезаны на трёх камнях, рядом... спой им... и я вспомню..."
+       "ru": "...мои имена... вырезаны на трёх камнях, рядом... спой им... и я вспомню...",
+       "pt": "...os meus nomes... gravados em três pedras, perto... canta-lhes... e eu recordarei..."
       }
      ]
     },
@@ -2960,7 +3129,8 @@
      "lines": [
       {
        "en": "...little wind... over here... my names... on the stones... sing to them...",
-       "ru": "...ветерок... сюда... мои имена... на камнях... спой им..."
+       "ru": "...ветерок... сюда... мои имена... на камнях... спой им...",
+       "pt": "...pequeno vento... aqui... os meus nomes... nas pedras... canta-lhes..."
       }
      ]
     },
@@ -2971,7 +3141,8 @@
      "lines": [
       {
        "en": "...one name. Yes... that was mine.",
-       "ru": "...одно имя. Да... это было моё."
+       "ru": "...одно имя. Да... это было моё.",
+       "pt": "...um nome. Sim... esse era meu."
       }
      ]
     },
@@ -2981,7 +3152,8 @@
      "lines": [
       {
        "en": "...two. One more, and I wake.",
-       "ru": "...два. Ещё одно, и я проснусь."
+       "ru": "...два. Ещё одно, и я проснусь.",
+       "pt": "...dois. Mais um, e eu acordo."
       }
      ]
     },
@@ -2996,11 +3168,13 @@
       {
        "en": "Take this, little wind: the Dash. Fall like a stone.",
        "ru": "Возьми, ветерок: Рывок. Срывайся, как камень.",
+       "pt": "Toma, pequeno vento: o Impulso. Cai como uma pedra.",
        "gift": true
       },
       {
        "en": "Now climb on. I will carry you over.",
-       "ru": "Теперь забирайся. Я перенесу тебя."
+       "ru": "Теперь забирайся. Я перенесу тебя.",
+       "pt": "Agora sobe. Eu levo-te para o outro lado."
       }
      ]
     },
@@ -3011,11 +3185,13 @@
      "lines": [
       {
        "en": "No one had said my names for a very long time. I was a bridge for the Keepers.",
-       "ru": "Давно никто не звал меня по именам. Я был мостом для Хранителей."
+       "ru": "Давно никто не звал меня по именам. Я был мостом для Хранителей.",
+       "pt": "Há muito tempo que ninguém dizia os meus nomes. Eu era uma ponte para os Zeladores."
       },
       {
        "en": "Orren tied the knot above us. Go and see what is left of him.",
-       "ru": "Оррен завязал узел над нами. Иди, посмотри, что от него осталось."
+       "ru": "Оррен завязал узел над нами. Иди, посмотри, что от него осталось.",
+       "pt": "Orren atou o nó por cima de nós. Vai ver o que resta dele."
       }
      ]
     },
@@ -3024,7 +3200,8 @@
      "lines": [
       {
        "en": "...one of my names... the wind took it west, past the edge... a stone on a stone. Sing it home?",
-       "ru": "...одно моё имя... ветер унёс его на запад, за край... камень на камне. Споёшь ему дорогу домой?"
+       "ru": "...одно моё имя... ветер унёс его на запад, за край... камень на камне. Споёшь ему дорогу домой?",
+       "pt": "...um dos meus nomes... o vento levou-o para oeste, além da beira... uma pedra sobre uma pedra. Cantas-lho de volta?"
       }
      ]
     },
@@ -3034,11 +3211,13 @@
      "lines": [
       {
        "en": "...I hear it. All my names. Take my Gust again, little wind: it carries further now.",
-       "ru": "...Слышу. Все мои имена. Возьми мой Порыв снова, ветерок: теперь он летит дальше."
+       "ru": "...Слышу. Все мои имена. Возьми мой Порыв снова, ветерок: теперь он летит дальше.",
+       "pt": "...ouço-o. Todos os meus nomes. Toma outra vez a minha Rajada, pequeno vento: agora chega mais longe."
       },
       {
        "en": "...my brother's name is cut somewhere on the Crown. If you pass it... sing it for me.",
-       "ru": "...имя моего брата высечено где-то на Короне. Если пройдёшь мимо... спой его для меня."
+       "ru": "...имя моего брата высечено где-то на Короне. Если пройдёшь мимо... спой его для меня.",
+       "pt": "...o nome do meu irmão está gravado algures na Coroa. Se passares por ele... canta-o por mim."
       }
      ]
     },
@@ -3048,7 +3227,8 @@
      "lines": [
       {
        "en": "...you sang his name. Up on the Crown, he heard. He was never lost: just standing very still.",
-       "ru": "...ты спел его имя. Там, на Короне, он услышал. Он не терялся: просто стоял очень тихо."
+       "ru": "...ты спел его имя. Там, на Короне, он услышал. Он не терялся: просто стоял очень тихо.",
+       "pt": "...cantaste o nome dele. Lá em cima, na Coroa, ele ouviu. Nunca esteve perdido: estava só muito quieto."
       }
      ]
     },
@@ -3058,7 +3238,8 @@
      "lines": [
       {
        "en": "...that one is only a rock, little wind. I sang to it for a century. Good listener, though.",
-       "ru": "...это просто камень, ветерок. Я пел ему сто лет. Зато хорошо слушает."
+       "ru": "...это просто камень, ветерок. Я пел ему сто лет. Зато хорошо слушает.",
+       "pt": "...essa é só uma rocha, pequeno vento. Cantei-lhe durante um século. Mas é boa ouvinte."
       }
      ]
     }
@@ -3366,6 +3547,19 @@
     7.3,
     211.09
    ]
+  },
+  {
+   "name": "lockC",
+   "pos": [
+    9.4,
+    5.4,
+    146.44
+   ],
+   "look": [
+    33.69,
+    1.4,
+    152.44
+   ]
   }
  ],
  "cutscenes": {
@@ -3490,7 +3684,8 @@
      "dur": 4.6,
      "text": {
       "en": "The Keepers sang a mountain into the sky…",
-      "ru": "Хранители песней подняли гору в небо…"
+      "ru": "Хранители песней подняли гору в небо…",
+      "pt": "Os Zeladores cantaram uma montanha até ao céu…"
      }
     },
     {
@@ -3498,7 +3693,8 @@
      "dur": 4.4,
      "text": {
       "en": "Its stones had names, and the winds knew them all…",
-      "ru": "У её камней были имена, и ветры знали их все…"
+      "ru": "У её камней были имена, и ветры знали их все…",
+      "pt": "As suas pedras tinham nomes, e os ventos conheciam-nos todos…"
      }
     },
     {
@@ -3506,7 +3702,8 @@
      "dur": 4.6,
      "text": {
       "en": "Then Orren tied every wind into one knot, and the stones fell asleep.",
-      "ru": "Потом Оррен связал все ветры в один узел, и камни уснули."
+      "ru": "Потом Оррен связал все ветры в один узел, и камни уснули.",
+      "pt": "Depois Orren atou todos os ventos num só nó, e as pedras adormeceram."
      }
     },
     {
@@ -3514,7 +3711,8 @@
      "dur": 5.2,
      "text": {
       "en": "Wake, child of the last Keeper. Climb to the Crown and loosen the knot.",
-      "ru": "Проснись, дитя последнего Хранителя. Поднимись к Короне и ослабь узел."
+      "ru": "Проснись, дитя последнего Хранителя. Поднимись к Короне и ослабь узел.",
+      "pt": "Acorda, filho do último Zelador. Sobe à Coroa e afrouxa o nó."
      }
     }
    ],
@@ -3698,12 +3896,14 @@
      "dur": 4.2,
      "who": {
       "en": "Kamen",
-      "ru": "Камень"
+      "ru": "Камень",
+      "pt": "Kamen"
      },
      "voice": "golem",
      "text": {
       "en": "The stones remember their names. The wind remembers the road: it will carry you, as I carried the Keepers.",
-      "ru": "Камни помнят свои имена. Ветер помнит дорогу: он понесёт тебя, как я носил Хранителей."
+      "ru": "Камни помнят свои имена. Ветер помнит дорогу: он понесёт тебя, как я носил Хранителей.",
+      "pt": "As pedras recordam os seus nomes. O vento recorda o caminho: levar-te-á, como eu levei os Zeladores."
      }
     },
     {
@@ -3711,12 +3911,14 @@
      "dur": 4.4,
      "who": {
       "en": "Kamen",
-      "ru": "Камень"
+      "ru": "Камень",
+      "pt": "Kamen"
      },
      "voice": "golem",
      "text": {
       "en": "The winds are bound beyond — to Orren's totems. Set them loose.",
-      "ru": "Дальше ветры привязаны к тотемам Оррена. Отпусти их."
+      "ru": "Дальше ветры привязаны к тотемам Оррена. Отпусти их.",
+      "pt": "Os ventos estão atados mais adiante, nos totens de Orren. Solta-os."
      }
     }
    ],
@@ -4399,6 +4601,13 @@
     "rise": -1.1,
     "needs": "airdash (two bursts)",
     "frac": 0.72
+   },
+   {
+    "from": "k1",
+    "to": "lockC_isl",
+    "lock": "anchor",
+    "gap": 15.85,
+    "needs": "Anchor (holds the lockC crumble row, 0.05 s at a touch)"
    }
   ],
   "dashReach": 6.62,

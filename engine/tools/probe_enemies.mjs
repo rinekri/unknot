@@ -39,7 +39,7 @@ for (const lv of ['l1', 'l2', 'l3']) {
           reg.set('input', { move: [dx / L, dz / L], run: true });
           G.step();
           const d = Math.hypot(e.pos.x - P().pos.x, e.pos.z - P().pos.z);
-          if (Math.abs(P().pos.y - e.ground) < 1.5) min = Math.min(min, d);
+          if ((solid || P().grounded) && Math.abs(P().pos.y - e.ground) < 1.5) min = Math.min(min, d); // U25: wind on its floor only: run off a rim, the hero falls under a wisp hovering past it (l1 thF side 5), which is no crossing
           if (P().breath < b0 - 0.9 || reg.get('enemy.knock')?.t !== k0 || e.state === 'pull') effect = true;
         }
         row.dirs++; row.minDist = Math.min(row.minDist, min);
